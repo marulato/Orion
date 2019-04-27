@@ -1,22 +1,22 @@
 package org.orion.common.dao;
 
 import org.orion.common.miscutil.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
-@Component
 public class Redis {
-    @Resource
     private RedisTemplate<String, Object> redisTemplate;
     private ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
     private HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+    private final Logger logger = LoggerFactory.getLogger(Redis.class);
 
     public void set(final String key, Object value) {
         valueOperations.set(key, value);
@@ -71,10 +71,12 @@ public class Redis {
                     hashOperations.put(key, fieldNames[j], value);
                 } catch (Exception e) {
                     try {
+                        logger.warn("Getter Not Found for '" + fieldNames[j] + "', Forced Injection Will Be Used");
                         fields[j].setAccessible(true);
                         Object value = fields[j].get(object);
                         hashOperations.put(key, fieldNames[j], value);
                     } catch (Exception e1) {
+                        logger.error("Injection Failed For '" + fieldNames[j] + "'", e1);
                         continue;
                     }
                 }
@@ -91,6 +93,7 @@ public class Redis {
             try {
                 entity = objClass.getConstructor().newInstance();
             } catch (Exception e) {
+                logger.warn(">> No Valid Constructor Found! Injection Abandoned<<");
                 return null;
             }
             for (int i = 0; i < fields.length; i++) {
@@ -101,8 +104,15 @@ public class Redis {
                     Method setterMethod = objClass.getDeclaredMethod(setters[i]);
                     setterMethod.setAccessible(true);
                     setterMethod.invoke(entity, value);
-
                 } catch (Exception e) {
+                    try {
+                        fields[i].setAccessible(true);
+                        fields[i].set(entity, value);
+                        logger.warn("Setter Not Found For '" + fieldNames[i] + "'");
+                    } catch (Exception e1) {
+                        logger.error("Injection Failed For '" + fieldNames[i] + "'", e1);
+                        continue;
+                    }
 
                 }
             }
