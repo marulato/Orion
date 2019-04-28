@@ -13,7 +13,6 @@ public class User extends BaseEntity {
     private String pwd;
     private String status;
     private String email;
-    private String contact;
     private String terminal;
     private Date lastLogin;
     private Date secLogin;
@@ -72,14 +71,6 @@ public class User extends BaseEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
     }
 
     public String getTerminal() {
