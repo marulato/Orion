@@ -1,14 +1,13 @@
 package org.orion.common.dao;
 
 import org.orion.common.miscutil.StringUtil;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class BaseSQLProvider {
+public class BaseSQLProvider {
 
     private String table;
 
@@ -37,6 +36,17 @@ public abstract class BaseSQLProvider {
         }
         select.append(table).append(" ");
         return select.toString();
+    }
+
+    public final String setWhereClause(String column, String operator) {
+        StringBuilder where = new StringBuilder();
+        where.append("WHERE ");
+        where.append(column).append(" ");
+        where.append(operator).append(" ");
+        where.append("#{");
+        where.append(StringUtil.convertColumnName(column));
+        where.append("}");
+        return where.toString();
     }
 
     public final String addWhereAnd(String column, String operator) {
@@ -77,44 +87,81 @@ public abstract class BaseSQLProvider {
         return order.toString();
     }
 
-    public abstract List<String> excludeForInsert();
 
-    public final String insertAll(Class<?> mapperEntity) {
+    public final String insert(Class<?> mapperEntity, List<String> exclude) {
         StringBuilder insert = new StringBuilder();
         if (mapperEntity != null) {
-            Field[] fields = mapperEntity.getDeclaredFields();
-            List<String> filedNameList = new ArrayList<>();
-            Arrays.stream(fields).forEach((field) -> {
-                filedNameList.add(field.getName());
-            });
-            List<String> exclude = excludeForInsert();
-            if (exclude != null && !exclude.isEmpty()) {
-                Iterator<String> iterator = exclude.iterator();
-                List<String> tableColumList = new ArrayList<>();
-                while (iterator.hasNext()) {
-                    String ex = iterator.next();
-                    if (StringUtil.isTableColumn(ex));
-                        iterator.remove();
-                        tableColumList.add(StringUtil.convertColumnName(ex));
-                }
-                exclude.addAll(tableColumList);
-                filedNameList.removeAll(exclude);
-            }
+            List<String> fieldNameList = getColumnFields(mapperEntity, exclude);
             insert.append("INSERT INTO ").append(table).append(" (");
-            filedNameList.forEach((fieldName) -> {
+            fieldNameList.forEach((fieldName) -> {
                 insert.append(StringUtil.convertToTableColumn(fieldName)).append(", ");
             });
             insert.deleteCharAt(insert.lastIndexOf(","));
             insert.append(")").append(" VALUES (");
-            filedNameList.forEach((fieldName) -> {
+            fieldNameList.forEach((fieldName) -> {
                 insert.append("#{" + fieldName + "}").append(", ");
             });
             insert.deleteCharAt(insert.lastIndexOf(","));
             insert.append(")");
-        } else {
-            insert.delete(0, insert.length() - 1);
         }
         return insert.toString();
+    }
+
+    public final String updateAll(Class<?> mapperEntity, List<String> exclude) {
+        StringBuilder update = new StringBuilder();
+        if (mapperEntity != null) {
+            List<String> fieldNameList = getColumnFields(mapperEntity, exclude);
+            update.append("UPDATE ").append(table).append(" SET ");
+            fieldNameList.forEach((fieldName) -> {
+                update.append(StringUtil.convertToTableColumn(fieldName)).append(" = ");
+                update.append("#{" + fieldName + "}").append(", ");
+            });
+            update.deleteCharAt(update.lastIndexOf(","));
+        }
+        return update.toString();
+    }
+
+    public final String deleteAll() {
+        StringBuilder delete = new StringBuilder();
+        delete.append("DELETE FROM ").append(table).append(" ");
+        return delete.toString();
+    }
+
+    public final String deleteByColumn(String byColumn, String operator) {
+        StringBuilder delete = new StringBuilder();
+        delete.append(deleteAll());
+        delete.append(setWhereClause(byColumn, operator));
+        return delete.toString();
+    }
+
+    private List<String> getColumnFields(Class<?> mapperEntity, List<String> exclude) {
+        List<String> filedNameList = new ArrayList<>();
+        Field[] fields = mapperEntity.getDeclaredFields();
+        Arrays.stream(fields).forEach((field) -> {
+            filedNameList.add(field.getName());
+        });
+        if (exclude != null && !exclude.isEmpty()) {
+            Iterator<String> iterator = exclude.iterator();
+            List<String> tableColumList = new ArrayList<>();
+            while (iterator.hasNext()) {
+                String ex = iterator.next();
+                if (StringUtil.isTableColumn(ex)) {
+                    iterator.remove();
+                    tableColumList.add(StringUtil.convertColumnName(ex));
+                }
+            }
+            exclude.addAll(tableColumList);
+            filedNameList.removeAll(exclude);
+            addAuditTrailColumn(filedNameList);
+        }
+        return filedNameList;
+    }
+
+    private void addAuditTrailColumn(List<String> fieldNameList) {
+        fieldNameList.add("createdAt");
+        fieldNameList.add("createdBy");
+        fieldNameList.add("updatedAt");
+        fieldNameList.add("updatedBy");
     }
 
 }
