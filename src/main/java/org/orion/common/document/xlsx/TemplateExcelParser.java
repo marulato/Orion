@@ -125,7 +125,7 @@ public class TemplateExcelParser {
         List<String> titles = new ArrayList<String>();
         if (originTitles != null && originTitles.size() != 0) {
             for (String title : originTitles) {
-                titles.add(StringUtil.convertFieldName(title));
+                titles.add(StringUtil.convertColumnName(title));
             }
         }
         return titles;

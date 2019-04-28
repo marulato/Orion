@@ -2,7 +2,7 @@
 spring:
   ##数据库连接信息
   datasource:
-    url: jdbc:mysql://localhost:3306/star?serverTimezone=Asia/Shanghai&useSSL=false
+    url: jdbc:mysql://localhost:3306/orion?serverTimezone=Asia/Shanghai&useSSL=false
     username: root
     password: 351975711
     driver-class-name: com.mysql.cj.jdbc.Driver

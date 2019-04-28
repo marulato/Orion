@@ -1,6 +1,8 @@
 package org.orion.common.miscutil;
 
 
+import java.util.Arrays;
+
 public final class StringUtil {
 
 	public static boolean isEmpty(String value) {
@@ -82,7 +84,14 @@ public final class StringUtil {
 		return isEmpty(value) ? false : value.matches(".+@\\w+\\.\\w+");
 	}
 
-	public static String convertFieldName(String value) {
+	public static boolean isTableColumn(String value) {
+	    if (isEmpty(value) || hasLowerCase(value) ) {
+	        return false;
+        }
+	    return true;
+    }
+
+	public static String convertColumnName(String value) {
 		if (isEmpty(value)) {
 			return null;
 		} else if (!value.contains("_")) {
@@ -96,6 +105,25 @@ public final class StringUtil {
 		}
 		return builder.toString();	
 	}
+
+	public static String convertToTableColumn(String value) {
+        if (isEmpty(value)) {
+            return null;
+        } else if (!hasUpperCase(value)) {
+            return value.toUpperCase();
+        }
+        StringBuilder column = new StringBuilder();
+        String[] src = convertToArray(value);
+        Arrays.stream(src).forEach((s) -> {
+            if(hasUpperCase(s)) {
+                column.append("_");
+            }
+            column.append(s.toUpperCase());
+        });
+        if (column.indexOf("_") == 0)
+            column.deleteCharAt(0);
+        return column.toString();
+    }
 
 	public static String getPartOf(String value, int start, int end) {
 		if (isEmpty(value)) {
