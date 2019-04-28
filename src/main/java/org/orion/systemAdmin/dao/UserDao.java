@@ -1,6 +1,8 @@
 package org.orion.systemAdmin.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.orion.systemAdmin.dao.provider.UserSqlProvider;
 import org.orion.systemAdmin.entity.User;
 
 import java.util.List;
@@ -13,6 +15,7 @@ public interface UserDao {
 
     Integer deleteByPrimaryKey(Long acctId);
 
+    @SelectProvider(type = UserSqlProvider.class, method = "insertUser")
     Integer create(User user);
 
     Integer update(User user);
@@ -27,6 +30,5 @@ public interface UserDao {
 
     Integer deleteBatch(List<Long> list);
 
-    /*<AUTOGEN--END>*/
 
 }
