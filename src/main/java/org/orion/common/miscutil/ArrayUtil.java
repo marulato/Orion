@@ -105,4 +105,27 @@ public class ArrayUtil {
         return null;
     }
 
+    public static Object[] joint(Object[]... arrays) {
+        Object[] newArray = null;
+        int totalLength = 0;
+        if (arrays != null && arrays.length > 0) {
+            for (Object[] e : arrays) {
+                if (e != null && e.length > 0)
+                    totalLength += e.length;
+            }
+            newArray = new Object[totalLength];
+            int index = 0;
+            for (Object[] e : arrays) {
+                if (e != null && e.length > 0) {
+                    for (int i = 0; i < e.length; i++) {
+                        newArray[index++] = e[i];
+                    }
+                }
+            }
+        }
+        return newArray;
+    }
+
+
+
 }
