@@ -2,10 +2,7 @@ package org.orion.common.dao;
 
 import org.orion.common.miscutil.StringUtil;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class BaseSQLProvider {
 
@@ -88,7 +85,7 @@ public class BaseSQLProvider {
     }
 
 
-    public final String insert(Class<?> mapperEntity, List<String> exclude) {
+    public final String insert(Class<?> mapperEntity, List<String> exclude, String atParam) {
         StringBuilder insert = new StringBuilder();
         if (mapperEntity != null) {
             List<String> fieldNameList = getColumnFields(mapperEntity, exclude);
@@ -99,10 +96,36 @@ public class BaseSQLProvider {
             insert.deleteCharAt(insert.lastIndexOf(","));
             insert.append(")").append(" VALUES (");
             fieldNameList.forEach((fieldName) -> {
-                insert.append("#{" + fieldName + "}").append(", ");
+                if (StringUtil.isEmpty(atParam))
+                    insert.append("#{" + fieldName + "}").append(", ");
+                else
+                    insert.append("#{"+ atParam +"." + fieldName + "}").append(", ");
             });
             insert.deleteCharAt(insert.lastIndexOf(","));
             insert.append(")");
+        }
+        return insert.toString();
+    }
+
+    public final String batchInsert(Class<?> mapperEntity, List<String> exclude, String atParam, int batchSize) {
+        StringBuilder insert = new StringBuilder();
+        batchSize = batchSize < 0 ? 0 : batchSize;
+        if (mapperEntity != null && !StringUtil.isEmpty(atParam)) {
+            List<String> fieldNameList = getColumnFields(mapperEntity, exclude);
+            insert.append("INSERT INTO ").append(table).append(" (");
+            fieldNameList.forEach((fieldName) -> {
+                insert.append(StringUtil.convertToTableColumn(fieldName)).append(", ");
+            });
+            insert.deleteCharAt(insert.lastIndexOf(","));
+            insert.append(")").append(" VALUES ");
+            for (int i = 0; i < batchSize; i++) {
+                insert.append("(");
+                for (String name : fieldNameList) {
+                    insert.append("#{" + atParam + "[" + i + "]").append("." + name).append("}");
+                }
+                insert.append("), ");
+            }
+            insert.deleteCharAt(insert.lastIndexOf(","));
         }
         return insert.toString();
     }
