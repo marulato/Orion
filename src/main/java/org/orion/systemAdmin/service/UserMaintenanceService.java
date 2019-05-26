@@ -10,7 +10,4 @@ public class UserMaintenanceService {
     @Resource
     private UserDao userDao;
 
-    public void create(User user) {
-        userDao.create(user);
-    }
 }

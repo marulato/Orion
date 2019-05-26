@@ -4,16 +4,16 @@ import org.orion.common.dao.BaseSQLProvider;
 import org.orion.common.miscutil.CollectionUtil;
 import org.orion.systemAdmin.entity.User;
 
-public class UserSqlProvider extends BaseSQLProvider {
+public class UserProvider extends BaseSQLProvider {
 
     public static final String TABLE = "USER_TBL";
 
-    public UserSqlProvider() {
+    public UserProvider() {
         super(TABLE);
     }
 
     public String insertUserSQL() {
-        return insert(User.class, CollectionUtil.initialList("acctId"), null);
+        return insert(User.class, null, null);
     }
 
     public String updateUserByUserIdSQL() {
@@ -26,5 +26,17 @@ public class UserSqlProvider extends BaseSQLProvider {
         String update = updateAll(User.class, CollectionUtil.initialList("acctId", "userId", "domain", "terminal"));
         String where = setWhereClause("ACCT_ID", "=");
         return update + where;
+    }
+
+    public String updateLoginSQL() {
+        String update = updateAll(User.class, CollectionUtil.initialList(""));
+        String where = setWhereClause("USER_ID", "=");
+        return update + where;
+    }
+
+    public String getLoginUserSQL() {
+        String select = selectAll();
+        String where = setWhereClause("USER_ID", "=");
+        return select + where;
     }
 }

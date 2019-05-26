@@ -46,6 +46,19 @@ public class BaseSQLProvider {
         return where.toString();
     }
 
+    public final String setWhereIn(String column, List<String> values) {
+        StringBuilder where = new StringBuilder();
+        where.append("WHERE ");
+        where.append(column).append(" ");
+        where.append("IN").append(" (");
+        for (String value : values) {
+            where.append(value).append(", ");
+        }
+        where.deleteCharAt(where.lastIndexOf(","));
+        where.append(")");
+        return where.toString();
+    }
+
     public final String addWhereAnd(String column, String operator) {
         StringBuilder where = new StringBuilder();
         where.append(" AND ");

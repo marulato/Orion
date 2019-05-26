@@ -5,9 +5,8 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.orion.common.miscutil.FileUtil;
+import org.orion.common.miscutil.IOUtil;
 import org.orion.common.miscutil.StringUtil;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,8 +17,8 @@ public class Dom4JReader {
     private Document document;
 
     public Dom4JReader(String filePath) throws DocumentException {
-        if ("xml".equalsIgnoreCase(FileUtil.getFileSuffix(FileUtil.getFileNameFromPath(filePath)))) {
-            document = read(FileUtil.getInputStream(filePath));
+        if ("xml".equalsIgnoreCase(StringUtil.getFileSuffix(StringUtil.getFileNameFromPath(filePath)))) {
+            document = read(IOUtil.getFileInputStream(filePath));
         }
     }
 

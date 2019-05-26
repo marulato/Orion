@@ -4,7 +4,6 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,8 +20,8 @@ public final class PoiUtil {
 
     public static XSSFWorkbook getXlsxWorkbookByFile(String path) {
         XSSFWorkbook workbook = null;
-        FileInputStream stream = FileUtil.getInputStream(path);
-        String suffix = FileUtil.getFileSuffix(path);
+        FileInputStream stream = IOUtil.getFileInputStream(path);
+        String suffix = StringUtil.getFileSuffix(path);
         try {
             if ("xlsx".equalsIgnoreCase(suffix)) {
                 workbook = new XSSFWorkbook(stream);
@@ -41,37 +40,6 @@ public final class PoiUtil {
         XSSFCellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        XSSFFont font = workbook.createFont();
-        font.setFontHeightInPoints((short) 10);
-        font.setFontName("微软雅黑");
-        cellStyle.setFont(font);
-        return cellStyle;
-    }
-
-    public static XSSFCellStyle errorCellStyle(XSSFWorkbook workbook) {
-        if (workbook == null) {
-            return null;
-        }
-        XSSFCellStyle cellStyle = workbook.createCellStyle();
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        XSSFFont font = workbook.createFont();
-        font.setFontHeightInPoints((short) 10);
-        font.setBold(true);
-        font.setFontName("sans");
-        font.setColor(Font.COLOR_RED);
-        cellStyle.setFont(font);
-        return cellStyle;
-    }
-
-    public static XSSFCellStyle errorDescCellStyle(XSSFWorkbook workbook) {
-        if (workbook == null) {
-            return null;
-        }
-        XSSFCellStyle cellStyle = workbook.createCellStyle();
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        cellStyle.setFillBackgroundColor((short)11);
         XSSFFont font = workbook.createFont();
         font.setFontHeightInPoints((short) 10);
         font.setFontName("微软雅黑");
@@ -267,7 +235,7 @@ public final class PoiUtil {
 
     public static void save(XSSFWorkbook workbook, String path) {
         if (workbook != null) {
-            FileOutputStream stream = FileUtil.getOutputStream(path);
+            FileOutputStream stream = IOUtil.getFileOutputStream(path);
             try {
                 workbook.write(stream);
             } catch (IOException e) {

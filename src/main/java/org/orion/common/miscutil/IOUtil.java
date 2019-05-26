@@ -50,6 +50,30 @@ public class IOUtil {
         }
     }
 
+    public static FileInputStream getFileInputStream(String path) {
+        FileInputStream fileInputStream = null;
+        try {
+            if (!StringUtil.isEmpty(path))
+                fileInputStream = new FileInputStream(new File(path));
+        } catch (Exception e) {
+            logger.error("", e);
+        } finally {
+            return fileInputStream;
+        }
+    }
+
+    public static FileOutputStream getFileOutputStream(String path) {
+        FileOutputStream fileOutputStream = null;
+        try {
+            if (!StringUtil.isEmpty(path))
+                fileOutputStream = new FileOutputStream(new File(path));
+        } catch (Exception e) {
+            logger.error("", e);
+        } finally {
+            return fileOutputStream;
+        }
+    }
+
     public static byte[] generateByteArray(File file) {
         byte[] data = null;
         if (file != null) {

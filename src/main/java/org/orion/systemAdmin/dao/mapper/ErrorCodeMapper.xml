@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.orion.systemAdmin.dao.ErrorCodeDao">
+    <select id="queryErrorCode" parameterType="java.lang.String" resultType="org.orion.common.mastercode.ErrorCode">
+        SELECT * FROM ERROR_CODE_MC WHERE ERROR_CODE = #{errorCode}
+    </select>
+
+    <select id="batchQueryErrorCode" parameterType="java.util.ArrayList" resultType="org.orion.common.mastercode.ErrorCode">
+        SELECT * FROM ERROR_CODE_MC WHERE ERROR_CODE IN
+        <foreach collection="errs" index="idx" separator="," item="code" open="(" close=")">
+            #{code}
+        </foreach>
+    </select>
+
+    <insert id="insertErrorCode" parameterType="org.orion.common.mastercode.ErrorCode">
+        INSERT INTO ERROR_CODE_MC VALUES (#{errorCode}, #{errorDesc}, #{errorType}, #{errorCond}, #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy})
+    </insert>
+</mapper>

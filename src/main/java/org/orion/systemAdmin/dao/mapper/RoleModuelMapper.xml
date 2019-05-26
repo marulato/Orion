@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.orion.systemAdmin.dao.RoleModuelDao">
+    <insert id="create" parameterType="org.orion.systemAdmin.entity.RoleModuelAssign">
+        INSERT INTO ROLE_MODUEL_ASSIGN VALUES (#{roleId}, #{moduelId});
+    </insert>
+
+    <insert id="batchCreate" parameterType="org.orion.systemAdmin.entity.RoleModuelAssign">
+        INSERT INTO ROLE_MODUEL_ASSIGN (ROLE_ID, MODUEL_ID) VALUES
+        <foreach collection="rml" index="idx" item="rm" separator=",">
+            (#{rm.roleId}, #{rm.moduelId})
+        </foreach>
+    </insert>
+
+    <select id="query" parameterType="java.lang.String" resultType="org.orion.systemAdmin.entity.RoleModuelAssign">
+        SELECT * FROM ROLE_MODUEL_ASSIGN WHERE ROLE_ID = #{roleId}
+    </select>
+
+    <select id="batchQuery" parameterType="java.util.ArrayList" resultType="org.orion.systemAdmin.entity.RoleModuelAssign">
+        SELECT * FROM ROLE_MODUEL_ASSIGN WHERE ROLE_ID IN
+        <foreach collection="ril" item="rl" index="idx" separator="," open="(" close=")">
+            #{ril}
+        </foreach>
+    </select>
+
+    <select id="queryAll" resultType="org.orion.systemAdmin.entity.RoleModuelAssign">
+        SELECT * FROM ROLE_MODUEL_ASSIGN
+    </select>
+
+    <delete id="deleteAll">
+        DELETE FROM ROLE_MODUEL_ASSIGN
+    </delete>
+
+</mapper>
