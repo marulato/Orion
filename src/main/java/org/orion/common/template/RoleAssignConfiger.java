@@ -40,7 +40,7 @@ public class RoleAssignConfiger {
                     }
                 }
             } catch (Exception e) {
-                logger.error("Error Initializing Role Assignment Configuration, Please check the xml file", e);
+                logger.error("Error Initializing Role-Moduel Assignment Configuration, Please check the xml file", e);
             }
         }
     }

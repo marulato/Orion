@@ -16,6 +16,7 @@ public class Validation {
     private static List<Map<Field, String[]>> fieldErrorList;
     private static Field[] fields;
     private static Object target;
+    private static boolean hasAnnotation;
     private static final Logger logger = LogManager.getLogger(Validation.class);
     private static void initClass(Object object) {
         if (object != null) {
@@ -43,6 +44,7 @@ public class Validation {
             }
             for (Field field : fields) {
                 if (field.isAnnotationPresent(ValidateWithMethod.class)) {
+                    hasAnnotation = true;
                     ValidateWithMethod validate = field.getAnnotation(ValidateWithMethod.class);
                     String[] methodNames = validate.methodName();
                     String[] errorCodes = validate.errorCode();
@@ -75,7 +77,7 @@ public class Validation {
             try {
                 initClass(target);
                 initValidationMap();
-                if (fieldMehtodList != null && fieldMehtodList.size() > 0) {
+                if (fieldMehtodList != null && fieldMehtodList.size() > 0 && hasAnnotation) {
                     int index = 0;
                     for (Map<Field, Method[]> map : fieldMehtodList) {
                         if (map.size() > 0) {

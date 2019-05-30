@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.orion.systemAdmin.dao.ModuelUrlDao">
+    <insert id="create" parameterType="org.orion.systemAdmin.entity.ModuelUrlAssign">
+        INSERT INTO MODUEL_URL_ASSIGN (MODULE_ID, MODUEL_DESC, FUNC_DESC, LEVEL, URL, REMARKS) VALUES
+        (#{moduelId}, #{moduelDesc}, #{funcDesc}, #{level}, #{url}, #{remarks});
+    </insert>
+
+    <insert id="batchCreate" parameterType="org.orion.systemAdmin.entity.ModuelUrlAssign">
+        INSERT INTO MODUEL_URL_ASSIGN (MODULE_ID, MODUEL_DESC, FUNC_DESC, LEVEL, URL, REMARKS) VALUES
+        <foreach collection="mua" item="mo" separator=",">
+            (#{mo.moduelId}, #{mo.moduelDesc}, #{mo.funcDesc}, #{mo.level}, #{mo.url}, #{mo.remarks})
+        </foreach>
+    </insert>
+</mapper>
