@@ -1,0 +1,10 @@
+<ModuelMappings>
+    <mapping>
+        <ModuelId>LOGIN</ModuelId>
+        <Url>/web/AuthLogin</Url>
+        <Desc>Users sign in the site</Desc>
+        <Func>System Login</Func>
+        <Level>A</Level>
+        <Remarks></Remarks>
+    </mapping>
+</ModuelMappings>

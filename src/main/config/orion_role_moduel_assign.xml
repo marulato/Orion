@@ -1,0 +1,19 @@
+<RoleAssignment>
+    <Role>
+        <Id>SYSTEMADMIN</Id>
+        <Moduel>PROFILE</Moduel>
+        <Moduel>TEST</Moduel>
+        <Moduel>LOGIN</Moduel>
+        <Moduel>PART</Moduel>
+        <Moduel>DOO</Moduel>
+    </Role>
+
+    <Role>
+        <Id>NormalUser</Id>
+        <Moduel>ADMIN</Moduel>
+        <Moduel>TEST</Moduel>
+        <Moduel>LOGIN</Moduel>
+        <Moduel>PART</Moduel>
+        <Moduel>DOO</Moduel>
+    </Role>
+</RoleAssignment>

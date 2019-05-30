@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 @Service
-public class RoleAssignService {
+public class PrivilegeAssignService {
     @Resource
     private RoleModuelDao roleModuelDao;
 

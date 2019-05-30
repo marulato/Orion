@@ -7,6 +7,7 @@ import org.orion.systemAdmin.entity.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
@@ -23,5 +24,10 @@ public class AuthorizeActionService {
                 userDao.insert(user);
             }
         }
+    }
+
+    public int login(HttpServletRequest request, User user) {
+
+        return 0;
     }
 }
