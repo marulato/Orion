@@ -14,8 +14,8 @@ import java.util.Map;
 public class RoleAssignConfiger {
 
     private final String ROOT_TAG   = "RoleAssignment";
-    private final String ROLE_TAG   = "Role";
-    private final String ID_TAG     = "Id";
+    private final String ROLE_ID_TAG   = "RoleId";
+    private final String FUNC_ID_TAG     = "FuncId";
     private final String MODUEL_TAG = "Moduel";
     private Map<String, List<String>> roleAssignMap;
     private final Logger logger = LoggerFactory.getLogger(RoleAssignConfiger.class);
@@ -30,14 +30,7 @@ public class RoleAssignConfiger {
                 for (Element roleTag : roleTags) {
                     List<Element> subTags = dom4JReader.getAllElementsUnderSpecified(roleTag);
                     String roleId = null;
-                    for (Element subTag : subTags) {
-                        if (ID_TAG.equals(subTag.getName())) {
-                            roleAssignMap.put(dom4JReader.getElementValue(subTag), new ArrayList<>());
-                            roleId = dom4JReader.getElementValue(subTag);
-                        } else {
-                            roleAssignMap.get(roleId).add(dom4JReader.getElementValue(subTag));
-                        }
-                    }
+
                 }
             } catch (Exception e) {
                 logger.error("Error Initializing Role-Moduel Assignment Configuration, Please check the xml file", e);

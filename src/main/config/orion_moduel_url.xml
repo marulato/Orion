@@ -1,11 +1,23 @@
 <ModuelMappings>
     <mapping>
         <ModuelId>LOGIN</ModuelId>
+        <ModuelName>Authorize Login</ModuelName>
         <Desc>Users sign in the site</Desc>
-        <Func>System login page</Func>
-        <Level>A</Level>
         <Remarks></Remarks>
-        <Url>/web/AuthLogin</Url>
+        <Function>
+            <FuncId>LOGINPAGE</FuncId>
+            <FuncName>Login Page</FuncName>
+            <URL>/web/AuthLogin</URL>
+            <Level>N</Level>
+            <IsSystem>N</IsSystem>
+        </Function>
+        <Function>
+            <FuncId>POSTLOGIN</FuncId>
+            <FuncName>Submit Login Request</FuncName>
+            <URL>/web/AuthLogin/doLogin</URL>
+            <Level>N</Level>
+            <IsSystem>N</IsSystem>
+        </Function>
     </mapping>
 
     <mapping>
