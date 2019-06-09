@@ -1,6 +1,6 @@
 package org.orion.systemAdmin.entity;
 
-public class ModuelUrlAssign {
+public class ModuelUrlAssign implements BaseAssign {
 
     private String moduelId;
     private String moduelName;

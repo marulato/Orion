@@ -176,6 +176,10 @@ public class DateUtil {
 		}
 		return new Date(timestamp.getTime());
 	}
+
+	public static Date getDate(long millis) {
+		return new Date(millis);
+	}
 	
 	public static Date getDate(String dateStr, String format) {
 		if (StringUtil.isEmpty(format) || StringUtil.isEmpty(dateStr)) {
@@ -194,24 +198,19 @@ public class DateUtil {
 
 	public static int getDaysBetween(Date from, Date to) {
 		if (from != null && to != null) {
-			long fromMillis = from.getTime();
-			long toMillis = to.getTime();
-			long temp = toMillis - fromMillis;
-			long between = temp >= 0 ? temp : -temp;
-			return (int) (between / ONE_DAY_MILLIS);
+			return (int) (millisBetween(from, to) / ONE_DAY_MILLIS);
 		}
-		return 0;
+		return -1;
 	}
 
-	public static long getMillisBetween(Date from, Date to) {
-		if (from != null && to != null) {
-			long fromMillis = from.getTime();
-			long toMillis = to.getTime();
-			long temp = toMillis - fromMillis;
-			long between = temp >= 0 ? temp : -temp;
-			return between;
-		}
-		return 0;
+	public static long millisBetween(Date from, Date to) {
+		if (from == null || to == null)
+			return -1;
+		long fromMillis = from.getTime();
+		long toMillis = to.getTime();
+		long temp = toMillis - fromMillis;
+		long between = temp >= 0 ? temp : -temp;
+		return between;
 	}
 
 	public static String getLogDate(Date date) {

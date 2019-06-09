@@ -2,7 +2,12 @@
     <RoleAssignment>
         <RoleId>SYSTEMADMIN</RoleId>
         <Moduel id="LOGIN">
-            <FuncId></FuncId>
+            <FuncId permission="Y">LOGINPAGE</FuncId>
+            <FuncId permission="Y">POSTLOGIN</FuncId>
+        </Moduel>
+        <Moduel id="PROFILE">
+            <FuncId permission="L"></FuncId>
+            <FuncId permission="Y"></FuncId>
         </Moduel>
     </RoleAssignment>
 

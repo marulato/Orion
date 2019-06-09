@@ -28,16 +28,19 @@ public class PrivilegeAssignService {
         List<RoleModuelAssign> roleModuelAssignList = new ArrayList<>();
         RoleAssignConfiger roleAssignConfiger = new RoleAssignConfiger();
         roleAssignConfiger.loadConfig(configPath);
-        Map<String, List<String>> roleAssignMap = roleAssignConfiger.getRoleAssignMap();
+        Map<String, List<RoleModuelAssign>> roleAssignMap = roleAssignConfiger.getRoleAssignMap();
         if (roleAssignMap != null && !roleAssignMap.isEmpty()) {
             Set<String> keys = roleAssignMap.keySet();
             for (String key : keys) {
-                List<String> moduels = roleAssignMap.get(key);
-                for (String moduel : moduels) {
-                    RoleModuelAssign roleModuelAssign = new RoleModuelAssign();
-                    roleModuelAssign.setRoleId(key);
-                    roleModuelAssign.setModuelId(moduel);
-                    roleModuelAssignList.add(roleModuelAssign);
+                List<RoleModuelAssign> moduels = roleAssignMap.get(key);
+                for (RoleModuelAssign roleModuel : moduels) {
+                    List<ErrorCode> errorCodes = Validation.doValidate(roleModuel);
+                    if (errorCodes != null && !errorCodes.isEmpty()) {
+                        roleModuelAssignList.clear();
+                        return roleModuelAssignList;
+                    } else {
+                        roleModuelAssignList.add(roleModuel);
+                    }
                 }
             }
         }

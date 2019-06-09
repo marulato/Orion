@@ -165,6 +165,8 @@ public class DaoGenerateSvc {
                         fieldTypes.add("int");
                     } else if("bigint".equalsIgnoreCase(dataType)) {
                         fieldTypes.add("long");
+                    } else if("smallint".equalsIgnoreCase(dataType)) {
+                        fieldTypes.add("int");
                     } else if("date".equalsIgnoreCase(dataType) || "datetime".equalsIgnoreCase(dataType)) {
                         fieldTypes.add("Date");
                     } else if ("blob".equalsIgnoreCase(dataType)) {

@@ -32,7 +32,6 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
     # 合并多个DruidDataSource的监控数据
     useGlobalDataSourceStat: true
-
 #  redis:
 #    database: 0
 #    timeout: 0
@@ -48,12 +47,34 @@ spring:
 #      maxIdle: 90
 #    # 连接池中的最小空闲连接
 #      minIdle: 0
-
   servlet:
     multipart:
       enabled: true
       max-file-size: 64MB
       max-request-size: 1024MB
+
+
+  quartz:
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: clusteredScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            isClustered: true
+            clusterCheckinInterval: 10000
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+    job-store-type: jdbc
+    auto-startup: true
+    startup-delay: 30s
 
 mybatis:
   mapper-locations: classpath*:org/orion/**/dao/mapper/*.xml

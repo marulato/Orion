@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.orion.common.scheduel.dao.JobScheduelDao">
+    <select id="queryAllJobs" parameterType="int" resultType="org.orion.common.scheduel.ScheduelEntity">
+        SELECT * FROM QRTZ_JOB_DETAILS LIMIT #{page}, #{pageSize}
+    </select>
+
+    <insert id="createOrionBatchJob" parameterType="org.orion.common.scheduel.OrionBatchJobEntity">
+        INSERT INTO BATCHJOB_SCHEDUEL VALUES (#{name}, #{description}, #{className}, #{isQuartz}, #{isRegistered},
+                                              #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy})
+    </insert>
+
+    <select id="queryOrionJob" parameterType="string" resultType="org.orion.common.scheduel.OrionBatchJobEntity">
+        SELECT * FROM BATCHJOB_SCHEDUEL WHERE NAME = #{name}
+    </select>
+
+    <select id="queryAllOrionJobs" resultType="org.orion.common.scheduel.OrionBatchJobEntity">
+        SELECT * FROM BATCHJOB_SCHEDUEL
+    </select>
+</mapper>

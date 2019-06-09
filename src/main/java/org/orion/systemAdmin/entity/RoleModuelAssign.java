@@ -5,12 +5,14 @@ import org.orion.common.validation.ValidateWithMethod;
 
 import java.util.Objects;
 
-public class RoleModuelAssign {
+public class RoleModuelAssign implements BaseAssign {
 
     @ValidateWithMethod(methodName = {"validateRoleId"}, errorCode = {"000"})
     private String roleId;
     @ValidateWithMethod(methodName = {"validateModuelId"}, errorCode = {"000"})
     private String moduelId;
+    private String funcId;
+    private String permission;
 
     private boolean validateRoleId(String roleId) {
         boolean isValid = false;
@@ -44,6 +46,16 @@ public class RoleModuelAssign {
         return Objects.hash(getRoleId(), getModuelId());
     }
 
+    @Override
+    public String toString() {
+        return "RoleModuelAssign{" +
+                "roleId='" + roleId + '\'' +
+                ", moduelId='" + moduelId + '\'' +
+                ", funcId='" + funcId + '\'' +
+                ", permission='" + permission + '\'' +
+                '}';
+    }
+
     public String getRoleId() {
         return roleId;
     }
@@ -58,5 +70,21 @@ public class RoleModuelAssign {
 
     public void setModuelId(String moduelId) {
         this.moduelId = moduelId;
+    }
+
+    public String getFuncId() {
+        return funcId;
+    }
+
+    public void setFuncId(String funcId) {
+        this.funcId = funcId;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
     }
 }
