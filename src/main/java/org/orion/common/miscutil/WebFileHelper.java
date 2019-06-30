@@ -24,21 +24,26 @@ public class WebFileHelper {
             OutputStream output = null;
             try{
                 File file = new File(from, fileName);
-                response.addHeader("content-type", "application/octet-stream");
-                response.setContentType("application/octet-stream");
-                response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
-                bufferdIn = new BufferedInputStream(new FileInputStream(file));
-                output = response.getOutputStream();
-                byte[] buffer = new byte[1024];
-                int len = 0;
-                while ((len = bufferdIn.read(buffer)) != -1) {
-                    output.write(buffer, 0 ,len);
+                if (file.exists()) {
+                    response.addHeader("content-type", "application/octet-stream");
+                    response.addHeader("content-length", String.valueOf(FileUtil.getSize(file, "MB")));
+                    response.setContentType("application/octet-stream");
+                    response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+                    bufferdIn = new BufferedInputStream(new FileInputStream(file));
+                    output = response.getOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int len = 0;
+                    while ((len = bufferdIn.read(buffer)) != -1) {
+                        output.write(buffer, 0 ,len);
+                    }
                 }
             } catch (Exception e) {
                 throw e;
             } finally {
-                bufferdIn.close();
-                output.close();
+                if (bufferdIn != null)
+                    bufferdIn.close();
+                if (output != null)
+                    output.close();
             }
 
         }

@@ -1,5 +1,6 @@
 package org.orion.systemAdmin.controller;
 
+import org.orion.common.miscutil.WebFileHelper;
 import org.orion.common.scheduel.JobScheduelManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class AuthLoginController {
@@ -22,8 +24,8 @@ public class AuthLoginController {
 
     @RequestMapping("/web/testjob")
     @ResponseBody
-    public String doJob() {
-        logger.info("打印成功");
+    public String doJob(HttpServletResponse response) throws Exception {
+        WebFileHelper.download("D:\\", "Wallpapers.zip", response);
         return "ok";
     }
 

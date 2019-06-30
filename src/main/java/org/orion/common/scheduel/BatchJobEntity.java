@@ -2,7 +2,7 @@ package org.orion.common.scheduel;
 
 import org.orion.common.basic.BaseEntity;
 
-public class OrionBatchJobEntity extends BaseEntity {
+public class BatchJobEntity extends BaseEntity {
 
     private String name;
     private String description;

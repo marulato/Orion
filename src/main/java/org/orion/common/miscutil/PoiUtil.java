@@ -1,15 +1,14 @@
 package org.orion.common.miscutil;
 
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.*;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -20,17 +19,20 @@ public final class PoiUtil {
 
     public static XSSFWorkbook getXlsxWorkbookByFile(String path) {
         XSSFWorkbook workbook = null;
-        FileInputStream stream = IOUtil.getFileInputStream(path);
         String suffix = StringUtil.getFileSuffix(path);
-        try {
-            if ("xlsx".equalsIgnoreCase(suffix)) {
+        if (!"xlsx".equalsIgnoreCase(suffix)) {
+            return null;
+        }
+        File file = new File(path);
+        if (file.exists()) {
+            try {
+                FileInputStream stream = IOUtil.getFileInputStream(path);
                 workbook = new XSSFWorkbook(stream);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return workbook;
-
     }
 
     public static XSSFCellStyle stdContentCellStyle(XSSFWorkbook workbook) {
@@ -52,7 +54,34 @@ public final class PoiUtil {
     }
 
     public static XSSFSheet getSheet(XSSFWorkbook workbook,String sheetName) {
-        return workbook != null && !StringUtil.isEmpty(sheetName) ? workbook.getSheet(sheetName) : null;
+        return (workbook != null && !StringUtil.isEmpty(sheetName)) ? workbook.getSheet(sheetName) : null;
+    }
+
+    public static XSSFRow getRow(XSSFSheet sheet, int r) {
+        return sheet.getRow(r);
+    }
+
+    public static XSSFCell getCell(XSSFRow row, int c) {
+        return row.getCell(c);
+    }
+
+    public static XSSFRow createRow(XSSFSheet sheet, int r) {
+        return sheet.createRow(r);
+    }
+
+    public static XSSFCell createCell(XSSFRow row, int c) {
+        return row.createCell(c);
+    }
+
+    public static void autoSizeColumn(XSSFSheet sheet, int c) {
+        sheet.autoSizeColumn(c);
+    }
+
+    public static void setValue(XSSFCell cell, String value, XSSFCellStyle style) {
+        if (cell != null) {
+            cell.setCellStyle(style);
+            cell.setCellValue(value);
+        }
     }
 
     /**
@@ -64,6 +93,7 @@ public final class PoiUtil {
      * @param cellNum column number start from 0
      * @return cell
      */
+    @Deprecated
     public static XSSFCell getCell(XSSFWorkbook workbook, String sheetName, int rowNum, int cellNum) {
         if (workbook == null || rowNum < 0 || cellNum < 0 || StringUtil.isEmpty(sheetName)) {
             return null;
@@ -101,6 +131,7 @@ public final class PoiUtil {
 
 
 
+    @Deprecated
     public static XSSFWorkbook writeCell(XSSFWorkbook workbook, String sheetName, int rowNum, int cellNum, String value, XSSFCellStyle style) {
         if (workbook != null) {
             XSSFCell cell = getCell(workbook, sheetName, rowNum, cellNum);
@@ -114,30 +145,7 @@ public final class PoiUtil {
         return workbook;
     }
 
-    /**
-     * Simplified write cell
-     * No Style Support
-     * @param xssfRow
-     * @param cellNum
-     * @param value
-     * @return
-     */
-    public static XSSFRow writeCell(XSSFRow xssfRow, int cellNum, String value) {
-        if (xssfRow != null) {
-            XSSFCell cell = xssfRow.getCell(cellNum);
-            cell = cell == null ? xssfRow.createCell(cellNum) : cell;
-            cell.setCellValue(value);
-        }
-        return xssfRow;
-    }
-
-    public static void writeCell(XSSFCell cell, String value, XSSFCellStyle style) {
-        if (cell != null) {
-            cell.setCellStyle(style);
-            cell.setCellValue(value);
-        }
-    }
-
+    @Deprecated
     public static void writeRow(XSSFWorkbook workbook, String sheetName, int rowNum, int colStartNum, List<String> content, List<XSSFCellStyle> styles) {
         if (workbook == null || StringUtil.isEmpty(sheetName) || rowNum < 0 || content == null) {
             return;
@@ -178,11 +186,7 @@ public final class PoiUtil {
         return convertCellValue(cell);
     }
 
-    public static List<String> readRow(XSSFWorkbook workbook, String sheetName, int rowNum) {
-        if (workbook == null || StringUtil.isEmpty(sheetName)) {
-            return null;
-        }
-        XSSFSheet sheet = workbook.getSheet(sheetName);
+    public static List<String> readRow(XSSFSheet sheet, int rowNum) {
         List<String> rowContent = new ArrayList<String>();
         if (sheet != null) {
             int firstRow = sheet.getFirstRowNum();
@@ -199,38 +203,63 @@ public final class PoiUtil {
         return rowContent;
     }
 
-    public static List<List<String>> readAll(XSSFWorkbook workbook, String sheetName) {
-        if (workbook == null || StringUtil.isEmpty(sheetName)) {
-            return null;
+    public static List<String> readRowContent(XSSFRow row) {
+        List<String> rowContent = new ArrayList<String>();
+        if (row != null) {
+            int firstColumn = row.getFirstCellNum();
+            int lastColumn = row.getLastCellNum();
+            for (int i = firstColumn; i < lastColumn; i++) {
+                rowContent.add(convertCellValue(row.getCell(i)));
+            }
         }
+        return rowContent;
+    }
+
+    public static XSSFRow readXSSFRow(XSSFSheet sheet, int rowNum) {
+        XSSFRow row = null;
+        if (sheet != null) {
+            int firstRow = sheet.getFirstRowNum();
+            int lastRow = sheet.getLastRowNum();
+            if (firstRow <= rowNum && lastRow >= rowNum) {
+                row = sheet.getRow(rowNum);
+            }
+        }
+        return row;
+    }
+
+    public static Map<Integer, XSSFRow> readRowMap(XSSFSheet sheet) {
+        Map<Integer, XSSFRow> rowMap = new HashMap<>();
+        if (sheet != null) {
+            int firstRow = sheet.getFirstRowNum();
+            int lastRow = sheet.getLastRowNum();
+            for (int i = firstRow; i <= lastRow; i++) {
+                XSSFRow row = readXSSFRow(sheet, i);
+                rowMap.put(i, row);
+            }
+        }
+        return rowMap;
+    }
+
+    public static List<List<String>> readAll(XSSFSheet sheet, int start, int end) {
         List<List<String>> allContent = null;
-        XSSFSheet sheet = getSheet(workbook, sheetName);
         if (sheet != null) {
             allContent = new ArrayList<List<String>>();
             int firstRow = sheet.getFirstRowNum();
             int lastRow = sheet.getLastRowNum();
-            for (int i = firstRow; i <= lastRow; i++) {
-                List<String> row = readRow(workbook, sheetName, i);
-                allContent.add(row);
+            if (end >= start && end <= lastRow) {
+                for (int i = firstRow; i <= lastRow; i++) {
+                    List<String> row = readRow(sheet, i + start);
+                    allContent.add(row);
+                    if (i + start == end && (start != 0 || end != 0))
+                        break;
+                }
             }
         }
         return allContent;
     }
 
-    public static int getFirstRowNo(XSSFWorkbook workbook, String sheetName) {
-        if (workbook == null || StringUtil.isEmpty(sheetName)) {
-            return -1;
-        }
-        XSSFSheet sheet = getSheet(workbook, sheetName);
-        return sheet != null ? sheet.getFirstRowNum() : -1;
-    }
-
-    public static int getLastRowNo(XSSFWorkbook workbook, String sheetName) {
-        if (workbook == null || StringUtil.isEmpty(sheetName)) {
-            return -1;
-        }
-        XSSFSheet sheet = getSheet(workbook, sheetName);
-        return sheet != null ? sheet.getLastRowNum() : -1;
+    public static List<List<String>> readAll(XSSFSheet sheet) {
+        return readAll(sheet, 0, 0);
     }
 
     public static void save(XSSFWorkbook workbook, String path) {
@@ -295,5 +324,25 @@ public final class PoiUtil {
         return value;
     }
 
+    public static String getNumericCoordinate(String coordinate) {
+        if (!StringUtil.isEmpty(coordinate)) {
+            String[] arr = StringUtil.convertToArray(coordinate);
+            StringBuilder alpha = new StringBuilder();
+            StringBuilder number = new StringBuilder();
+            int alphaSum = 0;
+            for (String str : arr) {
+                if (StringUtil.isAlpha(str)) {
+                    alpha.append(str.toUpperCase());
+                } else {
+                    number.append(str);
+                }
+            }
+            for (int i = 0; i <alpha.length(); i++) {
+                alphaSum += StringUtil.getAlphaIndex(String.valueOf(alpha.charAt(i))) * Math.pow(26, alpha.length() - i - 1);
+            }
+            return alphaSum + "," + number.toString();
+        }
+        return null;
+    }
 
 }

@@ -17,19 +17,19 @@ public class UserProvider extends BaseSQLProvider {
     }
 
     public String updateUserByUserIdSQL() {
-        String update = updateAll(User.class, CollectionUtil.initialList("acctId", "userId", "domain", "terminal"));
+        String update = updateAll(User.class, CollectionUtil.toList("acctId", "userId", "domain", "terminal"));
         String where = setWhereClause("USER_ID", "=");
         return update + where;
     }
 
     public String updateUserByAcctIdSQL() {
-        String update = updateAll(User.class, CollectionUtil.initialList("acctId", "userId", "domain", "terminal"));
+        String update = updateAll(User.class, CollectionUtil.toList("acctId", "userId", "domain", "terminal"));
         String where = setWhereClause("ACCT_ID", "=");
         return update + where;
     }
 
     public String updateLoginSQL() {
-        String update = updateAll(User.class, CollectionUtil.initialList(""));
+        String update = updateAll(User.class, CollectionUtil.toList(""));
         String where = setWhereClause("USER_ID", "=");
         return update + where;
     }

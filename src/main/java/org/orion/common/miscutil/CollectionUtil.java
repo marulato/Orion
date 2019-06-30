@@ -1,7 +1,5 @@
 package org.orion.common.miscutil;
 
-import org.apache.poi.ss.formula.functions.T;
-
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -29,7 +27,7 @@ public class CollectionUtil {
     }
 
   public static <T> Collection<T> addElements(Collection<T> list , T... ele) {
-        if (list != null && !Nullable.isNull(ele)) {
+        if (list != null && ele != null) {
             for (T e : ele) {
                 list.add(e);
             }
@@ -38,7 +36,7 @@ public class CollectionUtil {
     }
 
     public static <K, V> Map<K, V> addElements(Map<K, V> map, Object...ele) {
-        if (map != null && !Nullable.isNull(ele) && ele.length % 2 == 0) {
+        if (map != null && ele != null && ele.length % 2 == 0) {
             for(int i = 0; i < ele.length; i++) {
                 map.put((K)ele[i], (V)ele[i + 1]);
             }
@@ -52,8 +50,8 @@ public class CollectionUtil {
         }
     }
 
-    public static <E> List<E> initialList(E...ele) {
-        List<E> list = new ArrayList<>();
+    public static <E> ArrayList<E> toList(E...ele) {
+        ArrayList<E> list = new ArrayList<>();
         addElements(list, ele);
         return list;
     }

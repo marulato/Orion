@@ -11,5 +11,10 @@ public class TestBatchJob1 extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         System.out.println("第一个任务" + new Date());
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

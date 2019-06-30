@@ -5,6 +5,8 @@ import java.util.Arrays;
 
 public final class StringUtil {
 
+    private static String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     public static boolean isEmpty(String value) {
         return value == null || value.isEmpty();
     }
@@ -175,5 +177,12 @@ public final class StringUtil {
         } else {
             return null;
         }
+    }
+
+    public static int getAlphaIndex(String alpha) {
+        if (isAlpha(alpha) && alpha.length() == 1) {
+            return alphabet.indexOf(alpha) + 1;
+        }
+        return 0;
     }
 }

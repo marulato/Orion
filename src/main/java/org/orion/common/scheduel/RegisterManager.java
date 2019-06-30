@@ -14,9 +14,9 @@ public class RegisterManager {
     private static void init() {
         registMap = new HashMap<>();
         JobScheduelManager jobScheduelManager = SpringUtil.getBean(JobScheduelManager.class);
-        List<OrionBatchJobEntity> orionList = jobScheduelManager.getAllOrionJobs();
+        List<BatchJobEntity> orionList = jobScheduelManager.getAllBatchJobs();
         if (orionList != null && !orionList.isEmpty()) {
-            for (OrionBatchJobEntity job : orionList) {
+            for (BatchJobEntity job : orionList) {
                 registMap.put(job.getName(), job.getIsRegistered().equals("Y"));
             }
         }

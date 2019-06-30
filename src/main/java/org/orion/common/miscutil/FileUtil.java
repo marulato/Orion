@@ -1,11 +1,10 @@
 package org.orion.common.miscutil;
 
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
 
 
 public class FileUtil {
@@ -129,10 +128,8 @@ public class FileUtil {
         }
     }
 
-    public static double getSize(String path, String unit) {
-        if (StringUtil.isEmpty(path))
-            return 0;
-        File file = new File(path);
+
+    public static double getSize(File file, String unit) {
         if (file.exists()) {
             double size = file.length();
             if (KB.equalsIgnoreCase(unit)) {

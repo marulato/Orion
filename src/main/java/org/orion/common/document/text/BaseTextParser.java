@@ -41,7 +41,7 @@ public abstract class BaseTextParser {
                 text = new Text();
                 text.setContent(content);
                 text.setFilePath(filePath);
-                text.setSize(FileUtil.getSize(filePath, "KB"));
+                text.setSize(FileUtil.getSize(new File(filePath), "KB"));
             } catch (Exception e) {
                 logger.error("Exceptions Occurred When Trying to Read Text", e);
                 throw e;
@@ -129,7 +129,7 @@ public abstract class BaseTextParser {
                     if (text == null)
                         text = new Text();
                     text.setFilePath(filePath);
-                    text.setSize(FileUtil.getSize(filePath, "KB"));
+                    text.setSize(FileUtil.getSize(new File(filePath), "KB"));
                     if (needClear)
                         text.setContent(Arrays.asList(String.valueOf(ch)));
                     else {
@@ -168,7 +168,7 @@ public abstract class BaseTextParser {
                     if (text == null)
                         text = new Text();
                     text.setFilePath(filePath);
-                    text.setSize(FileUtil.getSize(filePath, "KB"));
+                    text.setSize(FileUtil.getSize(new File(filePath), "KB"));
                     if (needClear)
                         text.setContent(Arrays.asList(line));
                     else {
@@ -209,7 +209,7 @@ public abstract class BaseTextParser {
                     if (text == null)
                         text = new Text();
                     text.setFilePath(filePath);
-                    text.setSize(FileUtil.getSize(filePath, "KB"));
+                    text.setSize(FileUtil.getSize(new File(filePath), "KB"));
                     if (needClear)
                         text.setContent(content);
                     else {

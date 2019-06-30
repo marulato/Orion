@@ -1,13 +1,13 @@
 package org.orion.common.miscutil;
 
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.Arrays;
+import java.util.List;
 
 public class ArrayUtil {
 
     public static boolean contains(Object[] arr,  Object... item) {
-        if (!Nullable.isNull(arr)) {
-            if (Nullable.isNull(item)) {
+        if (arr != null) {
+            if (item != null) {
                 return false;
             }
             List<Object> list = Arrays.asList(arr);
@@ -26,7 +26,7 @@ public class ArrayUtil {
     }
 
     public static Object[] get(Object[] arr, int start, int end) {
-        if (!Nullable.isNull(arr) && start < end && end < arr.length) {
+        if (arr != null && start < end && end < arr.length) {
             Object[] copy = new Object[end - start + 1];
             int index = 0;
             for (int i = start; i <= end; i++) {
@@ -38,7 +38,7 @@ public class ArrayUtil {
     }
 
     public static String[] get(String[] arr, int start, int end) {
-        if (!Nullable.isNull(arr) && start < end && end < arr.length) {
+        if (arr != null && start < end && end < arr.length) {
             String[] copy = new String[end - start + 1];
             int index = 0;
             for (int i = start; i <= end; i++) {
@@ -50,7 +50,7 @@ public class ArrayUtil {
     }
 
     public static String[] toStringArray(List<String> list) {
-        if (!Nullable.isNull(list)) {
+        if (list != null) {
             String[] array = new String[list.size()];
             list.toArray(array);
             return array;

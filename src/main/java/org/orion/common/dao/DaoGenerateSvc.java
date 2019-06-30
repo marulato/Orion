@@ -1,7 +1,5 @@
 package org.orion.common.dao;
 
-
-import org.orion.common.miscutil.Nullable;
 import org.orion.common.miscutil.StringUtil;
 import org.springframework.stereotype.Service;
 
@@ -149,7 +147,7 @@ public class DaoGenerateSvc {
             columnNames = schemaDao.retrieveColumnNames(tableName);
             dataTypes = schemaDao.retrieveColumnTypes(tableName);
             columnAndFieldMap = new HashMap<>();
-            if (!Nullable.isNull(columnNames) && !Nullable.isNull(dataTypes)) {
+            if (columnNames != null && !columnNames.isEmpty() && dataTypes != null && !dataTypes.isEmpty()) {
                 fieldNames = new ArrayList<>();
                 fieldTypes = new ArrayList<>();
                 nameAndTypeMap = new HashMap<>();
