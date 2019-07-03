@@ -37,8 +37,23 @@ public class CachePool {
 
     }
 
-    public static void refresh(String cacheId) {
-
+    public static void flush(String cacheId) {
+        switch (cacheId) {
+            case "BatchJob" : {
+                batchjobCache.clear();
+                List<BatchJobEntity> jobList = jobScheduelManager.getAllBatchJobs();
+                for (BatchJobEntity job : jobList) {
+                    batchjobCache.put(job.getJobId(), job);
+                }
+            }
+            case "ErrorCode" : {
+                errorCodeCache.clear();
+                List<ErrorCode> errorList = masterCodeService.getAllErrorCodes();
+                for (ErrorCode code : errorList) {
+                    errorCodeCache.put(code.getErrorCode(), code);
+                }
+            }
+        }
     }
 
     public static Map<Object, BatchJobEntity> getBatchjobCache() {
