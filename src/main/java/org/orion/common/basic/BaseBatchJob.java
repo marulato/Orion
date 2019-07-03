@@ -41,13 +41,13 @@ public abstract class BaseBatchJob {
     }
 
     protected void afterExecute() {
-
-    }
-
-    private void updateBatchJobStatus() {
         if (exception != null) {
             logger.error("BatchJob [" + batchjobId + "] terminated because of an exception", exception);
         }
+    }
+
+    private void updateBatchJobStatus() {
+
     }
 
 }

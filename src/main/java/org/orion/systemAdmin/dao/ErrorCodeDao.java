@@ -13,6 +13,8 @@ public interface ErrorCodeDao {
 
     ErrorCode queryErrorCode(String errorCode);
 
+    List<ErrorCode> queryAllErrorCode();
+
     List<ErrorCode> batchQueryErrorCode(@Param("errs") List<String> errorCodes);
 
     void insertErrorCode(ErrorCode errorCode);

@@ -4,11 +4,24 @@ import org.orion.common.basic.BaseEntity;
 
 public class BatchJobEntity extends BaseEntity {
 
+    private String jobId;
     private String name;
     private String description;
     private String className;
     private String isQuartz;
     private String isRegistered;
+
+    public BatchJobEntity() {
+        super("BATCH_JOB_SCHEDUEL");
+    }
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
 
     public String getName() {
         return name;

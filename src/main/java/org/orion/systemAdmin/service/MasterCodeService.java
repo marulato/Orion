@@ -18,6 +18,10 @@ public class MasterCodeService {
         return null;
     }
 
+    public List<ErrorCode> getAllErrorCodes() {
+        return errorCodeDao.queryAllErrorCode();
+    }
+
     public List<ErrorCode> getErrorCodeList(List<String> errorCodeList) {
         if (errorCodeList != null && !errorCodeList.isEmpty())
             return errorCodeDao.batchQueryErrorCode(errorCodeList);

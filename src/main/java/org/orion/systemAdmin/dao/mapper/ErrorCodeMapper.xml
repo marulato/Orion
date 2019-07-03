@@ -13,6 +13,10 @@
         </foreach>
     </select>
 
+    <select id="queryAllErrorCode" resultType="org.orion.common.mastercode.ErrorCode">
+        SELECT * FROM ERROR_CODE_MC
+    </select>
+
     <insert id="insertErrorCode" parameterType="org.orion.common.mastercode.ErrorCode">
         INSERT INTO ERROR_CODE_MC VALUES (#{errorCode}, #{errorDesc}, #{errorType}, #{errorCond}, #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy})
     </insert>

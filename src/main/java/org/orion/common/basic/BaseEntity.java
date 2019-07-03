@@ -3,7 +3,7 @@ package org.orion.common.basic;
 import java.io.Serializable;
 import java.util.Date;
 
-public class BaseEntity implements Serializable {
+public abstract class BaseEntity implements Serializable, Cloneable {
     private Date createdAt;
     private String createdBy;
     private Date updatedAt;
@@ -12,6 +12,11 @@ public class BaseEntity implements Serializable {
     private String updatedAtStr;
     private String createdAtFullStr;
     private String updatedAtFullStr;
+    private String tableName;
+
+    public BaseEntity(String tableName) {
+        this.tableName = tableName;
+    }
 
     public void setAudit(String createdBy, Date createdAt, String updatedBy, Date updatedAt) {
         this.createdAt = createdAt;
@@ -96,5 +101,13 @@ public class BaseEntity implements Serializable {
 
     public void setUpdatedAtFullStr(String updatedAtFullStr) {
         this.updatedAtFullStr = updatedAtFullStr;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }
