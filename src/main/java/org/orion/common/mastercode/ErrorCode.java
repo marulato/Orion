@@ -1,7 +1,6 @@
 package org.orion.common.mastercode;
 
 import org.orion.common.basic.BaseEntity;
-import java.util.Date;
 
 public class ErrorCode extends BaseEntity {
 
@@ -9,6 +8,10 @@ public class ErrorCode extends BaseEntity {
     private String errorCond;
     private String errorDesc;
     private String errorType;
+
+    public ErrorCode() {
+        super("ERROR_CODE_MC");
+    }
 
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;

@@ -7,39 +7,27 @@
     </select>
 
     <insert id="insert" parameterType="org.orion.systemAdmin.entity.User">
-        INSERT INTO USER_TBL (ACCT_ACTIVATE_DT, ACCT_CDT, ACCT_DEACTIVATE_DT, ACCT_STATUS, ACCT_TERMINATE_DT, ACCT_UDT,
-                              ADDR, ADDR_COUNTRY_CODE, ADDR_POSTAL_CODE, ADDR_STATE, CITIZENSHIP, CONTACT_NO, CREATED_AT,
-                              CREATED_BY_USERDOMAIN, CREATED_BY_USERID, DISPLAY_NAME, DOB, EMAIL, FIRST_NAME, GENDER, IDENTITY_NO,
-                              IS_FIRST_TIME_LOGIN, IS_SYSTEM, LAST_NAME, LOGINNULL_LAST_SUCCESS_DT, LOGIN_FAIL_ATTEMPT_CNT,
-                              LOGIN_LAST_ATTEMPT_DT, LOGIN_LAST_SUCCESS_DT, MARITAL_STATUS, MIDDLE_NAME, MOBILE_NO, PASSPORT_NO, PWD,
-                              PWD_CHALLENGE_ANS, PWD_CHALLENGE_HINT, PWD_CHALLENGE_QN, PWD_CHG_REQUIRED, PWD_LAST_CHG_DT, REASON, REMARKS,
-                              SALUTATION, UPDATED_AT, UPDATED_BY_USERDOMAIN, UPDATED_BY_USERID, USER_DOMAIN, USER_ID )
-                              VALUES(#{acctActivateDt}, #{acctCdt}, #{acctDeactivateDt}, #{acctStatus}, #{acctTerminateDt},
-                                     #{acctUdt}, #{addr}, #{addrCountryCode}, #{addrPostalCode}, #{addrState}, #{citizenship},
-                                     #{contactNo}, #{createdAt}, #{createdByUserdomain}, #{createdByUserid}, #{displayName},
-                                     #{dob}, #{email}, #{firstName}, #{gender}, #{identityNo}, #{isFirstTimeLogin}, #{isSystem},
-                                     #{lastName}, #{loginnullLastSuccessDt}, #{loginFailAttemptCnt}, #{loginLastAttemptDt},
-                                     #{loginLastSuccessDt}, #{maritalStatus}, #{middleName}, #{mobileNo}, #{passportNo}, #{pwd},
-                                     #{pwdChallengeAns}, #{pwdChallengeHint}, #{pwdChallengeQn}, #{pwdChgRequired}, #{pwdLastChgDt},
-                                     #{reason}, #{remarks}, #{salutation}, #{updatedAt}, #{updatedByUserdomain}, #{updatedByUserid},
-                                     #{userDomain}, #{userId} )
+        INSERT INTO USER_TBL (USER_ID, LOGIN_ID, USER_DOMAIN, DISPLAY_NAME, PWD, EMAIL, MOBILE_NO, ACCT_STATUS, REMARKS,
+                              LOGIN_LAST_ATTEMPT_DT, LOGIN_LAST_SUCCESS_DT, LOGIN_FAIL_ATTEMPT_CNT, PWD_LAST_CHG_DT,
+                              PWD_CHG_REQUIRED, ACCT_ACTIVATE_DT, ACCT_DEACTIVATE_DT, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY)
+               VALUES(#{userId}, #{loginId}, #{userDomain}, #{displayName}, #{pwd}, #{email}, #{mobileNo}, #{acctStatus},
+                       #{remarks}, #{loginLastAttemptDt}, #{loginLastSuccessDt}, #{loginFailAttemptCnt}, #{pwdLastChgDt},
+                       #{pwdChgRequired}, #{acctActivateDt}, #{acctDeactivateDt}, #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy})
     </insert>
 
     <update id="update" parameterType="org.orion.systemAdmin.entity.User">
-        UPDATE USER_TBL SET ACCT_ACTIVATE_DT = #{acctActivateDt}, ACCT_CDT = #{acctCdt}, ACCT_DEACTIVATE_DT = #{acctDeactivateDt},
-                            ACCT_STATUS = #{acctStatus}, ACCT_TERMINATE_DT = #{acctTerminateDt}, ACCT_UDT = #{acctUdt}, ADDR = #{addr},
-                            ADDR_COUNTRY_CODE = #{addrCountryCode}, ADDR_POSTAL_CODE = #{addrPostalCode}, ADDR_STATE = #{addrState},
-                            CITIZENSHIP = #{citizenship}, CONTACT_NO = #{contactNo}, CREATED_AT = #{createdAt},
-                            CREATED_BY_USERDOMAIN = #{createdByUserdomain}, CREATED_BY_USERID = #{createdByUserid}, DISPLAY_NAME = #{displayName},
-                            DOB = #{dob}, EMAIL = #{email}, FIRST_NAME = #{firstName}, GENDER = #{gender}, IDENTITY_NO = #{identityNo},
-                            IS_FIRST_TIME_LOGIN = #{isFirstTimeLogin}, IS_SYSTEM = #{isSystem}, LAST_NAME = #{lastName},
-                            LOGIN_2ND_LAST_SUCCESS_DT = #{loginnullLastSuccessDt}, LOGIN_FAIL_ATTEMPT_CNT = #{loginFailAttemptCnt},
-                            LOGIN_LAST_ATTEMPT_DT = #{loginLastAttemptDt}, LOGIN_LAST_SUCCESS_DT = #{loginLastSuccessDt},
-                            MARITAL_STATUS = #{maritalStatus}, MIDDLE_NAME = #{middleName}, MOBILE_NO = #{mobileNo},
-                            PASSPORT_NO = #{passportNo}, PWD = #{pwd}, PWD_CHALLENGE_ANS = #{pwdChallengeAns}, PWD_CHALLENGE_HINT = #{pwdChallengeHint},
-                            PWD_CHALLENGE_QN = #{pwdChallengeQn}, PWD_CHG_REQUIRED = #{pwdChgRequired}, PWD_LAST_CHG_DT = #{pwdLastChgDt},
-                            REASON = #{reason}, REMARKS = #{remarks}, SALUTATION = #{salutation}, UPDATED_AT = #{updatedAt},
-                            UPDATED_BY_USERDOMAIN = #{updatedByUserdomain}, UPDATED_BY_USERID = #{updatedByUserid}, USER_DOMAIN = #{userDomain}
-        WHERE USER_ID = #{userId}
+        UPDATE USER_TBL SET USER_ID = #{userId}, LOGIN_ID = #{loginId}, USER_DOMAIN = #{userDomain}, DISPLAY_NAME = #{displayName},
+                            PWD = #{pwd}, EMAIL = #{email}, MOBILE_NO = #{mobileNo}, ACCT_STATUS = #{acctStatus},
+                            REMARKS = #{remarks}, LOGIN_LAST_ATTEMPT_DT = #{loginLastAttemptDt},
+                            LOGIN_LAST_SUCCESS_DT = #{loginLastSuccessDt}, LOGIN_FAIL_ATTEMPT_CNT = #{loginFailAttemptCnt},
+                            PWD_LAST_CHG_DT = #{pwdLastChgDt}, PWD_CHG_REQUIRED = #{pwdChgRequired}, ACCT_ACTIVATE_DT = #{acctActivateDt},
+                            ACCT_DEACTIVATE_DT = #{acctDeactivateDt}, CREATED_AT = #{createdAt}, CREATED_BY = #{createdBy},
+                            UPDATED_AT = #{updatedAt}, UPDATED_BY = #{updatedBy} WHERE USER_ID = #{userId}
+    </update>
+
+    <update id="updateAfterLogin" parameterType="org.orion.systemAdmin.entity.User">
+        UPDATE USER_TBL SET ACCT_STATUS = #{acctStatus}, LOGIN_LAST_ATTEMPT_DT = #{loginLastAttemptDt},
+                            LOGIN_LAST_SUCCESS_DT = #{loginLastSuccessDt}, LOGIN_FAIL_ATTEMPT_CNT = #{loginFailAttemptCnt},
+                            UPDATED_AT = #{updatedAt}, UPDATED_BY = #{updatedBy} WHERE USER_ID = #{userId}
     </update>
 </mapper>
