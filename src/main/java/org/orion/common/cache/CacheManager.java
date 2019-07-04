@@ -1,6 +1,8 @@
 package org.orion.common.cache;
 
+import org.orion.common.mastercode.ErrorCode;
 import org.orion.common.scheduel.BatchJobEntity;
+import org.orion.systemAdmin.entity.MasterCode;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -9,11 +11,26 @@ public class CacheManager {
 
     public static final String BATCH_JOB = "BatchJob";
     public static final String ERROR_CODE = "ErrorCode";
+    public static final String MASTER_CODE = "MasterCode";
 
     public static Cache<?> getCache(String cacheId) {
-        if ("BatchJob".equals(cacheId)) {
+        if (BATCH_JOB.equals(cacheId)) {
             Cache<BatchJobEntity> cache = new Cache<>();
             setCacheMap(cache, CachePool.getBatchjobCache());
+            cache.setCacheId(cacheId);
+            return cache;
+        }
+
+        if (MASTER_CODE.equals(cacheId)) {
+            Cache<MasterCode> cache = new Cache<>();
+            setCacheMap(cache, CachePool.getMasterCodeCache());
+            cache.setCacheId(cacheId);
+            return cache;
+        }
+
+        if (ERROR_CODE.equals(cacheId)) {
+            Cache<ErrorCode> cache = new Cache<>();
+            setCacheMap(cache, CachePool.getErrorCodeCache());
             cache.setCacheId(cacheId);
             return cache;
         }

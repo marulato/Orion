@@ -3,6 +3,8 @@ package org.orion.systemAdmin.service;
 import org.orion.common.mastercode.ErrorCode;
 import org.orion.common.miscutil.StringUtil;
 import org.orion.systemAdmin.dao.ErrorCodeDao;
+import org.orion.systemAdmin.dao.MasterCodeDao;
+import org.orion.systemAdmin.entity.MasterCode;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.List;
 public class MasterCodeService {
     @Resource
     private ErrorCodeDao errorCodeDao;
+    @Resource
+    private MasterCodeDao masterCodeDao;
 
     public ErrorCode getErrorCode(String errorCode) {
         if (!StringUtil.isEmpty(errorCode))
@@ -32,5 +36,9 @@ public class MasterCodeService {
         if (errorCode != null) {
             errorCodeDao.insertErrorCode(errorCode);
         }
+    }
+
+    public List<MasterCode> getAllMasterCode() {
+        return masterCodeDao.queryAll();
     }
 }

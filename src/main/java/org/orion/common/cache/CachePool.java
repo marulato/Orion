@@ -3,6 +3,7 @@ package org.orion.common.cache;
 import org.orion.common.mastercode.ErrorCode;
 import org.orion.common.scheduel.BatchJobEntity;
 import org.orion.common.scheduel.JobScheduelManager;
+import org.orion.systemAdmin.entity.MasterCode;
 import org.orion.systemAdmin.service.MasterCodeService;
 
 import javax.annotation.Resource;
@@ -19,6 +20,7 @@ public class CachePool {
 
     private static Map<Object, BatchJobEntity> batchjobCache;
     private static Map<Object, ErrorCode> errorCodeCache;
+    private static Map<Object, MasterCode> masterCodeCache;
 
     private CachePool(){}
 
@@ -35,6 +37,13 @@ public class CachePool {
             errorCodeCache.put(code.getErrorCode(), code);
         }
 
+        List<MasterCode> masterCodeList = masterCodeService.getAllMasterCode();
+        masterCodeCache = new HashMap<>();
+        for (MasterCode masterCode : masterCodeList) {
+            masterCodeCache.put(masterCode.getCodeType() + "," + masterCode.getCode(), masterCode);
+            masterCodeCache.put(masterCode.getMcId(), masterCode);
+        }
+
     }
 
     public static void flush(String cacheId) {
@@ -45,6 +54,7 @@ public class CachePool {
                 for (BatchJobEntity job : jobList) {
                     batchjobCache.put(job.getJobId(), job);
                 }
+                break;
             }
             case "ErrorCode" : {
                 errorCodeCache.clear();
@@ -52,6 +62,15 @@ public class CachePool {
                 for (ErrorCode code : errorList) {
                     errorCodeCache.put(code.getErrorCode(), code);
                 }
+                break;
+            }
+            case "MasterCode" : {
+                masterCodeCache.clear();
+                List<MasterCode> masterCodeList = masterCodeService.getAllMasterCode();
+                for (MasterCode masterCode : masterCodeList) {
+                    masterCodeCache.put(masterCode.getCodeType() + "," + masterCode.getCode(), masterCode);
+                }
+                break;
             }
         }
     }
@@ -62,6 +81,10 @@ public class CachePool {
 
     public static Map<Object, ErrorCode> getErrorCodeCache() {
         return errorCodeCache;
+    }
+
+    public static Map<Object, MasterCode> getMasterCodeCache() {
+        return masterCodeCache;
     }
 
 }

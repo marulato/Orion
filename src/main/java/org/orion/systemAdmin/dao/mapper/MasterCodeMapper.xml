@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.orion.systemAdmin.dao.MasterCodeDao">
+    <select id="queryMasterCode" parameterType="java.lang.String" resultType="org.orion.systemAdmin.entity.MasterCode">
+        SELECT * FROM MASTER_CODE_MC WHERE CODE_TYPE = #{param1} AND CODE = #{param2}
+    </select>
+
+    <select id="queryAll" resultType="org.orion.systemAdmin.entity.MasterCode">
+        SELECT * FROM MASTER_CODE_MC
+    </select>
+</mapper>
