@@ -26,7 +26,6 @@ public abstract class TemplatePdfGenerator {
     }
 
     public abstract Map<String, Object> getParameters(HttpServletRequest request);
-/*    public Map<String, Object> getParametersFromCSCPrint(CSCardReprint card){return null;};*/
     public abstract String getTemplate();
 
     public byte[] generatePdf(HttpServletRequest request) throws Exception {
@@ -42,7 +41,7 @@ public abstract class TemplatePdfGenerator {
         Map<String, Object> params = getParameters(request);
         String html = MessageUtil.getTemplateMessage(template, params);
         BaseGenerator gen = new PdfGenerator();
-        gen.setNeedPageNo(needPageNo); //add by shihong
+        gen.setNeedPageNo(needPageNo);
         if (params != null) {
         	String stamp = (String) params.get("stamp");
         	if (!StringUtil.isEmpty(stamp)) {

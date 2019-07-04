@@ -10,7 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-
+/**
+ * Author: yuzhou
+ * Class: Excel
+ * Version: master 3, branch none
+ *
+ */
 public class Excel {
 
     private String path;
@@ -23,6 +28,12 @@ public class Excel {
     private int miniumCol;
     private int maxCol;
 
+    /**
+     * After called, the content will be read into the memory if the file exsits.
+     * If not exsits, an empty excel file will be created in the memory using the params provided
+     * @param path the path of the exsiting excel file, or where the new file will be saved
+     * @param sheetName the name of the sheet operated during the procedure
+     */
     public Excel(String path, String sheetName) {
         this.path = path;
         this.sheetName = sheetName;
@@ -47,6 +58,11 @@ public class Excel {
         });
     }
 
+    /**
+     * Get the content from the cell by coordinate
+     * @param coordinate the coordiante of the cell in excel like 'A1'
+     * @return the content of the cell as a string
+     */
     public String getValue(String coordinate) {
         String cord = PoiUtil.getNumericCoordinate(coordinate);
         if (!StringUtil.isEmpty(cord)) {
@@ -56,10 +72,21 @@ public class Excel {
         return null;
     }
 
+    /**
+     * Get the content from the cell by row number and column number
+     * @param rn row number
+     * @param cn column number
+     * @return the content of the cell as a string
+     */
     public String getValue(int rn, int cn) {
         return PoiUtil.readCell(rowMap.get(rn).getCell(cn));
     }
 
+    /**
+     * Set the content for the cell by coordinate
+     * @param coordinate the coordiante of the cell in excel like 'A1'
+     * @param value content
+     */
     public void setValue(String coordinate, String value) {
         String cord = PoiUtil.getNumericCoordinate(coordinate);
         if (!StringUtil.isEmpty(cord)) {
@@ -68,6 +95,12 @@ public class Excel {
         }
     }
 
+    /**
+     *
+     * @param rn row number
+     * @param cn column number
+     * @param value content
+     */
     public void setValue(int rn, int cn, String value) {
         XSSFRow row = getRow(rn);
         if (row != null && !StringUtil.isEmpty(value)) {
