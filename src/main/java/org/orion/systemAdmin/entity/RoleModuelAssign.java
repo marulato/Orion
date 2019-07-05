@@ -12,7 +12,6 @@ public class RoleModuelAssign implements BaseAssign {
     @ValidateWithMethod(methodName = {"validateModuelId"}, errorCode = {"000"})
     private String moduelId;
     private String funcId;
-    private String permission;
 
     private boolean validateRoleId(String roleId) {
         boolean isValid = false;
@@ -46,15 +45,6 @@ public class RoleModuelAssign implements BaseAssign {
         return Objects.hash(getRoleId(), getModuelId());
     }
 
-    @Override
-    public String toString() {
-        return "RoleModuelAssign{" +
-                "roleId='" + roleId + '\'' +
-                ", moduelId='" + moduelId + '\'' +
-                ", funcId='" + funcId + '\'' +
-                ", permission='" + permission + '\'' +
-                '}';
-    }
 
     public String getRoleId() {
         return roleId;
@@ -78,13 +68,5 @@ public class RoleModuelAssign implements BaseAssign {
 
     public void setFuncId(String funcId) {
         this.funcId = funcId;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    public void setPermission(String permission) {
-        this.permission = permission;
     }
 }

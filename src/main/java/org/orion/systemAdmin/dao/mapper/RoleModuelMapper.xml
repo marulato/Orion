@@ -13,7 +13,7 @@
         </foreach>
     </insert>
 
-    <select id="query" parameterType="java.lang.String" resultType="org.orion.systemAdmin.entity.RoleModuelAssign">
+    <select id="queryRole" parameterType="java.lang.String" resultType="org.orion.systemAdmin.entity.RoleModuelAssign">
         SELECT * FROM ROLE_MODUEL_ASSIGN WHERE ROLE_ID = #{roleId}
     </select>
 

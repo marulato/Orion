@@ -13,4 +13,12 @@
             (#{mo.moduelId}, #{mo.moduelDesc}, #{mo.funcDesc}, #{mo.level}, #{mo.url}, #{mo.remarks})
         </foreach>
     </insert>
+
+    <select id="queryUrlForModuel" resultType="org.orion.systemAdmin.entity.ModuelUrlAssign">
+        SELECT * FROM MODUEL_URL_ASSIGN WHERE MODUEL_ID = #{modelId}
+    </select>
+
+    <select id="queryUrlByFunc" resultType="org.orion.systemAdmin.entity.ModuelUrlAssign">
+        SELECT * FROM MODUEL_URL_ASSIGN WHERE FUNC_ID = #{funcId}
+    </select>
 </mapper>

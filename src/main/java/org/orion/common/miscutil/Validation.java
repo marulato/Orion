@@ -3,8 +3,8 @@ package org.orion.common.miscutil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.orion.common.mastercode.ErrorCode;
+import org.orion.common.message.DataManager;
 import org.orion.common.validation.ValidateWithMethod;
-import org.orion.systemAdmin.service.MasterCodeService;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -111,10 +111,12 @@ public class Validation {
 
     public static List<ErrorCode> doValidate(Object target) {
         List<String> errorCodeList = validateWithCode(target);
+        List<ErrorCode> errorCodes = new ArrayList<>();
         if (errorCodeList != null && !errorCodeList.isEmpty()) {
-            MasterCodeService masterCodeService = SpringUtil.getBean(MasterCodeService.class);
-            return masterCodeService.getErrorCodeList(errorCodeList);
+            for (String code : errorCodeList) {
+                errorCodes.add(DataManager.getErrorCode(code));
+            }
         }
-        return null;
+        return errorCodes;
     }
 }
