@@ -17,6 +17,7 @@ public class AppContext {
     private List<OrionUserRole> userRoles;
     private boolean isLogin;
     private Date loginTime;
+    private String sessionId;
 
     private AppContext(){}
 
@@ -33,6 +34,7 @@ public class AppContext {
                 context.setUrlList(userMainService.getUrlForUser(user));
                 context.setLoginTime((Date) HttpUtil.getSessionAttr(request, "login_time"));
                 context.setLogin((boolean) HttpUtil.getSessionAttr(request, "is_login"));
+                context.setSessionId(request.getSession().getId());
                 HttpUtil.setSessionAttr(request, "AppContext", context);
                 HttpUtil.clearSession(request, "login_time", "is_login");
             }
@@ -82,5 +84,13 @@ public class AppContext {
 
     public void setLoginTime(Date loginTime) {
         this.loginTime = loginTime;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }

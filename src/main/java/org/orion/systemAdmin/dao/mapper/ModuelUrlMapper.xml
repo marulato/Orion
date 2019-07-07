@@ -3,14 +3,14 @@
 
 <mapper namespace="org.orion.systemAdmin.dao.ModuelUrlDao">
     <insert id="create" parameterType="org.orion.systemAdmin.entity.ModuelUrlAssign">
-        INSERT INTO MODUEL_URL_ASSIGN (MODULE_ID, MODUEL_DESC, FUNC_DESC, LEVEL, URL, REMARKS) VALUES
-        (#{moduelId}, #{moduelDesc}, #{funcDesc}, #{level}, #{url}, #{remarks});
+        INSERT INTO MODUEL_URL_ASSIGN (MODUEL_ID, MODUEL_NAME, MODUEL_DESC, FUNC_ID, FUNC_NAME, LEVEL, URL, IS_SYSTEM, REMARKS) VALUES
+        (#{moduelId}, #{moduelName}, #{moduelDesc}, #{funcId}, #{funcName}, #{level}, #{url}, #{isSystem}, #{remarks});
     </insert>
 
     <insert id="batchCreate" parameterType="org.orion.systemAdmin.entity.ModuelUrlAssign">
-        INSERT INTO MODUEL_URL_ASSIGN (MODULE_ID, MODUEL_DESC, FUNC_DESC, LEVEL, URL, REMARKS) VALUES
+        INSERT INTO MODUEL_URL_ASSIGN (MODUEL_ID, MODUEL_NAME, MODUEL_DESC, FUNC_ID, FUNC_NAME, LEVEL, URL, IS_SYSTEM, REMARKS) VALUES
         <foreach collection="mua" item="mo" separator=",">
-            (#{mo.moduelId}, #{mo.moduelDesc}, #{mo.funcDesc}, #{mo.level}, #{mo.url}, #{mo.remarks})
+            (#{mo.moduelId}, #{mo.moduelName}, #{mo.moduelDesc}, #{mo.funcId}, #{mo.funcName}, #{mo.level}, #{mo.url}, #{mo.isSystem}, #{mo.remarks})
         </foreach>
     </insert>
 
@@ -21,4 +21,8 @@
     <select id="queryUrlByFunc" resultType="org.orion.systemAdmin.entity.ModuelUrlAssign">
         SELECT * FROM MODUEL_URL_ASSIGN WHERE FUNC_ID = #{funcId}
     </select>
+
+    <delete id="deleteAll">
+        DELETE FROM MODUEL_URL_ASSIGN
+    </delete>
 </mapper>

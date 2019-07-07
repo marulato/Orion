@@ -5,27 +5,46 @@
         <Desc>Users sign in the site</Desc>
         <Remarks></Remarks>
         <Function>
-            <FuncId>LOGINPAGE</FuncId>
+            <FuncId>LOGIN_PAGE</FuncId>
             <FuncName>Login Page</FuncName>
             <URL>/web/AuthLogin</URL>
             <Level>N</Level>
             <IsSystem>N</IsSystem>
         </Function>
         <Function>
-            <FuncId>POSTLOGIN</FuncId>
+            <FuncId>SIGN_IN</FuncId>
             <FuncName>Submit Login Request</FuncName>
-            <URL>/web/AuthLogin/doLogin</URL>
+            <URL>/web/AuthLogin/signin</URL>
+            <Level>N</Level>
+            <IsSystem>N</IsSystem>
+        </Function>
+        <Function>
+            <FuncId>PWD_REC_PAGE</FuncId>
+            <FuncName>Password Recovery Page</FuncName>
+            <URL>/web/AuthLogin/PwdRecovery</URL>
+            <Level>N</Level>
+            <IsSystem>N</IsSystem>
+        </Function>
+        <Function>
+            <FuncId>PWD_REC_SUBMIT</FuncId>
+            <FuncName>Password Recovery Submit</FuncName>
+            <URL>/web/AuthLogin/PwdRecovery/submit</URL>
             <Level>N</Level>
             <IsSystem>N</IsSystem>
         </Function>
     </mapping>
 
     <mapping>
-        <ModuelId>LOGIN</ModuelId>
-        <Desc>Users sign in the site</Desc>
-        <Func>send login request</Func>
-        <Level>A</Level>
+        <ModuelId>HOME</ModuelId>
+        <ModuelName>Home Page</ModuelName>
+        <Desc>Dashboard overview</Desc>
         <Remarks></Remarks>
-        <Url>/web/AuthLogin/doLogin</Url>
+        <Function>
+            <FuncId>HOME_PAGE</FuncId>
+            <FuncName>Home Page</FuncName>
+            <URL>/web/Home</URL>
+            <Level>N</Level>
+            <IsSystem>N</IsSystem>
+        </Function>
     </mapping>
 </ModuelMappings>

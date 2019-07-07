@@ -3,6 +3,6 @@
 
 <mapper namespace="org.orion.systemAdmin.dao.UserRoleDao">
     <select id="queryRole" resultType="org.orion.systemAdmin.entity.OrionUserRole">
-        SELECT * FROM USER_ROLE_ASSIGN WHERE LOGIN_ID = #{loginId}
+        SELECT * FROM USER_ROLE_ASSIGN WHERE USER_ID = #{userId}
     </select>
 </mapper>

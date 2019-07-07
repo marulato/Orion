@@ -1,6 +1,7 @@
 package org.orion.systemAdmin.entity;
 
 import org.orion.common.basic.BaseEntity;
+import org.orion.common.validation.ValidateWithMethod;
 
 import java.util.Date;
 
@@ -21,6 +22,7 @@ public class User extends BaseEntity {
     private String remarks;
     private String userDomain;
     private long userId;
+    @ValidateWithMethod(methodName = {"validateLoginId"}, errorCode = {""})
     private String loginId;
 
 

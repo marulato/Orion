@@ -3,7 +3,7 @@
 
 <mapper namespace="org.orion.systemAdmin.dao.UserDao">
     <select id="query" parameterType="java.lang.String" resultType="org.orion.systemAdmin.entity.User">
-        SELECT * FROM USER_TBL WHERE USER_ID = #{userId}
+        SELECT * FROM USER_TBL WHERE LOGIN_ID = #{loginId}
     </select>
 
     <insert id="insert" parameterType="org.orion.systemAdmin.entity.User">
@@ -30,4 +30,31 @@
                             LOGIN_LAST_SUCCESS_DT = #{loginLastSuccessDt}, LOGIN_FAIL_ATTEMPT_CNT = #{loginFailAttemptCnt},
                             UPDATED_AT = #{updatedAt}, UPDATED_BY = #{updatedBy} WHERE USER_ID = #{userId}
     </update>
+
+    <insert id="createHistory" parameterType="org.orion.systemAdmin.entity.UserLoginHistory">
+        INSERT INTO USER_LOGIN_HISTORY (USER_ID, LOGIN_ID, LOGIN_TIME, IS_SUCCESS, CLIENT, SESSION_ID, REASON )
+        VALUES(#{userId}, #{loginId}, #{loginTime}, #{isSuccess}, #{client}, #{sessionId}, #{reason} )
+    </insert>
+
+    <select id="queryLoginAudit" parameterType="org.orion.systemAdmin.entity.User" resultType="org.orion.systemAdmin.entity.UserLoginHistory">
+        SELECT * FROM USER_LOGIN_HISTORY WHERE LOGIN_ID = #{loginId}
+    </select>
+
+    <select id="queryLoginAuditPeriod" resultType="org.orion.systemAdmin.entity.UserLoginHistory">
+        SELECT * FROM USER_LOGIN_HISTORY
+        <where>
+            <if test="id != null">
+                AND LOGIN_ID = #{id}
+            </if>
+            <if test="from != null">
+                AND LOGIN_TIME &gt;= #{from}
+            </if>
+            <if test="to != null">
+                AND LOGIN_TIME &lt;= #{to}
+            </if>
+            <if test="ss != null">
+                AND IS_SUCCESS = #{ss}
+            </if>
+        </where>
+    </select>
 </mapper>

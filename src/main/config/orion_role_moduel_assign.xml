@@ -2,12 +2,13 @@
     <RoleAssignment>
         <RoleId>SYSTEMADMIN</RoleId>
         <Moduel id="LOGIN">
-            <FuncId permission="Y">LOGINPAGE</FuncId>
-            <FuncId permission="Y">POSTLOGIN</FuncId>
+            <FuncId>LOGIN_PAGE</FuncId>
+            <FuncId>SIGN_IN</FuncId>
+            <FuncId>PWD_REC_PAGE</FuncId>
+            <FuncId>PWD_REC_SUBMIT</FuncId>
         </Moduel>
-        <Moduel id="PROFILE">
-            <FuncId permission="L"></FuncId>
-            <FuncId permission="Y"></FuncId>
+        <Moduel id="HOME">
+            <FuncId>HOME_PAGE</FuncId>
         </Moduel>
     </RoleAssignment>
 

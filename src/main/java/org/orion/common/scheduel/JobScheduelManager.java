@@ -140,7 +140,7 @@ public class JobScheduelManager {
             long start = System.currentTimeMillis();
             registerAutoJob(jobScheduel);
             BatchJobEntity batchJobEntity = getOrionBatchJob(jobScheduel, true, needRegistion);
-            batchJobEntity.setAudit(appContext.getUserId(), DateUtil.now());
+            batchJobEntity.setAudit(appContext.getUser().getLoginId(), DateUtil.now());
             List<ErrorCode> errorCodes = createBatchJob(batchJobEntity);
             long end = System.currentTimeMillis();
             TranscationResult result = new TranscationResult("registerAutoJobNow", start, end, errorCodes);
@@ -153,7 +153,7 @@ public class JobScheduelManager {
     public void registerManualJob(JobScheduel jobScheduel, AppContext appContext) {
         if (jobScheduel != null && appContext != null) {
             BatchJobEntity batchJobEntity = getOrionBatchJob(jobScheduel, false, true);
-            batchJobEntity.setAudit(appContext.getUserId(), DateUtil.now());
+            batchJobEntity.setAudit(appContext.getUser().getLoginId(), DateUtil.now());
             createBatchJob(batchJobEntity);
         }
     }

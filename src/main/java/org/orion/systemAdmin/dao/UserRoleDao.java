@@ -8,6 +8,6 @@ import java.util.List;
 @Mapper
 public interface UserRoleDao {
 
-    List<OrionUserRole> queryRole(String loginId);
+    List<OrionUserRole> queryRole(long userId);
 
 }

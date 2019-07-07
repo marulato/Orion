@@ -49,7 +49,6 @@ public class RoleAssignConfiger {
                                 roleModuelAssign.setRoleId(roleId);
                                 roleModuelAssign.setModuelId(moduelId);
                                 roleModuelAssign.setFuncId(dom4JReader.getElementValue(funcTag));
-                                roleModuelAssign.setPermission(dom4JReader.getAttrValue(funcTag, "permission"));
                                 roleAssignMap.get(roleId).add(roleModuelAssign);
                             }
                         }

@@ -84,4 +84,17 @@ public class PrivilegeAssignService {
             roleModuelDao.batchCreate(roleModuelAssignList);
         }
     }
+
+    public void saveModuelUrlAssignment(List<ModuelUrlAssign> moduelUrlAssignList) {
+        if (moduelUrlAssignList != null && !moduelUrlAssignList.isEmpty()) {
+            for (ModuelUrlAssign mua : moduelUrlAssignList) {
+                List<ErrorCode> errorCodes = Validation.doValidate(mua);
+                if (errorCodes != null && !errorCodes.isEmpty()) {
+                    return;
+                }
+            }
+            moduelUrlDao.deleteAll();
+            moduelUrlDao.batchCreate(moduelUrlAssignList);
+        }
+    }
 }

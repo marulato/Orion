@@ -1,30 +1,33 @@
 package org.orion.common.cache;
 
 import org.orion.common.mastercode.ErrorCode;
+import org.orion.common.miscutil.SpringUtil;
 import org.orion.common.scheduel.BatchJobEntity;
 import org.orion.common.scheduel.JobScheduelManager;
 import org.orion.systemAdmin.entity.MasterCode;
 import org.orion.systemAdmin.service.MasterCodeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CachePool {
 
-    @Resource
-    private static JobScheduelManager jobScheduelManager;
-    @Resource
-    private static MasterCodeService masterCodeService;
+    private static JobScheduelManager jobScheduelManager = SpringUtil.getBean(JobScheduelManager.class);
+    private static MasterCodeService masterCodeService = SpringUtil.getBean(MasterCodeService.class);
 
     private static Map<Object, BatchJobEntity> batchjobCache;
     private static Map<Object, ErrorCode> errorCodeCache;
     private static Map<Object, MasterCode> masterCodeCache;
 
+    private static final Logger logger = LoggerFactory.getLogger("Cache Pool");
+
     private CachePool(){}
 
     public static void init() {
+        long start = System.currentTimeMillis();
         List<BatchJobEntity> jobList = jobScheduelManager.getAllBatchJobs();
         batchjobCache = new HashMap<>();
         for (BatchJobEntity job : jobList) {
@@ -43,6 +46,8 @@ public class CachePool {
             masterCodeCache.put(masterCode.getCodeType() + "," + masterCode.getCode(), masterCode);
             masterCodeCache.put(masterCode.getMcId(), masterCode);
         }
+        long end = System.currentTimeMillis();
+        logger.info("Cache Initialized Successfully, Time cost: " + (end - start) + " ms");
 
     }
 

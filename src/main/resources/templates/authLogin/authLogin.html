@@ -30,7 +30,8 @@
               <div class="form-group">
                 <label class="label">用户名</label>
                 <div class="input-group">
-                  <input name="username" type="text" class="form-control" placeholder="Username">
+                  <input name="loginId" type="text" class="form-control" placeholder="Username">
+                  <input type="hidden" id="browser" name="agent">
                   <div class="input-group-append">
                       <span class="input-group-text">
                         <i class="mdi mdi-check-circle-outline"></i>
@@ -41,7 +42,7 @@
               <div class="form-group">
                 <label class="label">密码</label>
                 <div class="input-group">
-                  <input name="password" type="password" class="form-control" placeholder="*********">
+                  <input name="pwd" type="password" class="form-control" placeholder="*********">
                   <div class="input-group-append">
                       <span class="input-group-text">
                         <i class="mdi mdi-check-circle-outline"></i>
@@ -92,7 +93,6 @@
 </div>
 <!-- container-scroller -->
 <!-- plugins:js -->
-<script th:src="@{/orion/systemAdmin/authLogin.js}"></script>
 <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
 <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
 <!-- endinject -->
@@ -104,6 +104,7 @@
 <script th:src="@{/orion/jquery-3.3.1.js}"></script>
 <script th:src="@{/orion/jquery-block.js}"></script>
 <script th:src="@{/orion/common.js}"></script>
+<script th:src="@{/orion/systemAdmin/authLogin.js}"></script>
 
 <!-- endinject -->
 </body>

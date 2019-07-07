@@ -18,7 +18,6 @@ public class DateUtil {
     public static final String MD_FORMAT 					= "MM/dd";
     public static final String UPSIDE_DOWN_TODAY_FORMAT 	= "dd/MM/yyyy";
     public static final long ONE_DAY_MILLIS					= 24 * 60 * 60 * 1000;
-    public static final Date currentDate					= new Date();
 
     public static Date parseDate(String dateStr) {
         Date date = null;
@@ -79,7 +78,7 @@ public class DateUtil {
     }
 
     public static Date now() {
-        return currentDate;
+        return new Date();
     }
 
     public static Date today() {

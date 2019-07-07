@@ -3,13 +3,13 @@
 
 <mapper namespace="org.orion.systemAdmin.dao.RoleModuelDao">
     <insert id="create" parameterType="org.orion.systemAdmin.entity.RoleModuelAssign">
-        INSERT INTO ROLE_MODUEL_ASSIGN VALUES (#{roleId}, #{moduelId});
+        INSERT INTO ROLE_MODUEL_ASSIGN VALUES (#{roleId}, #{moduelId}, #{funcId});
     </insert>
 
     <insert id="batchCreate" parameterType="org.orion.systemAdmin.entity.RoleModuelAssign">
-        INSERT INTO ROLE_MODUEL_ASSIGN (ROLE_ID, MODUEL_ID) VALUES
+        INSERT INTO ROLE_MODUEL_ASSIGN (ROLE_ID, MODUEL_ID, FUNC_ID) VALUES
         <foreach collection="rml" index="idx" item="rm" separator=",">
-            (#{rm.roleId}, #{rm.moduelId})
+            (#{rm.roleId}, #{rm.moduelId}, #{rm.funcId})
         </foreach>
     </insert>
 

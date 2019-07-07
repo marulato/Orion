@@ -4,10 +4,7 @@ import org.orion.systemAdmin.dao.ModuelUrlDao;
 import org.orion.systemAdmin.dao.RoleModuelDao;
 import org.orion.systemAdmin.dao.UserDao;
 import org.orion.systemAdmin.dao.UserRoleDao;
-import org.orion.systemAdmin.entity.ModuelUrlAssign;
-import org.orion.systemAdmin.entity.OrionUserRole;
-import org.orion.systemAdmin.entity.RoleModuelAssign;
-import org.orion.systemAdmin.entity.User;
+import org.orion.systemAdmin.entity.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,17 +27,28 @@ public class UserMaintenanceService {
     }
 
     public void updateUserLogin(User user) {
-        userDao.updateAfterLogin(user);
+        if (user != null) {
+            userDao.updateAfterLogin(user);
+        }
+    }
+
+    public void createLoginAudit(UserLoginHistory loginHistory) {
+        if (loginHistory != null) {
+            userDao.createHistory(loginHistory);
+        }
     }
 
     public List<OrionUserRole> getUserRole(User user) {
-        return userRoleDao.queryRole(user.getLoginId());
+        if (user != null) {
+            return userRoleDao.queryRole(user.getUserId());
+        }
+        return null;
     }
 
     public List<ModuelUrlAssign> getModuelUrlAssignForUser(User user) {
         List<ModuelUrlAssign> moduelUrlList = new ArrayList<>();
         if (user != null) {
-            List<OrionUserRole> userRoles = userRoleDao.queryRole(user.getLoginId());
+            List<OrionUserRole> userRoles = userRoleDao.queryRole(user.getUserId());
             for (OrionUserRole userRole : userRoles) {
                 List<RoleModuelAssign> roleList = roleModuelDao.queryRole(userRole.getRoleId());
                 for (RoleModuelAssign moduel : roleList) {

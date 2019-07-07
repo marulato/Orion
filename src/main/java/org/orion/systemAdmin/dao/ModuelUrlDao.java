@@ -13,6 +13,8 @@ public interface ModuelUrlDao {
 
     void batchCreate(@Param("mua") List<ModuelUrlAssign> moduelUrlAssignList);
 
+    void deleteAll();
+
     List<ModuelUrlAssign> queryUrlForModuel(String modelId);
 
     ModuelUrlAssign queryUrlByFunc(String funcId);

@@ -9,4 +9,5 @@ public class AppConsts {
     public static final String ACCT_INACTIVE    = "I";
     public static final String ACCT_EXPIRED     = "E";
     public static final String ACCT_FROZEN      = "F";
+    public static final String ACCT_INVPWD      = "P";
 }
