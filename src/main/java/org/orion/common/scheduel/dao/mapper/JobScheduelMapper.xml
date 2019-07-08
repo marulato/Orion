@@ -7,15 +7,15 @@
     </select>
 
     <insert id="createBatchJob" parameterType="org.orion.common.scheduel.BatchJobEntity">
-        INSERT INTO BATCHJOB_SCHEDUEL VALUES (#{name}, #{description}, #{className}, #{isQuartz}, #{isRegistered},
+        INSERT INTO BATCH_JOB_SCHEDUEL VALUES (#{name}, #{description}, #{className}, #{isQuartz}, #{isRegistered},
                                               #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy})
     </insert>
 
     <select id="queryBatchJob" parameterType="string" resultType="org.orion.common.scheduel.BatchJobEntity">
-        SELECT * FROM BATCHJOB_SCHEDUEL WHERE NAME = #{name}
+        SELECT * FROM BATCH_JOB_SCHEDUEL WHERE NAME = #{name}
     </select>
 
     <select id="queryAllBatchJobs" resultType="org.orion.common.scheduel.BatchJobEntity">
-        SELECT * FROM BATCHJOB_SCHEDUEL
+        SELECT * FROM BATCH_JOB_SCHEDUEL
     </select>
 </mapper>

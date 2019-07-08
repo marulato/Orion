@@ -45,6 +45,22 @@ public class UserMaintenanceService {
         return null;
     }
 
+    public void createProfile(User user, UserProfile profile) {
+        if (user != null && profile != null) {
+            User actualUser = getUser(user.getLoginId());
+            if (user.equals(actualUser) && user.getUserId() == profile.getUserId()) {
+                userDao.createProfile(profile);
+            }
+        }
+    }
+
+    public UserProfile getProfileForUser(User user) {
+        if (user != null) {
+            return userDao.queryUserProfile(user);
+        }
+        return null;
+    }
+
     public List<ModuelUrlAssign> getModuelUrlAssignForUser(User user) {
         List<ModuelUrlAssign> moduelUrlList = new ArrayList<>();
         if (user != null) {

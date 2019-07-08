@@ -1,5 +1,7 @@
 package org.orion.common.dao;
 
+import org.orion.common.audit.AuditTrail;
+import org.orion.common.miscutil.SpringUtil;
 import org.orion.common.miscutil.StringUtil;
 import org.springframework.stereotype.Service;
 
@@ -142,8 +144,22 @@ public class DaoGenerateSvc {
         return insert.toString();
     }
 
+    public String createAudit(AuditTrail auditTrail) {
+        StringBuilder auditBuilder = new StringBuilder();
+        StringBuilder targitBuilder = new StringBuilder();
+        auditBuilder.append(createInsertSql(auditTrail.getAuditTable(), null));
+        auditBuilder.delete(auditBuilder.lastIndexOf("VALUES"), auditBuilder.length());
+        auditBuilder.delete(auditBuilder.indexOf("(") + 1, auditBuilder.indexOf("AUDIT_TIME") + 3 + "AUDIT_TIME".length() - 1);
+        targitBuilder.append(" SELECT * FROM ").append(auditTrail.getTargetTable()).append(" WHERE ").append(auditTrail.getWhere());
+        auditBuilder.append(targitBuilder);
+        return auditBuilder.toString();
+    }
+
     private void doInitData(String tableName) {
         if (!StringUtil.isBlank(tableName)) {
+            if (schemaDao == null) {
+                schemaDao = SpringUtil.getBean(DatabaseSchemaDao.class);
+            }
             columnNames = schemaDao.retrieveColumnNames(tableName);
             dataTypes = schemaDao.retrieveColumnTypes(tableName);
             columnAndFieldMap = new HashMap<>();

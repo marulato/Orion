@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.orion.systemAdmin.entity.User;
 import org.orion.systemAdmin.entity.UserLoginHistory;
+import org.orion.systemAdmin.entity.UserProfile;
 
 import java.util.Date;
 import java.util.List;
@@ -25,5 +26,9 @@ public interface UserDao {
     List<UserLoginHistory> queryLoginAudit(User user);
 
     List<UserLoginHistory> queryLoginAuditPeriod(@Param("id") String loginId, @Param("from") Date from, @Param("to") Date to, @Param("ss") String isSuccess);
+
+    void createProfile(UserProfile profile);
+
+    UserProfile queryUserProfile(User user);
 
 }

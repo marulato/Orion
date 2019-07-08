@@ -35,9 +35,11 @@ public class AuthLoginController {
             switch (loginResult) {
                 case 1 :
                     logger.info("User Login Successfully: ");
+                    break;
             }
+            return String.valueOf(loginResult);
         }
-        return "";
+        return "error";
     }
 
     @RequestMapping("/web/AuthLogin/logout")

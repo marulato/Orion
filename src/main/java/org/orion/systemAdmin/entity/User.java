@@ -4,6 +4,7 @@ import org.orion.common.basic.BaseEntity;
 import org.orion.common.validation.ValidateWithMethod;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class User extends BaseEntity {
 
@@ -25,9 +26,38 @@ public class User extends BaseEntity {
     @ValidateWithMethod(methodName = {"validateLoginId"}, errorCode = {""})
     private String loginId;
 
-
     public User() {
         super("USER_TBL");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return getLoginFailAttemptCnt() == user.getLoginFailAttemptCnt() &&
+                getUserId() == user.getUserId() &&
+                Objects.equals(getAcctActivateDt(), user.getAcctActivateDt()) &&
+                Objects.equals(getAcctDeactivateDt(), user.getAcctDeactivateDt()) &&
+                Objects.equals(getAcctStatus(), user.getAcctStatus()) &&
+                Objects.equals(getMobileNo(), user.getMobileNo()) &&
+                Objects.equals(getDisplayName(), user.getDisplayName()) &&
+                Objects.equals(getEmail(), user.getEmail()) &&
+                Objects.equals(getLoginLastAttemptDt(), user.getLoginLastAttemptDt()) &&
+                Objects.equals(getLoginLastSuccessDt(), user.getLoginLastSuccessDt()) &&
+                Objects.equals(getPwdChgRequired(), user.getPwdChgRequired()) &&
+                Objects.equals(getPwdLastChgDt(), user.getPwdLastChgDt()) &&
+                Objects.equals(getRemarks(), user.getRemarks()) &&
+                Objects.equals(getUserDomain(), user.getUserDomain()) &&
+                Objects.equals(getLoginId(), user.getLoginId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getAcctActivateDt(), getAcctDeactivateDt(), getAcctStatus(), getMobileNo(),
+                getDisplayName(), getEmail(), getLoginFailAttemptCnt(), getLoginLastAttemptDt(),
+                getLoginLastSuccessDt(), getPwdChgRequired(), getPwdLastChgDt(), getRemarks(),
+                getUserDomain(), getUserId(), getLoginId());
     }
 
     public Date getAcctActivateDt() {

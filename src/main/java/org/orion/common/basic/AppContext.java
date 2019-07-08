@@ -15,6 +15,7 @@ public class AppContext {
     private User user;
     private List<String> urlList;
     private List<OrionUserRole> userRoles;
+    private OrionUserRole currentRole;
     private boolean isLogin;
     private Date loginTime;
     private String sessionId;
@@ -68,6 +69,14 @@ public class AppContext {
 
     public void setUserRoles(List<OrionUserRole> userRoles) {
         this.userRoles = userRoles;
+    }
+
+    public OrionUserRole getCurrentRole() {
+        return currentRole;
+    }
+
+    public void setCurrentRole(OrionUserRole currentRole) {
+        this.currentRole = currentRole;
     }
 
     public boolean isLogin() {

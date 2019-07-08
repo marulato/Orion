@@ -57,4 +57,13 @@
             </if>
         </where>
     </select>
+
+    <insert id="createProfile" parameterType="org.orion.systemAdmin.entity.UserProfile">
+        INSERT INTO USER_PROFILE (USER_ID, LOGIN_ID, DISPLAY_NAME, FULL_NAME, ID_NO, GENDER, DOB, EMAIL, CONTACT_NO, DESCRIPTION, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY)
+        VALUES(#{userId}, #{loginId}, #{displayName}, #{fullName}, #{idNo}, #{gender}, #{dob}, #{email}, #{contactNo}, #{description}, #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy})
+    </insert>
+
+    <select id="queryUserProfile" parameterType="org.orion.systemAdmin.entity.User" resultType="org.orion.systemAdmin.entity.UserProfile">
+        SELECT * FROM USER_PROFILE WHERE USER_ID = #{userId} AND LOGIN_ID = #{loginId}
+    </select>
 </mapper>
