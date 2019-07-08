@@ -1,10 +1,8 @@
 package org.orion.common.audit.dao;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.*;
 import org.orion.common.audit.AuditTrail;
+import org.orion.common.basic.BaseEntity;
 import org.orion.common.dao.DaoGenerateSvc;
 
 @Mapper
@@ -15,6 +13,6 @@ public interface AuditTrailDao {
 
     @InsertProvider(type = DaoGenerateSvc.class, method = "createAudit")
     @Options(useGeneratedKeys = true, keyProperty = "auditId")
-    void createAudit(AuditTrail auditTrail);
+    void createAudit(@Param("at") AuditTrail auditTrail, @Param("en") BaseEntity entity);
 
 }

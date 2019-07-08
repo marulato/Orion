@@ -111,7 +111,7 @@ public final class StringUtil {
     public static String convertToTableColumn(String value) {
         if (isEmpty(value)) {
             return null;
-        } else if (!hasUpperCase(value)) {
+        } else if (value.contains("_") || !hasLowerCase(value)) {
             return value.toUpperCase();
         }
         StringBuilder column = new StringBuilder();

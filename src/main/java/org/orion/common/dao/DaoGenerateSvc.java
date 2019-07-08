@@ -1,6 +1,7 @@
 package org.orion.common.dao;
 
 import org.orion.common.audit.AuditTrail;
+import org.orion.common.basic.BaseEntity;
 import org.orion.common.miscutil.SpringUtil;
 import org.orion.common.miscutil.StringUtil;
 import org.springframework.stereotype.Service;
@@ -144,13 +145,22 @@ public class DaoGenerateSvc {
         return insert.toString();
     }
 
-    public String createAudit(AuditTrail auditTrail) {
+    public String createAudit(Map<String, Object> param) {
         StringBuilder auditBuilder = new StringBuilder();
         StringBuilder targitBuilder = new StringBuilder();
+        AuditTrail auditTrail = (AuditTrail) param.get("at");
+        BaseEntity entity = (BaseEntity) param.get("en");
         auditBuilder.append(createInsertSql(auditTrail.getAuditTable(), null));
         auditBuilder.delete(auditBuilder.lastIndexOf("VALUES"), auditBuilder.length());
         auditBuilder.delete(auditBuilder.indexOf("(") + 1, auditBuilder.indexOf("AUDIT_TIME") + 3 + "AUDIT_TIME".length() - 1);
-        targitBuilder.append(" SELECT * FROM ").append(auditTrail.getTargetTable()).append(" WHERE ").append(auditTrail.getWhere());
+        targitBuilder.append(" SELECT * FROM ").append(auditTrail.getTargetTable()).append(" WHERE ");
+        for (String filedName : auditTrail.getAuditKeys()) {
+            targitBuilder.append(StringUtil.convertToTableColumn(filedName));
+            targitBuilder.append(" = ");
+            targitBuilder.append("#{en.").append(filedName).append("}");
+            targitBuilder.append(" AND ");
+        }
+        targitBuilder.delete(targitBuilder.lastIndexOf("AND"), targitBuilder.length());
         auditBuilder.append(targitBuilder);
         return auditBuilder.toString();
     }

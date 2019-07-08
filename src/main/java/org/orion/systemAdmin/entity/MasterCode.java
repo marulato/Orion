@@ -10,7 +10,7 @@ public class MasterCode extends BaseEntity {
     private String description;
 
     public MasterCode() {
-        super("MASTER_CODE_MC");
+        super("MASTER_CODE_MC", "MASTER_CODE_MC_HX");
     }
 
     public int getMcId() {

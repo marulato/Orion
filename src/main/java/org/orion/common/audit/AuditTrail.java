@@ -1,9 +1,14 @@
 package org.orion.common.audit;
 
 import org.orion.common.audit.dao.AuditTrailDao;
+import org.orion.common.basic.BaseEntity;
 import org.orion.common.miscutil.SpringUtil;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class AuditTrail {
 
@@ -13,20 +18,38 @@ public class AuditTrail {
     private long auditId;
     private String auditType;
     private Date auditTime;
+    private List<String> auditKeys;
 
-    public AuditTrail(String auditTable, String auditType, String targetTable) {
-        this.auditTable = auditTable;
+    public AuditTrail(String auditType) {
+        auditKeys = new ArrayList<>();
         this.auditType = auditType;
-        this.targetTable = targetTable;
         auditTime = new Date();
     }
 
-    public void generateAudit(String where) {
-        this.where = where;
-        AuditTrailDao auditTrailDao = SpringUtil.getBean(AuditTrailDao.class);
-        auditTrailDao.createAudit(this);
-        auditTrailDao.updateBaseAudit(this);
+    @Transactional
+    public void generateAudit(BaseEntity entity) {
+        if (auditKeys != null && !auditKeys.isEmpty() && entity != null) {
+            auditTable = entity.getAuditTable();
+            targetTable = entity.getTableName();
+            Class cls = entity.getClass();
+            Field[] fields = cls.getDeclaredFields();
+            try {
+                for (Field field : fields) {
+                    if (field.isAnnotationPresent(AuditId.class)) {
+                        field.setAccessible(true);
+                        String fieldName = field.getName();
+                        auditKeys.add(fieldName);
+                    }
+                }
+            } catch (Exception e) {
+
+            }
+            AuditTrailDao auditTrailDao = SpringUtil.getBean(AuditTrailDao.class);
+            auditTrailDao.createAudit(this, entity);
+            auditTrailDao.updateBaseAudit(this);
+        }
     }
+
 
     public String getAuditTable() {
         return auditTable;
@@ -76,4 +99,11 @@ public class AuditTrail {
         this.auditTime = auditTime;
     }
 
+    public List<String> getAuditKeys() {
+        return auditKeys;
+    }
+
+    public void setAuditKeys(List<String> auditKeys) {
+        this.auditKeys = auditKeys;
+    }
 }

@@ -13,8 +13,10 @@ public abstract class BaseEntity implements Serializable, Cloneable {
     private String createdAtFullStr;
     private String updatedAtFullStr;
     private String tableName;
+    private String auditTable;
 
-    public BaseEntity(String tableName) {
+    public BaseEntity(String tableName, String auditTable) {
+        this.auditTable = auditTable;
         this.tableName = tableName;
     }
 
@@ -109,5 +111,13 @@ public abstract class BaseEntity implements Serializable, Cloneable {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public String getAuditTable() {
+        return auditTable;
+    }
+
+    public void setAuditTable(String auditTable) {
+        this.auditTable = auditTable;
     }
 }

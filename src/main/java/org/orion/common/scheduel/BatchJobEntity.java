@@ -12,7 +12,7 @@ public class BatchJobEntity extends BaseEntity {
     private String isRegistered;
 
     public BatchJobEntity() {
-        super("BATCH_JOB_SCHEDUEL");
+        super("BATCH_JOB_SCHEDUEL", "BATCH_JOB_SCHEDUEL_HX");
     }
 
     public String getJobId() {

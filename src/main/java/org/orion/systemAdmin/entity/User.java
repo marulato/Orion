@@ -1,5 +1,6 @@
 package org.orion.systemAdmin.entity;
 
+import org.orion.common.audit.AuditId;
 import org.orion.common.basic.BaseEntity;
 import org.orion.common.validation.ValidateWithMethod;
 
@@ -22,12 +23,14 @@ public class User extends BaseEntity {
     private Date pwdLastChgDt;
     private String remarks;
     private String userDomain;
+    @AuditId
     private long userId;
     @ValidateWithMethod(methodName = {"validateLoginId"}, errorCode = {""})
+    @AuditId
     private String loginId;
 
     public User() {
-        super("USER_TBL");
+        super("USER_TBL", "USER_TBL_HX");
     }
 
     @Override

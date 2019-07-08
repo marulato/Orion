@@ -19,7 +19,7 @@ public class UserProfile extends BaseEntity {
     private byte[] portrait;
 
     public UserProfile() {
-        super("USER_PROFILE");
+        super("USER_PROFILE", "USER_PROFILE_HX");
     }
 
     public long getUserId() {

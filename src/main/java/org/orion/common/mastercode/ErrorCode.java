@@ -10,7 +10,7 @@ public class ErrorCode extends BaseEntity {
     private String errorType;
 
     public ErrorCode() {
-        super("ERROR_CODE_MC");
+        super("ERROR_CODE_MC", "ERROR_CODE_MC_HX");
     }
 
     public void setErrorCode(String errorCode) {
