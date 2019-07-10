@@ -2,11 +2,13 @@ package org.orion.common.dao;
 
 import org.orion.common.audit.AuditTrail;
 import org.orion.common.basic.BaseEntity;
+import org.orion.common.dao.annotation.Id;
 import org.orion.common.miscutil.SpringUtil;
 import org.orion.common.miscutil.StringUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -154,7 +156,37 @@ import java.util.Map;
 
     public String createUpdate(BaseEntity entity) {
         if (entity != null) {
+            StringBuilder update = new StringBuilder();
+            update.append(createUpdateSql(entity.getTableName(), null));
+            update.append(" WHERE ").append(appendWhere(entity));
+            return update.toString();
+        }
+        return null;
+    }
 
+    public String createDelete(BaseEntity entity) {
+        if (entity != null) {
+            StringBuilder delete = new StringBuilder();
+            delete.append("DELETE FROM ").append(entity.getTableName()).append(" WHERE ");
+            delete.append(appendWhere(entity));
+        }
+        return null;
+    }
+
+    private String appendWhere(BaseEntity entity) {
+        if (entity != null) {
+            StringBuilder where = new StringBuilder();
+            Class cls = entity.getClass();
+            Field[] fields = cls.getDeclaredFields();
+            for (Field field : fields) {
+                if (field.isAnnotationPresent(Id.class)) {
+                    where.append(StringUtil.convertToTableColumn(field.getName()));
+                    where.append(" = ").append("#{").append(field.getName()).append("}");
+                }
+                where.append(" AND ");
+            }
+            where.delete(where.lastIndexOf("AND"), where.length());
+            return where.toString();
         }
         return null;
     }

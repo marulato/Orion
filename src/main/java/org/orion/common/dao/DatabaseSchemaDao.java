@@ -1,9 +1,6 @@
 package org.orion.common.dao;
 
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.orion.common.basic.BaseEntity;
 
 import java.util.List;
@@ -19,4 +16,10 @@ public interface DatabaseSchemaDao {
 
     @InsertProvider(type = SQLManager.class, method = "createInsert")
     public void insert(BaseEntity entity);
+
+    @UpdateProvider(type = SQLManager.class, method = "createUpdate")
+    public void update(BaseEntity entity);
+
+    @DeleteProvider(type = SQLManager.class, method = "createDelete")
+    public void delete(BaseEntity entity);
 }
