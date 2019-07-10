@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class DaoGenerateSvc {
+    public class SQLManager {
     @Resource
     private DatabaseSchemaDao schemaDao;
     private List<String> columnNames;
@@ -131,8 +131,8 @@ public class DaoGenerateSvc {
             insert.append(", ");
         }
         insert.deleteCharAt(insert.lastIndexOf(","));
-        insert.append(") ");
-        insert.append(" VALUES(");
+        insert.append(")");
+        insert.append(" VALUES (");
         for (String col : fieldNames) {
             if (StringUtil.isEmpty(param)) {
                 insert.append("#{").append(col).append("}, ");
@@ -143,6 +143,20 @@ public class DaoGenerateSvc {
         insert.deleteCharAt(insert.lastIndexOf(","));
         insert.append(")");
         return insert.toString();
+    }
+
+    public String createInsert(BaseEntity entity) {
+        if (entity != null) {
+            return createInsertSql(entity.getTableName(), null);
+        }
+        return null;
+    }
+
+    public String createUpdate(BaseEntity entity) {
+        if (entity != null) {
+
+        }
+        return null;
     }
 
     public String createAudit(Map<String, Object> param) {

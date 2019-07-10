@@ -28,7 +28,7 @@ public class AuditTrail {
 
     @Transactional
     public void generateAudit(BaseEntity entity) {
-        if (auditKeys != null && !auditKeys.isEmpty() && entity != null) {
+        if (entity != null) {
             auditTable = entity.getAuditTable();
             targetTable = entity.getTableName();
             Class cls = entity.getClass();
@@ -42,7 +42,7 @@ public class AuditTrail {
                     }
                 }
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
             AuditTrailDao auditTrailDao = SpringUtil.getBean(AuditTrailDao.class);
             auditTrailDao.createAudit(this, entity);

@@ -1,7 +1,9 @@
 package org.orion.systemAdmin.controller;
 
+import org.orion.common.basic.AppContext;
 import org.orion.common.mastercode.ErrorCode;
 import org.orion.common.miscutil.Validation;
+import org.orion.systemAdmin.entity.AppConsts;
 import org.orion.systemAdmin.entity.User;
 import org.orion.systemAdmin.service.AuthorizeActionService;
 import org.slf4j.Logger;
@@ -32,10 +34,12 @@ public class AuthLoginController {
         if (loginUser != null) {
             List<ErrorCode> errorCodes = Validation.doValidate(loginUser);
             int loginResult = authorizeService.login(loginUser, request);
-            switch (loginResult) {
-                case 1 :
-                    logger.info("User Login Successfully: ");
-                    break;
+            if (loginResult == 1) {
+                AppContext context = AppContext.getAppContext(request);
+                User user = context.getUser();
+                if (AppConsts.YES.equals(user.getPwdChgRequired())) {
+
+                }
             }
             return String.valueOf(loginResult);
         }

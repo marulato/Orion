@@ -2,6 +2,7 @@ package org.orion.systemAdmin.entity;
 
 import org.orion.common.audit.AuditId;
 import org.orion.common.basic.BaseEntity;
+import org.orion.common.miscutil.StringUtil;
 import org.orion.common.validation.ValidateWithMethod;
 
 import java.util.Date;
@@ -25,12 +26,19 @@ public class User extends BaseEntity {
     private String userDomain;
     @AuditId
     private long userId;
-    @ValidateWithMethod(methodName = {"validateLoginId"}, errorCode = {""})
+    @ValidateWithMethod(methodName = {"validateLoginId"}, errorCode = {"001"})
     @AuditId
     private String loginId;
 
     public User() {
         super("USER_TBL", "USER_TBL_HX");
+    }
+
+    public boolean validateLoginId(String loginId) {
+        boolean isValid = false;
+        if (!StringUtil.isEmpty(loginId))
+            isValid = true;
+        return isValid;
     }
 
     @Override

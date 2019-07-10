@@ -15,4 +15,8 @@ public class AppConsts {
     public static final String AUDIT_AFTER_MODIFY   = "AM";
     public static final String AUDIT_AFTER_INSERT   = "AI";
     public static final String AUDIT_BEFOR_DELETE   = "BD";
+
+    public static final String YES     = "Y";
+    public static final String NO      = "N";
+
 }
