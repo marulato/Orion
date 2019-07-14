@@ -257,46 +257,63 @@ public class DateUtil {
         return -1;
     }
 
+    public static boolean same(Date date1, Date date2) {
+        if (date1 != null && date2 != null) {
+            return date1.getTime() == date2.getTime();
+        }
+        return false;
+    }
+
+    public static boolean isBetween(Date date, Date from, Date to) {
+        if (date != null && from != null && to != null) {
+            if (same(date, from) || same(date, to))
+                return true;
+            if (date.after(from) && date.before(to))
+                return true;
+        }
+        return false;
+    }
+
     public static String getConstellation(Date date) {
         if (date != null) {
             int month = getMonth(date) + 1;
             int day = getDayOfMonth(date);
             String constellation = null;
             if (month == 1 && day >= 20 || month == 2 && day <= 18) {
-                constellation = "水瓶座";
+                constellation = "AQUA";
             }
             if (month == 2 && day >= 19 || month == 3 && day <= 20) {
-                constellation = "双鱼座";
+                constellation = "PIS";
             }
             if (month == 3 && day >= 21 || month == 4 && day <= 19) {
-                constellation = "白羊座";
+                constellation = "ARI";
             }
             if (month == 4 && day >= 20 || month == 5 && day <= 20) {
-                constellation = "金牛座";
+                constellation = "TAU";
             }
             if (month == 5 && day >= 21 || month == 6 && day <= 21) {
-                constellation = "双子座";
+                constellation = "GEM";
             }
             if (month == 6 && day >= 22 || month == 7 && day <= 22) {
-                constellation = "巨蟹座";
+                constellation = "CAN";
             }
             if (month == 7 && day >= 23 || month == 8 && day <= 22) {
-                constellation = "狮子座";
+                constellation = "LEO";
             }
             if (month == 8 && day >= 23 || month == 9 && day <= 22) {
-                constellation = "处女座";
+                constellation = "VIR";
             }
             if (month == 9 && day >= 23 || month == 10 && day <= 23) {
-                constellation = "天秤座";
+                constellation = "LIB";
             }
             if (month == 10 && day >= 24 || month == 11 && day <= 22) {
-                constellation = "天蝎座";
+                constellation = "SCO";
             }
             if (month == 11 && day >= 23 || month == 12 && day <= 21) {
-                constellation = "射手座";
+                constellation = "SAG";
             }
             if (month == 12 && day >= 22 || month == 1 && day <= 19) {
-                constellation = "摩羯座";
+                constellation = "CAP";
             }
             return constellation;
         }

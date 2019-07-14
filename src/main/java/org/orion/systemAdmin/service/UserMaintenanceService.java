@@ -45,6 +45,12 @@ public class UserMaintenanceService {
         return null;
     }
 
+    public void updatePwd(User user) {
+        if (user != null) {
+            userDao.updatePassword(user);
+        }
+    }
+
     public void createProfile(User user, UserProfile profile) {
         if (user != null && profile != null) {
             User actualUser = getUser(user.getLoginId());

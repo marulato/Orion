@@ -2,6 +2,8 @@ package org.orion.systemAdmin.entity;
 
 public class AppConsts {
 
+    public static final String SALT_KEY         = "OrionWebPassword";
+
     public static final String CODE_TYPE_ACCT   = "ACT";
     public static final String ACCT_ACTIVE      = "A";
     public static final String ACCT_LOCKED      = "L";

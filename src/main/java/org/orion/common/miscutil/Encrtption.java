@@ -57,10 +57,10 @@ public class Encrtption {
         {
             Cipher ecipher = Cipher.getInstance("DES");
             byte[] keyByte = new byte[8];
-            System.arraycopy(("orion" + key).getBytes(), 0, keyByte, 0, keyByte.length);
+            System.arraycopy(("orion" + key).getBytes("UTF-8"), 0, keyByte, 0, keyByte.length);
             SecretKey secretKey = new SecretKeySpec(keyByte, "DES");
-            ecipher.init(1, secretKey);
-            byte[] enc = ecipher.doFinal(src.getBytes());
+            ecipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] enc = ecipher.doFinal(src.getBytes("UTF-8"));
             byte[] encodedBytes = Base64.encodeBase64(enc);
             return new String(encodedBytes);
         } catch (Exception e) {
@@ -69,19 +69,50 @@ public class Encrtption {
         return null;
     }
 
-    public static String decryptDES(String encrytped, String key)
-    {
+    public static String decryptDES(String encrytped, String key) {
         try
         {
             Cipher dcipher = Cipher.getInstance("DES");
             byte[] keyByte = new byte[8];
-            System.arraycopy(("orion" + key).getBytes(), 0, keyByte, 0, keyByte.length);
+            System.arraycopy(("orion" + key).getBytes("UTF-8"), 0, keyByte, 0, keyByte.length);
             SecretKey secretKey = new SecretKeySpec(keyByte, "DES");
-            dcipher.init(2, secretKey);
-            byte[] utf8 = dcipher.doFinal(Base64.decodeBase64(encrytped.getBytes()));
+            dcipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] utf8 = dcipher.doFinal(Base64.decodeBase64(encrytped.getBytes("UTF-8")));
             return new String(utf8, "UTF8");
         } catch (Exception e) {
             logger.error("", e);
+        }
+        return null;
+    }
+
+    public static String encryptAES(String src, String key) {
+        if (!StringUtil.isEmpty(key) && key.length() >= 16) {
+            try {
+                byte[] keyByte = ArrayUtil.get(key.getBytes("UTF-8"), 0, 15);
+                SecretKeySpec skeySpec = new SecretKeySpec(keyByte, "AES");
+                Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+                cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+                byte[] encrypted = cipher.doFinal(src.getBytes("UTF-8"));
+                return new String(Base64.encodeBase64(encrypted));
+            } catch (Exception e) {
+                logger.error("", e);
+            }
+        }
+        return null;
+    }
+
+    public static String decryptAES(String encrytped, String key) {
+        if (!StringUtil.isEmpty(key) && key.length() >= 16) {
+            try {
+                byte[] keyByte = ArrayUtil.get(key.getBytes("UTF-8"), 0, 15);
+                SecretKeySpec skeySpec = new SecretKeySpec(keyByte, "AES");
+                Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+                cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+                byte[] decrypted = cipher.doFinal(Base64.decodeBase64(encrytped.getBytes("UTF-8")));
+                return new String(decrypted, "UTF-8");
+            } catch (Exception e) {
+                logger.error("", e);
+            }
         }
         return null;
     }

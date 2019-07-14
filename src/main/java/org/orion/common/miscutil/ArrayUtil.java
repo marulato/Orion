@@ -49,6 +49,18 @@ public class ArrayUtil {
         return null;
     }
 
+    public static byte[] get(byte[] arr, int start, int end) {
+        if (arr != null && start < end && end < arr.length) {
+            byte[] copy = new byte[end - start + 1];
+            int index = 0;
+            for (int i = start; i <= end; i++) {
+                copy[index ++] = arr[i];
+            }
+            return copy;
+        }
+        return null;
+    }
+
     public static String[] toStringArray(List<String> list) {
         if (list != null) {
             String[] array = new String[list.size()];

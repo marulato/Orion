@@ -66,4 +66,8 @@
     <select id="queryUserProfile" parameterType="org.orion.systemAdmin.entity.User" resultType="org.orion.systemAdmin.entity.UserProfile">
         SELECT * FROM USER_PROFILE WHERE USER_ID = #{userId} AND LOGIN_ID = #{loginId}
     </select>
+
+    <update id="updatePassword" parameterType="org.orion.systemAdmin.entity.User">
+        UPDATE USER_TBL SET PWD = #{pwd}, PWD_LAST_CHG_DT = #{pwdLastChgDt}, PWD_CHG_REQUIRED = #{pwdChgRequired}, UPDATED_AT = #{updatedAt}, UPDATED_BY = #{updatedBy} WHERE USER_ID = #{userId}
+    </update>
 </mapper>

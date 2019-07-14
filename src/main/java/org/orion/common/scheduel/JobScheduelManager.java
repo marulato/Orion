@@ -2,7 +2,6 @@ package org.orion.common.scheduel;
 
 import org.orion.common.basic.AppContext;
 import org.orion.common.basic.BaseBatchJob;
-import org.orion.common.basic.TranscationResult;
 import org.orion.common.mastercode.ErrorCode;
 import org.orion.common.miscutil.DateUtil;
 import org.orion.common.miscutil.StringUtil;
@@ -135,7 +134,7 @@ public class JobScheduelManager {
     }
 
     @Transactional
-    public TranscationResult registerAutomaticJob(JobScheduel jobScheduel, AppContext appContext, boolean needRegistion) {
+    public void registerAutomaticJob(JobScheduel jobScheduel, AppContext appContext, boolean needRegistion) {
         if (jobScheduel != null && appContext != null) {
             long start = System.currentTimeMillis();
             registerAutoJob(jobScheduel);
@@ -143,10 +142,7 @@ public class JobScheduelManager {
             batchJobEntity.setAudit(appContext.getUser().getLoginId(), DateUtil.now());
             List<ErrorCode> errorCodes = createBatchJob(batchJobEntity);
             long end = System.currentTimeMillis();
-            TranscationResult result = new TranscationResult("registerAutoJobNow", start, end, errorCodes);
-            return result;
         }
-        return new TranscationResult();
     }
 
     @Transactional

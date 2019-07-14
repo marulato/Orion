@@ -23,6 +23,8 @@ public interface UserDao {
 
     void createHistory(UserLoginHistory loginHistory);
 
+    void updatePassword(User user);
+
     List<UserLoginHistory> queryLoginAudit(User user);
 
     List<UserLoginHistory> queryLoginAuditPeriod(@Param("id") String loginId, @Param("from") Date from, @Param("to") Date to, @Param("ss") String isSuccess);
