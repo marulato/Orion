@@ -45,7 +45,7 @@ public class AuthLoginController {
 
     @RequestMapping("/web/AuthLogin/signin")
     @ResponseBody
-    public String login(HttpServletRequest request, User loginUser) {
+    public String login(HttpServletRequest request, User loginUser) throws Exception {
         if (loginUser != null) {
             loginUser.setPwd(Encrtption.decryptAES(loginUser.getPwd(), AppConsts.SALT_KEY));
             int loginResult = authorizeService.login(loginUser, request);
@@ -64,7 +64,7 @@ public class AuthLoginController {
 
     @RequestMapping("/web/AuthLogin/ChangePassword/confirm")
     @ResponseBody
-    public String changePwd(HttpServletRequest request, String pwd, String npwd) {
+    public String changePwd(HttpServletRequest request, String pwd, String npwd) throws Exception {
         String password = Encrtption.decryptAES(pwd, AppConsts.SALT_KEY);
         String newPwd = Encrtption.decryptAES(npwd, AppConsts.SALT_KEY);
         AppContext context = AppContext.getAppContext(request);
