@@ -30,24 +30,24 @@ public class AuthLoginController {
 
     @RequestMapping("/web/AuthLogin")
     public String initLoginPage() {
-        return "authLogin/authLogin";
+        return "systemadmin/login_page";
     }
 
     @RequestMapping("/web/AuthLogin/ChangePassword")
     public String initChangePwdPage() {
-        return "authLogin/changePassword";
+        return "systemadmin/changePassword";
     }
 
     @RequestMapping("/web/Home")
     public String initHomePage() {
-        return "authLogin/homePage";
+        return "systemadmin/dashboard";
     }
 
     @RequestMapping("/web/AuthLogin/signin")
     @ResponseBody
     public String login(HttpServletRequest request, User loginUser) throws Exception {
         if (loginUser != null) {
-            loginUser.setPwd(Encrtption.decryptAES(loginUser.getPwd(), AppConsts.SALT_KEY));
+            loginUser.setPwd(Encrtption.decryptAES(loginUser.getPwd(), AppConsts.SALT_KEY, true));
             int loginResult = authorizeService.login(loginUser, request);
             if (loginResult == 1) {
                 AppContext context = AppContext.getAppContext(request);
@@ -65,8 +65,8 @@ public class AuthLoginController {
     @RequestMapping("/web/AuthLogin/ChangePassword/confirm")
     @ResponseBody
     public String changePwd(HttpServletRequest request, String pwd, String npwd) throws Exception {
-        String password = Encrtption.decryptAES(pwd, AppConsts.SALT_KEY);
-        String newPwd = Encrtption.decryptAES(npwd, AppConsts.SALT_KEY);
+        String password = Encrtption.decryptAES(pwd, AppConsts.SALT_KEY, true);
+        String newPwd = Encrtption.decryptAES(npwd, AppConsts.SALT_KEY, true);
         AppContext context = AppContext.getAppContext(request);
         String changePwd = (String)HttpUtil.getSessionAttr(request, "changePwd");
         if (password.equals(newPwd) && context != null && AppConsts.YES.equals(changePwd)) {

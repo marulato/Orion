@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description" content="Xenon Boostrap Admin Panel" />
+	<meta name="author" content="" />
+	
+	<title>Xenon - Data Tables</title>
+
+	<link rel="stylesheet" th:href="@{/assets/css/fonts/linecons/css/linecons.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/fonts/fontawesome/css/font-awesome.min.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/bootstrap.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/xenon-core.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/xenon-forms.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/xenon-components.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/xenon-skins.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/custom.css}">
+	<link rel="stylesheet" th:href="@{/orion/jquery.page.css}">
+
+
+	<script th:src="@{/assets/js/jquery-1.11.1.min.js}"></script>
+	
+	
+</head>
+<body class="page-body">
+
+	<div th:replace="basic::setting-pane"></div>
+	
+	<div class="page-container">
+		<div th:replace="basic::leftmenu"></div>
+		
+		<div class="main-content">
+			<nav th:replace="basic::nav-bar"></nav>
+
+			<div class="page-title">
+				
+				<div class="title-env">
+					<h1 class="title">参数配置</h1>
+					<p class="description">运行时服务器参数设置</p>
+				</div>
+				
+					<div class="breadcrumb-env">
+					
+								<ol class="breadcrumb bc-1">
+									<li>
+							<a href="dashboard-1.html"><i class="fa-home"></i>Home</a>
+						</li>
+								<li>
+						
+										<a href="tables-basic.html">系统设置</a>
+								</li>
+							<li class="active">
+						
+										<strong>参数配置</strong>
+								</li>
+								</ol>
+								
+				</div>
+					
+			</div>
+
+			<!-- Removing search and results count filter -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">服务器运行参数</h3>
+				</div>
+				<div class="panel-body">
+					
+					<table class="table table-bordered table-striped" id="sysconfigTable">
+						<thead>
+							<tr>
+								<th>名称</th>
+								<th>键</th>
+								<th>参数</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						
+						<tbody class="middle-align" id="sysConfigbody">
+
+							
+						</tbody>
+					</table>
+					<div class="dataTables_paginate paging_simple_numbers">
+						<div class="tcdPageCode page_1"></div>
+					</div>
+				</div>
+			</div>
+			<!-- Main Footer -->
+			<!-- Choose between footer styles: "footer-type-1" or "footer-type-2" -->
+			<!-- Add class "sticky" to  always stick the footer to the end of page (if page contents is small) -->
+			<!-- Or class "fixed" to  always fix the footer to the end of page -->
+			<footer class="main-footer sticky footer-type-1">
+				
+				<div class="footer-inner">
+				
+					<!-- Add your copyright text here -->
+					<div class="footer-text">
+						&copy; 2014 
+						<strong>Xenon</strong> 
+						More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a>
+					</div>
+					
+					
+					<!-- Go to Top Link, just add rel="go-top" to any link to add this functionality -->
+					<div class="go-up">
+					
+						<a href="#" rel="go-top">
+							<i class="fa-angle-up"></i>
+						</a>
+						
+					</div>
+					
+				</div>
+				
+			</footer>
+		</div>
+		
+			
+		<!-- start: Chat Section -->
+		<div id="chat" class="fixed">
+			
+			<div class="chat-inner">
+			
+				
+				<h2 class="chat-header">
+					<a href="#" class="chat-close" data-toggle="chat">
+						<i class="fa-plus-circle rotate-45deg"></i>
+					</a>
+					
+					Chat
+					<span class="badge badge-success is-hidden">0</span>
+				</h2>
+				
+				<script type="text/javascript">
+				// Here is just a sample how to open chat conversation box
+				jQuery(document).ready(function($)
+				{
+					var $chat_conversation = $(".chat-conversation");
+					
+					$(".chat-group a").on('click', function(ev)
+					{
+						ev.preventDefault();
+						
+						$chat_conversation.toggleClass('is-open');
+						
+						$(".chat-conversation textarea").trigger('autosize.resize').focus();
+					});
+					
+					$(".conversation-close").on('click', function(ev)
+					{
+						ev.preventDefault();
+						$chat_conversation.removeClass('is-open');
+					});
+				});
+				</script>
+				
+				
+				<div class="chat-group">
+					<strong>Favorites</strong>
+					
+					<a href="#"><span class="user-status is-online"></span> <em>Catherine J. Watkins</em></a>
+					<a href="#"><span class="user-status is-online"></span> <em>Nicholas R. Walker</em></a>
+					<a href="#"><span class="user-status is-busy"></span> <em>Susan J. Best</em></a>
+					<a href="#"><span class="user-status is-idle"></span> <em>Fernando G. Olson</em></a>
+					<a href="#"><span class="user-status is-offline"></span> <em>Brandon S. Young</em></a>
+				</div>
+				
+				
+				<div class="chat-group">
+					<strong>Work</strong>
+					
+					<a href="#"><span class="user-status is-busy"></span> <em>Rodrigo E. Lozano</em></a>
+					<a href="#"><span class="user-status is-offline"></span> <em>Robert J. Garcia</em></a>
+					<a href="#"><span class="user-status is-offline"></span> <em>Daniel A. Pena</em></a>
+				</div>
+				
+				
+				<div class="chat-group">
+					<strong>Other</strong>
+					
+					<a href="#"><span class="user-status is-online"></span> <em>Dennis E. Johnson</em></a>
+					<a href="#"><span class="user-status is-online"></span> <em>Stuart A. Shire</em></a>
+					<a href="#"><span class="user-status is-online"></span> <em>Janet I. Matas</em></a>
+					<a href="#"><span class="user-status is-online"></span> <em>Mindy A. Smith</em></a>
+					<a href="#"><span class="user-status is-busy"></span> <em>Herman S. Foltz</em></a>
+					<a href="#"><span class="user-status is-busy"></span> <em>Gregory E. Robie</em></a>
+					<a href="#"><span class="user-status is-busy"></span> <em>Nellie T. Foreman</em></a>
+					<a href="#"><span class="user-status is-busy"></span> <em>William R. Miller</em></a>
+					<a href="#"><span class="user-status is-idle"></span> <em>Vivian J. Hall</em></a>
+					<a href="#"><span class="user-status is-offline"></span> <em>Melinda A. Anderson</em></a>
+					<a href="#"><span class="user-status is-offline"></span> <em>Gary M. Mooneyham</em></a>
+					<a href="#"><span class="user-status is-offline"></span> <em>Robert C. Medina</em></a>
+					<a href="#"><span class="user-status is-offline"></span> <em>Dylan C. Bernal</em></a>
+					<a href="#"><span class="user-status is-offline"></span> <em>Marc P. Sanborn</em></a>
+					<a href="#"><span class="user-status is-offline"></span> <em>Kenneth M. Rochester</em></a>
+					<a href="#"><span class="user-status is-offline"></span> <em>Rachael D. Carpenter</em></a>
+				</div>
+			
+			</div>
+			
+			<!-- conversation template -->
+			<div class="chat-conversation">
+				
+				<div class="conversation-header">
+					<a href="#" class="conversation-close">
+						&times;
+					</a>
+					
+					<span class="user-status is-online"></span>
+					<span class="display-name">Arlind Nushi</span> 
+					<small>Online</small>
+				</div>
+				
+				<ul class="conversation-body">	
+					<li>
+						<span class="user">Arlind Nushi</span>
+						<span class="time">09:00</span>
+						<p>Are you here?</p>
+					</li>
+					<li class="odd">
+						<span class="user">Brandon S. Young</span>
+						<span class="time">09:25</span>
+						<p>This message is pre-queued.</p>
+					</li>
+					<li>
+						<span class="user">Brandon S. Young</span>
+						<span class="time">09:26</span>
+						<p>Whohoo!</p>
+					</li>
+					<li class="odd">
+						<span class="user">Arlind Nushi</span>
+						<span class="time">09:27</span>
+						<p>Do you like it?</p>
+					</li>
+				</ul>
+				
+				<div class="chat-textarea">
+					<textarea class="form-control autogrow" placeholder="Type your message"></textarea>
+				</div>
+				
+			</div>
+			
+		</div>
+		<!-- end: Chat Section -->
+		
+	</div>
+	<!--修改弹窗-->
+	<div class="modal fade" id="modifyBox">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">修改参数</h4>
+				</div>
+
+				<div class="modal-body">
+
+					<div class="row">
+						<div class="col-md-12">
+
+							<div class="form-group">
+								<label for="field-1" class="control-label">描述</label>
+
+								<input type="text" class="form-control" id="descInput">
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+
+							<div class="form-group">
+								<label for="field-3" class="control-label">键</label>
+
+								<input type="text" class="form-control" id="keyInput">
+							</div>
+
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
+
+							<div class="form-group">
+								<label for="field-4" class="control-label">值</label>
+
+								<input type="text" class="form-control" id="valueInput">
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-info">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+
+
+
+
+	<!-- Imported styles on this page -->
+	<link rel="stylesheet" th:href="@{/assets/js/datatables/dataTables.bootstrap.css}">
+
+	<!-- Bottom Scripts -->
+	<script th:src="@{/orion/jquery-3.3.1.js}"></script>
+	<script th:src="@{/assets/js/bootstrap.min.js}"></script>
+	<script th:src="@{/assets/js/TweenMax.min.js}"></script>
+	<script th:src="@{/assets/js/resizeable.js}"></script>
+	<script th:src="@{/assets/js/joinable.js}"></script>
+	<script th:src="@{/assets/js/xenon-api.js}"></script>
+	<script th:src="@{/assets/js/xenon-toggles.js}"></script>
+	<script th:src="@{/assets/js/datatables/js/jquery.dataTables.min.js}"></script>
+
+
+	<!-- Imported scripts on this page -->
+	<script th:src="@{/assets/js/datatables/dataTables.bootstrap.js}"></script>
+	<script th:src="@{/assets/js/datatables/yadcf/jquery.dataTables.yadcf.js}"></script>
+	<script th:src="@{/assets/js/datatables/tabletools/dataTables.tableTools.min.js}"></script>
+
+
+	<!-- JavaScripts initializations and stuff -->
+	<script th:src="@{/assets/js/xenon-custom.js}"></script>
+
+	<script th:src="@{/orion/jquery-block.js}"></script>
+	<script th:src="@{/orion/common.js}"></script>
+	<script th:src="@{/orion/systemadmin/systemConfig.js}"></script>
+	<script th:src="@{/orion/jquery.page.js}"></script>
+
+</body>
+</html>

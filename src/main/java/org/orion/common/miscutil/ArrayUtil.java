@@ -5,18 +5,34 @@ import java.util.List;
 
 public class ArrayUtil {
 
+    public static boolean isEmpty(String[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(int[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(double[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(byte[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(Object[] array) {
+        return array == null || array.length == 0;
+    }
+
+
     public static boolean contains(Object[] arr,  Object... item) {
-        if (arr != null) {
-            if (item != null) {
-                return false;
-            }
+        if (arr != null && item != null) {
             List<Object> list = Arrays.asList(arr);
-            for(Object obj : item) {
-                if (!list.contains(obj))
-                    return false;
-            }
+            List<Object> items = Arrays.asList(item);
+            return list.containsAll(items);
         }
-        return true;
+        return false;
     }
 
 
@@ -90,7 +106,5 @@ public class ArrayUtil {
         }
         return newArray;
     }
-
-
 
 }

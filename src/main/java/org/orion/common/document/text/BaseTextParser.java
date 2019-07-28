@@ -1,7 +1,6 @@
 package org.orion.common.document.text;
 
 import org.orion.common.miscutil.FileUtil;
-import org.orion.common.miscutil.IOUtil;
 import org.orion.common.miscutil.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,7 @@ public abstract class BaseTextParser {
                 throw e;
             } finally {
                 try {
-                    IOUtil.close(reader);
+                    reader.close();
                 } catch (Exception e) {
                     logger.error("Failed to Close Input Stream", e);
                     throw e;
@@ -122,7 +121,7 @@ public abstract class BaseTextParser {
             throw e;
         } finally {
             try {
-                IOUtil.close(writer);
+                writer.close();
                 if (autoReflesh == null || autoReflesh == true)
                     refresh();
                 else {
@@ -161,7 +160,7 @@ public abstract class BaseTextParser {
             throw e;
         } finally {
             try {
-                IOUtil.close(writer);
+                writer.close();
                 if (autoReflesh == null || autoReflesh == true)
                     refresh();
                 else {
@@ -202,7 +201,7 @@ public abstract class BaseTextParser {
             throw e;
         } finally {
             try {
-                IOUtil.close(writer);
+                writer.close();
                 if (autoReflesh == null || autoReflesh == true)
                     refresh();
                 else {

@@ -14,6 +14,9 @@ public interface DatabaseSchemaDao {
     @Select("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = (SELECT database()) and TABLE_NAME = #{tn}")
     public List<String> retrieveColumnTypes(@Param("tn") String tableName);
 
+    @SelectProvider(type = SQLManager.class, method = "executeCommand")
+    public void execute(String sql);
+
     @InsertProvider(type = SQLManager.class, method = "createInsert")
     public void insert(BaseEntity entity);
 

@@ -185,4 +185,24 @@ public final class StringUtil {
         }
         return 0;
     }
+
+    public static String appendFileName(String dir, String fileName) {
+        if (!isEmpty(dir) && !isEmpty(fileName)) {
+            dir = dir.replaceAll("\\\\", "/");
+            if (dir.endsWith("/")) {
+                return dir + fileName;
+            } else {
+                return dir + "/" + fileName;
+            }
+        }
+        return null;
+    }
+
+    public static String deleteCharAt(String src, int index) {
+        if (!isEmpty(src)) {
+            StringBuilder builder = new StringBuilder(src);
+            return builder.deleteCharAt(index).toString();
+        }
+        return null;
+    }
 }

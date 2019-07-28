@@ -2,6 +2,7 @@ package org.orion.common.dao;
 
 import org.orion.common.audit.AuditTrail;
 import org.orion.common.basic.BaseEntity;
+import org.orion.common.basic.SearchParam;
 import org.orion.common.dao.annotation.Id;
 import org.orion.common.miscutil.SpringUtil;
 import org.orion.common.miscutil.StringUtil;
@@ -211,6 +212,25 @@ import java.util.Map;
         return auditBuilder.toString();
     }
 
+    public String createSearch(SearchParam searchParam) {
+        if (searchParam != null) {
+            StringBuilder search = new StringBuilder();
+            search.append("SELECT * FROM ").append(searchParam.getTable());
+            search.append(searchParam.getOrder().orderBy());
+            search.append(" LIMIT #{start}, #{pageSize}");
+            return search.toString();
+        }
+        return null;
+    }
+
+    public String getCount(String tableName) {
+        return "SELECT COUNT(*) FROM " + tableName;
+    }
+
+    public String executeCommand(String sql) {
+        return sql;
+    }
+
     private void doInitData(String tableName) {
         if (!StringUtil.isBlank(tableName)) {
             if (schemaDao == null) {
@@ -239,7 +259,7 @@ import java.util.Map;
                         fieldTypes.add("int");
                     } else if("date".equalsIgnoreCase(dataType) || "datetime".equalsIgnoreCase(dataType)) {
                         fieldTypes.add("Date");
-                    } else if ("blob".equalsIgnoreCase(dataType)) {
+                    } else if (dataType.contains("blob")) {
                         fieldTypes.add("byte[]");
                     }
                 }

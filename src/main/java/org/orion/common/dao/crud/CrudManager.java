@@ -2,6 +2,7 @@ package org.orion.common.dao.crud;
 
 import org.orion.common.basic.BaseEntity;
 import org.orion.common.dao.DatabaseSchemaDao;
+import org.orion.common.miscutil.StringUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,6 +22,12 @@ public class CrudManager {
     public void update(BaseEntity entity) {
         if (entity != null) {
             databaseSchemaDao.update(entity);
+        }
+    }
+
+    public void execute(String sql) {
+        if (!StringUtil.isEmpty(sql)) {
+            databaseSchemaDao.execute(sql);
         }
     }
 }

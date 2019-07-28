@@ -26,7 +26,7 @@ public final class PoiUtil {
         File file = new File(path);
         if (file.exists()) {
             try {
-                FileInputStream stream = IOUtil.getFileInputStream(path);
+                FileInputStream stream = new FileInputStream(path);
                 workbook = new XSSFWorkbook(stream);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -264,8 +264,8 @@ public final class PoiUtil {
 
     public static void save(XSSFWorkbook workbook, String path) {
         if (workbook != null) {
-            FileOutputStream stream = IOUtil.getFileOutputStream(path);
             try {
+                FileOutputStream stream = new FileOutputStream(path);
                 workbook.write(stream);
             } catch (IOException e) {
                 e.printStackTrace();

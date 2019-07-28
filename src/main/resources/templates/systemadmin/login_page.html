@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description" content="Xenon Boostrap Admin Panel" />
+	<meta name="author" content="" />
+	
+	<title>Xenon - Login Light</title>
+
+<!--	<link rel="stylesheet" th:href="@{http://fonts.useso.com/css?family=Arimo:400,700,400italic}">-->
+	<link rel="stylesheet" th:href="@{/assets/css/fonts/linecons/css/linecons.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/fonts/fontawesome/css/font-awesome.min.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/bootstrap.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/xenon-core.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/xenon-forms.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/xenon-components.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/xenon-skins.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/custom.css}">
+
+	<script th:src="@{/assets/js/jquery-1.11.1.min.js}"></script>
+	
+</head>
+<body class="page-body login-page login-light">
+
+	
+	<div class="login-container">
+	
+		<div class="row">
+		
+			<div class="col-sm-6">
+
+				<script type="text/javascript">
+					jQuery(document).ready(function($)
+					{
+						// Reveal Login form
+						setTimeout(function(){ $(".fade-in-effect").addClass('in'); }, 1);
+
+
+						// Validation and Ajax action
+						$("form#login").validate({
+							rules: {
+								username: {
+									required: true
+								},
+
+								passwd: {
+									required: true
+								}
+							},
+
+							messages: {
+								username: {
+									required: 'Please enter your username.'
+								},
+
+								passwd: {
+									required: 'Please enter your password.'
+								}
+							},
+
+							// Form Processing via AJAX
+							submitHandler: function(form)
+							{
+								show_loading_bar(70); // Fill progress bar to 70% (just a given value)
+
+								var opts = {
+									"closeButton": true,
+									"debug": false,
+									"positionClass": "toast-top-full-width",
+									"onclick": null,
+									"showDuration": "300",
+									"hideDuration": "1000",
+									"timeOut": "5000",
+									"extendedTimeOut": "1000",
+									"showEasing": "swing",
+									"hideEasing": "linear",
+									"showMethod": "fadeIn",
+									"hideMethod": "fadeOut"
+								};
+							}
+						});
+
+						// Set Form focus
+						$("form#login .form-group:has(.form-control):first .form-control").focus();
+					});
+				</script>
+				
+				<!-- Errors container -->
+				<div class="errors-container">
+				
+
+				</div>
+				
+				<!-- Add class "fade-in-effect" for login form effect -->
+				<form method="post" role="form" id="loginForm" class="login-form fade-in-effect">
+					
+					<div class="login-header">
+						<a href="dashboard-1.html" class="logo">
+							<img src="assets/images/logo-white-bg@2x.png" alt="" width="80" />
+							<span>登陆</span>
+						</a>
+						
+						<p>Dear user, log in to access the admin area!</p>
+					</div>
+	
+					
+					<div class="form-group">
+						<label class="control-label" for="username">Username</label>
+						<input type="hidden" id="browser">
+						<input type="text" class="form-control" name="loginId" id="username" autocomplete="off" />
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label" for="password">Password</label>
+						<input type="password" class="form-control" name="pwd" id="password" autocomplete="off" />
+					</div>
+					
+					<div class="form-group">
+						<button type="button" class="btn btn-primary  btn-block text-left" onclick="auth.doLogin()">
+							<i class="fa-lock"></i>
+							登陆
+						</button>
+					</div>
+					
+					<div class="login-footer">
+						<a href="#">忘记密码?</a>
+						
+						<div class="info-links">
+							<a href="#">ToS</a> -
+							<a href="#">隐私政策</a>
+						</div>
+						
+					</div>
+					
+				</form>
+				
+				<!-- External login -->
+				<div class="external-login">
+					<a href="#" class="facebook">
+						<i class="fa-facebook"></i>
+						注册
+					</a>
+				</div>
+				
+			</div>
+			
+		</div>
+		
+	</div>
+
+
+
+	<!-- Bottom Scripts -->
+	<script th:src="@{/assets/js/bootstrap.min.js}"></script>
+	<script th:src="@{/assets/js/TweenMax.min.js}"></script>
+	<script th:src="@{/assets/js/resizeable.js}"></script>
+	<script th:src="@{/assets/js/joinable.js}"></script>
+	<script th:src="@{/assets/js/xenon-api.js}"></script>
+	<script th:src="@{/assets/js/xenon-toggles.js}"></script>
+	<script th:src="@{/assets/js/jquery-validate/jquery.validate.min.js}"></script>
+	<script th:src="@{/assets/js/toastr/toastr.min.js}"></script>
+
+	<script th:src="@{/js/aes.min.js}"></script>
+	<script th:src="@{/orion/jquery-3.3.1.js}"></script>
+	<script th:src="@{/orion/jquery-block.js}"></script>
+	<script th:src="@{/orion/common.js}"></script>
+	<script th:src="@{/orion/systemadmin/authLogin.js}"></script>
+
+	<script th:src="@{/assets/js/xenon-custom.js}"></script>
+
+</body>
+</html>

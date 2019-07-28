@@ -55,4 +55,8 @@ public class CollectionUtil {
         addElements(list, ele);
         return list;
     }
+
+    public static <E> List<E> unmutableList(E...ele) {
+        return Collections.unmodifiableList(Arrays.asList(ele));
+    }
 }

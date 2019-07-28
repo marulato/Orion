@@ -8,6 +8,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
 public class Encrtption {
@@ -52,28 +53,42 @@ public class Encrtption {
         return false;
     }
 
+    public static String sha256(byte[] data) {
+        if (ArrayUtil.isEmpty(data)) {
+            return null;
+        }
+        return DigestUtils.sha256Hex(data);
+    }
+
+    public static String sha1(byte[] data) {
+        if (ArrayUtil.isEmpty(data)) {
+            return null;
+        }
+        return DigestUtils.sha1Hex(data);
+    }
+
     public static String encryptDES(String src, String key) throws Exception {
             Cipher ecipher = Cipher.getInstance("DES");
             byte[] keyByte = new byte[8];
-            System.arraycopy(("orion" + key).getBytes("UTF-8"), 0, keyByte, 0, keyByte.length);
+            System.arraycopy(("orion" + key).getBytes(StandardCharsets.UTF_8), 0, keyByte, 0, keyByte.length);
             SecretKey secretKey = new SecretKeySpec(keyByte, "DES");
             ecipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            byte[] enc = ecipher.doFinal(src.getBytes("UTF-8"));
+            byte[] enc = ecipher.doFinal(src.getBytes(StandardCharsets.UTF_8));
             byte[] encodedBytes = Base64.encodeBase64(enc);
-            return new String(encodedBytes);
+            return new String(encodedBytes, StandardCharsets.UTF_8);
     }
 
     public static String decryptDES(String encrytped, String key) throws Exception {
             Cipher dcipher = Cipher.getInstance("DES");
             byte[] keyByte = new byte[8];
-            System.arraycopy(("orion" + key).getBytes("UTF-8"), 0, keyByte, 0, keyByte.length);
+            System.arraycopy(("orion" + key).getBytes(StandardCharsets.UTF_8), 0, keyByte, 0, keyByte.length);
             SecretKey secretKey = new SecretKeySpec(keyByte, "DES");
             dcipher.init(Cipher.DECRYPT_MODE, secretKey);
-            byte[] utf8 = dcipher.doFinal(Base64.decodeBase64(encrytped.getBytes("UTF-8")));
-            return new String(utf8, "UTF8");
+            byte[] utf8 = dcipher.doFinal(Base64.decodeBase64(encrytped.getBytes(StandardCharsets.UTF_8)));
+            return new String(utf8, StandardCharsets.UTF_8);
     }
 
-    public static String encryptAES(String src, String key) throws Exception {
+    public static String encryptAES(String src, String key, boolean padding) throws Exception {
         if (!StringUtil.isEmpty(key) && key.length() >= 16) {
             if (parameterSpec == null) {
                 SecureRandom random = new SecureRandom();
@@ -81,24 +96,36 @@ public class Encrtption {
                 random.nextBytes(iv);
                 parameterSpec = new GCMParameterSpec(128, iv);
             }
-            byte[] keyByte = ArrayUtil.get(key.getBytes("UTF-8"), 0, 15);
+            byte[] keyByte = ArrayUtil.get(key.getBytes(StandardCharsets.UTF_8), 0, 15);
             SecretKeySpec skeySpec = new SecretKeySpec(keyByte, "AES");
-            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, parameterSpec);
-            byte[] encrypted = cipher.doFinal(src.getBytes("UTF-8"));
-            return new String(Base64.encodeBase64(encrypted));
+            Cipher cipher = null;
+            if (padding) {
+                cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+                cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+            } else {
+                cipher = Cipher.getInstance("AES/GCM/NoPadding");
+                cipher.init(Cipher.ENCRYPT_MODE, skeySpec, parameterSpec);
+            }
+            byte[] encrypted = cipher.doFinal(src.getBytes(StandardCharsets.UTF_8));
+            return new String(Base64.encodeBase64(encrypted), StandardCharsets.UTF_8);
         }
         return null;
     }
 
-    public static String decryptAES(String encrytped, String key) throws Exception {
+    public static String decryptAES(String encrytped, String key, boolean padding) throws Exception {
         if (!StringUtil.isEmpty(key) && key.length() >= 16) {
-                byte[] keyByte = ArrayUtil.get(key.getBytes("UTF-8"), 0, 15);
+                byte[] keyByte = ArrayUtil.get(key.getBytes(StandardCharsets.UTF_8), 0, 15);
                 SecretKeySpec skeySpec = new SecretKeySpec(keyByte, "AES");
-                Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-                cipher.init(Cipher.DECRYPT_MODE, skeySpec, parameterSpec);
-                byte[] decrypted = cipher.doFinal(Base64.decodeBase64(encrytped.getBytes("UTF-8")));
-                return new String(decrypted, "UTF-8");
+                Cipher cipher = null;
+                if (padding) {
+                    cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+                    cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+                } else {
+                    cipher = Cipher.getInstance("AES/GCM/NoPadding");
+                    cipher.init(Cipher.DECRYPT_MODE, skeySpec, parameterSpec);
+                }
+                byte[] decrypted = cipher.doFinal(Base64.decodeBase64(encrytped.getBytes(StandardCharsets.UTF_8)));
+                return new String(decrypted, StandardCharsets.UTF_8);
         }
         return null;
     }

@@ -1,10 +1,13 @@
 package org.orion.common.miscutil;
 
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 
 public class FileUtil {
@@ -14,15 +17,19 @@ public class FileUtil {
     public static final String MB = "MB";
     public static final String GB = "GB";
     public static final String TB = "TB";
+    private static final List<String> IMAGE_EXTEND  = CollectionUtil.unmutableList("JPG", "JPEG", "BMP", "PNG", "GIF", "RAW", "PSD", "TIFF", "WEBP");
+    private static final List<String> VIDEO_EXTEND  = CollectionUtil.unmutableList("MP4", "AVI", "MKV", "FLV", "RMVB", "MOV", "WMV", "AVC", "264", "265");
+    private static final List<String> DOC_EXTEND  = CollectionUtil.unmutableList("TXT", "DOC", "DOCX", "XLS", "XLSX", "PPT", "PPTX");
+    private static final List<String> EXECUTABLE_EXTEND  = CollectionUtil.unmutableList("EXE", "BAT", "JAR", "SH", "COM", "JS", "VBS");
 
-    public static File createDirectory(String path) {
-        if (StringUtil.isEmpty(path))
-            return null;
-        File file = new File(path);
-        if (! file.exists()) {
-            file.mkdirs();
+    public static boolean isImage(File file) {
+        if (file != null && file.isFile()) {
+            String exName = StringUtil.getFileSuffix(file.getName());
+            if (IMAGE_EXTEND.contains(exName.toUpperCase())) {
+                return true;
+            }
         }
-        return file;
+        return false;
     }
 
     public static boolean deleteSingleFile(String path) {
@@ -36,6 +43,7 @@ public class FileUtil {
         }
     }
 
+    @Deprecated
     public static int deleteAll(String path) {
         if (StringUtil.isEmpty(path))
             return -1;
@@ -144,6 +152,58 @@ public class FileUtil {
             return size;
         } else {
             return 0;
+        }
+    }
+
+    public static void mkdirs(String dir) {
+        if (!StringUtil.isEmpty(dir)) {
+            File file = new File(dir);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+        }
+    }
+
+    public static void cleanDir(String dirPath) throws IOException {
+        File dir = new File(dirPath);
+        if (dir.exists() && dir.isDirectory()) {
+            FileUtils.cleanDirectory(dir);
+        }
+    }
+
+    public static void copy(String src, String dest) throws IOException {
+        copy(new File(src), new File(dest));
+    }
+
+    public static void copy(File src, File dest) throws IOException {
+        if (src != null && dest != null) {
+            if (src.isFile() && dest.exists() && dest.isDirectory()) {
+                FileUtils.copyFileToDirectory(src, dest);
+            } else if(src.isDirectory() && dest.exists() && dest.isDirectory()) {
+                FileUtils.copyDirectoryToDirectory(src, dest);
+            } else if(src.isFile() && !dest.exists()) {
+                FileUtils.copyFile(src, dest);
+            } else if(src.isDirectory()) {
+                FileUtils.copyDirectory(src, dest);
+            }
+        }
+    }
+
+    public static void move(String src, String dest) throws IOException {
+        move(new File(src), new File(dest));
+    }
+
+    public static void move(File src, File dest) throws IOException {
+        if (src != null && dest != null) {
+            if (src.isFile() && dest.exists() && dest.isDirectory()) {
+                FileUtils.moveFileToDirectory(src, dest, true);
+            } else if(src.isDirectory() && dest.exists() && dest.isDirectory()) {
+                FileUtils.moveDirectoryToDirectory(src, dest, true);
+            } else if(src.isFile() && !dest.exists()) {
+                FileUtils.moveFile(src, dest);
+            } else if(src.isDirectory()) {
+                FileUtils.moveDirectory(src, dest);
+            }
         }
     }
 
