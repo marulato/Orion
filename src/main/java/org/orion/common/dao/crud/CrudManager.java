@@ -30,4 +30,11 @@ public class CrudManager {
             databaseSchemaDao.execute(sql);
         }
     }
+
+    public int countAll(String table) {
+        if (!StringUtil.isEmpty(table)) {
+            return databaseSchemaDao.countAll(table);
+        }
+        return -1;
+    }
 }

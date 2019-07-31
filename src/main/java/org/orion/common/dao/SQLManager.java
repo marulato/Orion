@@ -216,7 +216,9 @@ import java.util.Map;
         if (searchParam != null) {
             StringBuilder search = new StringBuilder();
             search.append("SELECT * FROM ").append(searchParam.getTable());
-            search.append(searchParam.getOrder().orderBy());
+            if (searchParam.getOrder() != null) {
+                search.append(searchParam.getOrder().orderBy());
+            }
             search.append(" LIMIT #{start}, #{pageSize}");
             return search.toString();
         }

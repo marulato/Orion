@@ -1,5 +1,6 @@
 package org.orion.systemAdmin.controller;
 
+import org.orion.common.basic.SearchParam;
 import org.orion.common.basic.SearchResult;
 import org.orion.systemAdmin.entity.SystemConfig;
 import org.orion.systemAdmin.service.SysConfigService;
@@ -24,8 +25,12 @@ public class SystemController {
     @RequestMapping("/web/System/Configuration/search")
     @ResponseBody
     public SearchResult searchSystemConfig(String page) {
+        SearchParam searchParam = new SearchParam();
+        searchParam.setPage(Integer.parseInt(page));
+        searchParam.setPageSize(10);
+        searchParam.setTable("SYS_CONFIG");
         SearchResult searchResult = new SearchResult();
-        List<SystemConfig> sysConfigList = sysConfigService.searchAllSystemConfigs(Integer.parseInt(page), 5);
+        List<SystemConfig> sysConfigList = sysConfigService.searchAllSystemConfigs(searchParam);
         searchResult.setPage(Integer.parseInt(page));
         searchResult.setTotalPages(sysConfigService.getSystemConfigTotalPages(5));
         searchResult.setResult(sysConfigList);

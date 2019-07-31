@@ -25,4 +25,7 @@ public interface DatabaseSchemaDao {
 
     @DeleteProvider(type = SQLManager.class, method = "createDelete")
     public void delete(BaseEntity entity);
+
+    @SelectProvider(type = SQLManager.class, method = "getCount")
+    public int countAll(String table);
 }
