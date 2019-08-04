@@ -31,3 +31,52 @@ common.getBrowser = function () {
 
 
 }
+
+common.getToken = function () {
+    var token = "";
+    $.ajax({
+        url:"/orion/web/Security/RequestValidation/token",
+        type:"post",
+        dataType:"text",
+        async:false,
+        success:function (data) {
+            token = encodeURIComponent(data);
+        },
+        error:function () {
+            token = "error_token";
+        }
+    });
+    return token;
+}
+
+common.validate = function (form, url) {
+    var response = null;
+    $.ajax({
+        url:url,
+        type:"post",
+        data:form,
+        async:false,
+        dataType:"json",
+        success:function (data) {
+            response = data;
+        }
+    });
+    return response;
+}
+
+common.showErrorMsg = function (result) {
+    var errors = result.errors;
+    $.each(errors, function (idx, err) {
+        var errMsg ="*" + err.errorDesc;
+        var id = "#err_" + err.errorCode;
+        $(id).removeClass("form-group");
+        $(id).addClass("form-group has-error");
+        $(id).after("<span id='err_span_" + idx + "' style='color: #cc3f44'>"+errMsg+"</span>");
+    });
+}
+
+common.dismissErrorMsg = function () {
+    $("div[id^='err_']").removeClass("form-group has-error");
+    $("div[id^='err_']").addClass("form-group");
+    $("span[id^='err_span_']").remove();
+}

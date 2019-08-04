@@ -162,6 +162,38 @@ public class DateUtil {
         return calendar.getTime();
     }
 
+    public static Date addMillis(Date date, long millis) {
+        if (date != null) {
+            long time = date.getTime();
+            return new Date(time + millis);
+        }
+        return null;
+    }
+
+    public static Date addSeconds(Date date, int seconds) {
+        if (date != null) {
+            long time = date.getTime();
+            return new Date(time + seconds * 1000);
+        }
+        return null;
+    }
+
+    public static Date addMinutes(Date date, int minutes) {
+        if (date != null) {
+            long time = date.getTime();
+            return new Date(time + minutes * 60000);
+        }
+        return null;
+    }
+
+    public static Date addHours(Date date, int hours) {
+        if (date != null) {
+            long time = date.getTime();
+            return new Date(time + hours * 360000);
+        }
+        return null;
+    }
+
     public static Timestamp getTimestamp(Date date) {
         if (date == null) {
             return null;

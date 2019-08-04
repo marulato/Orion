@@ -4,6 +4,8 @@ import org.orion.common.audit.AuditTrail;
 import org.orion.common.basic.BaseEntity;
 import org.orion.common.basic.SearchParam;
 import org.orion.common.dao.annotation.Id;
+import org.orion.common.dao.annotation.SearchColumn;
+import org.orion.common.miscutil.ReflectionUtil;
 import org.orion.common.miscutil.SpringUtil;
 import org.orion.common.miscutil.StringUtil;
 import org.springframework.stereotype.Service;
@@ -192,30 +194,52 @@ import java.util.Map;
         return null;
     }
 
-    public String createAudit(Map<String, Object> param) {
-        StringBuilder auditBuilder = new StringBuilder();
-        StringBuilder targitBuilder = new StringBuilder();
-        AuditTrail auditTrail = (AuditTrail) param.get("at");
-        BaseEntity entity = (BaseEntity) param.get("en");
-        auditBuilder.append(createInsertSql(auditTrail.getAuditTable(), null));
-        auditBuilder.delete(auditBuilder.lastIndexOf("VALUES"), auditBuilder.length());
-        auditBuilder.delete(auditBuilder.indexOf("(") + 1, auditBuilder.indexOf("AUDIT_TIME") + 3 + "AUDIT_TIME".length() - 1);
-        targitBuilder.append(" SELECT * FROM ").append(auditTrail.getTargetTable()).append(" WHERE ");
-        for (String filedName : auditTrail.getAuditKeys()) {
-            targitBuilder.append(StringUtil.convertToTableColumn(filedName));
-            targitBuilder.append(" = ");
-            targitBuilder.append("#{en.").append(filedName).append("}");
-            targitBuilder.append(" AND ");
+    public String createAudit(AuditTrail<?> auditTrail) {
+        StringBuilder audit = new StringBuilder();
+        Object target = auditTrail.getEntity();
+        DatabaseSchemaDao schemaDao = SpringUtil.getBean(DatabaseSchemaDao.class);
+        List<String> columns = schemaDao.retrieveColumnNames(auditTrail.getAuditTable());
+        audit.append("INSERT INTO ").append(StringUtil.convertToTableColumn(auditTrail.getAuditTable())).append(" (");
+        for (String column : columns) {
+            audit.append(StringUtil.convertToTableColumn(column));
+            audit.append(", ");
         }
-        targitBuilder.delete(targitBuilder.lastIndexOf("AND"), targitBuilder.length());
-        auditBuilder.append(targitBuilder);
-        return auditBuilder.toString();
+        audit.deleteCharAt(audit.lastIndexOf(","));
+        audit.append(") ");
+        audit.append("VALUES (NULL, ");
+        for (String column : columns) {
+            if ("auditId".equals(StringUtil.convertColumnName(column))) {
+                continue;
+            }
+            if (StringUtil.convertColumnName(column).contains("audit")) {
+                audit.append("#{").append(StringUtil.convertColumnName(column)).append("}, ");
+            } else {
+                audit.append("#{entity.").append(StringUtil.convertColumnName(column)).append("}, ");
+            }
+        }
+        audit.deleteCharAt(audit.lastIndexOf(","));
+        audit.append(")");
+        return audit.toString();
     }
 
-    public String createSearch(SearchParam searchParam) {
+    public String createSearch(SearchParam searchParam) throws Exception {
         if (searchParam != null) {
             StringBuilder search = new StringBuilder();
+            List<Field> searchFields = ReflectionUtil.getAnnotationFields(searchParam.getObject(), SearchColumn.class);
             search.append("SELECT * FROM ").append(searchParam.getTable());
+            if (!searchFields.isEmpty()) {
+                search.append(" WHERE ");
+                for (Field field : searchFields) {
+                    String fieldName = field.getName();
+                    String columnName = StringUtil.convertToTableColumn(fieldName);
+                    SearchColumn annotation = field.getAnnotation(SearchColumn.class);
+                    search.append(columnName).append(" ").append(annotation.pattern().toUpperCase());
+                    search.append(" CONCAT(").append(StringUtil.addSingleQuo(annotation.prefix())).append(", #{").append("object." + fieldName).append("}, ");
+                    search.append(StringUtil.addSingleQuo(annotation.suffix())).append(")");
+                    search.append(" AND ");
+                }
+                search.delete(search.lastIndexOf("AND"), search.length());
+            }
             if (searchParam.getOrder() != null) {
                 search.append(searchParam.getOrder().orderBy());
             }
@@ -223,6 +247,12 @@ import java.util.Map;
             return search.toString();
         }
         return null;
+    }
+
+    public String createSearchCount(SearchParam searchParam) throws Exception {
+        String searchSQL = createSearch(searchParam);
+        searchSQL = searchSQL.replaceFirst("\\*", "COUNT(*)");
+        return searchSQL.substring(0, searchSQL.lastIndexOf("LIMIT"));
     }
 
     public String getCount(String tableName) {

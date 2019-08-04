@@ -1,73 +1,71 @@
 package org.orion.common.scheduel;
 
+import org.orion.common.basic.BaseBatchJob;
+import org.orion.common.validation.ValidateWithMethod;
+import org.orion.systemAdmin.entity.AppConsts;
+import org.quartz.CronExpression;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 public class JobScheduel {
 
-    private Class<? extends QuartzJobBean> jobClass;
-    private String cron;
-    private String jobId;
-    private String name;
-    private String groupId;
-    private String triggerId;
-    private String triggerGroup;
+    private Class<?> jobClass;
+    private String jobName;
+    private String jobGroup;
     private String jobDesc;
+    private String triggerName;
+    private String triggerGroup;
     private String triggerDesc;
+    @ValidateWithMethod(methodName = {"validateCron"}, errorCode = {"100"})
+    private String cron;
 
-    public Class<? extends QuartzJobBean> getJobClass() {
+    //additional fields
+    private String automatic;
+    private String register;
+    @ValidateWithMethod(methodName = {"validateClass"}, errorCode = {""})
+    private String className;
+
+    private boolean validateCron(String cron) {
+        return CronExpression.isValidExpression(cron);
+    }
+
+    private boolean validateClass(String className)  {
+        try {
+            Class cls = Class.forName(className);
+            Object instance = cls.getConstructor().newInstance();
+            if (AppConsts.YES.equals(automatic))
+                return instance instanceof QuartzJobBean;
+            else
+                return instance instanceof BaseBatchJob;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Class getJobClass() throws Exception {
+        if (jobClass == null) {
+            jobClass = Class.forName(className);
+        }
         return jobClass;
     }
 
-    public void setJobClass(Class<? extends QuartzJobBean> jobClass) {
+    public void setJobClass(Class<?> jobClass) {
         this.jobClass = jobClass;
     }
 
-    public String getCron() {
-        return cron;
+    public String getJobName() {
+        return jobName;
     }
 
-    public void setCron(String cron) {
-        this.cron = cron;
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
     }
 
-    public String getJobId() {
-        return jobId;
+    public String getJobGroup() {
+        return jobGroup;
     }
 
-    public void setJobId(String jobId) {
-        this.jobId = jobId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getTriggerId() {
-        return triggerId;
-    }
-
-    public void setTriggerId(String triggerId) {
-        this.triggerId = triggerId;
-    }
-
-    public String getTriggerGroup() {
-        return triggerGroup;
-    }
-
-    public void setTriggerGroup(String triggerGroup) {
-        this.triggerGroup = triggerGroup;
+    public void setJobGroup(String jobGroup) {
+        this.jobGroup = jobGroup;
     }
 
     public String getJobDesc() {
@@ -78,11 +76,59 @@ public class JobScheduel {
         this.jobDesc = jobDesc;
     }
 
+    public String getTriggerName() {
+        return triggerName;
+    }
+
+    public void setTriggerName(String triggerName) {
+        this.triggerName = triggerName;
+    }
+
+    public String getTriggerGroup() {
+        return triggerGroup;
+    }
+
+    public void setTriggerGroup(String triggerGroup) {
+        this.triggerGroup = triggerGroup;
+    }
+
     public String getTriggerDesc() {
         return triggerDesc;
     }
 
     public void setTriggerDesc(String triggerDesc) {
         this.triggerDesc = triggerDesc;
+    }
+
+    public String getCron() {
+        return cron;
+    }
+
+    public void setCron(String cron) {
+        this.cron = cron;
+    }
+
+    public String getAutomatic() {
+        return automatic;
+    }
+
+    public void setAutomatic(String automatic) {
+        this.automatic = automatic;
+    }
+
+    public String getRegister() {
+        return register;
+    }
+
+    public void setRegister(String register) {
+        this.register = register;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }

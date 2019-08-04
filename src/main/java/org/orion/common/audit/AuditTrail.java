@@ -1,55 +1,32 @@
 package org.orion.common.audit;
 
-import org.orion.common.audit.dao.AuditTrailDao;
-import org.orion.common.basic.BaseEntity;
-import org.orion.common.miscutil.SpringUtil;
-import org.springframework.transaction.annotation.Transactional;
+import org.orion.common.miscutil.DateUtil;
+import org.orion.common.miscutil.ReflectionUtil;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class AuditTrail {
+public class AuditTrail <T> {
 
     private String auditTable;
-    private String targetTable;
-    private String where;
     private long auditId;
     private String auditType;
     private Date auditTime;
-    private List<String> auditKeys;
+    private T entity;
 
-    public AuditTrail(String auditType) {
-        auditKeys = new ArrayList<>();
-        this.auditType = auditType;
-        auditTime = new Date();
-    }
-
-    @Transactional
-    public void generateAudit(BaseEntity entity) {
-        if (entity != null) {
-            auditTable = entity.getAuditTable();
-            targetTable = entity.getTableName();
-            Class cls = entity.getClass();
-            Field[] fields = cls.getDeclaredFields();
+    public AuditTrail (T entity, String auditType) {
+        try {
+            auditTable = ReflectionUtil.getString(entity, "AUDIT_TABLE");
+        } catch (Exception e) {
             try {
-                for (Field field : fields) {
-                    if (field.isAnnotationPresent(AuditId.class)) {
-                        field.setAccessible(true);
-                        String fieldName = field.getName();
-                        auditKeys.add(fieldName);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+                auditTable = ReflectionUtil.getString(entity, "TABLE_NAME") + "_HX";
+            } catch (Exception e1) {
+                auditTable = null;
             }
-            AuditTrailDao auditTrailDao = SpringUtil.getBean(AuditTrailDao.class);
-            auditTrailDao.createAudit(this, entity);
-            auditTrailDao.updateBaseAudit(this);
         }
+        this.entity = entity;
+        this.auditType = auditType;
+        this.auditTime = DateUtil.now();
     }
-
 
     public String getAuditTable() {
         return auditTable;
@@ -57,22 +34,6 @@ public class AuditTrail {
 
     public void setAuditTable(String auditTable) {
         this.auditTable = auditTable;
-    }
-
-    public String getTargetTable() {
-        return targetTable;
-    }
-
-    public void setTargetTable(String targetTable) {
-        this.targetTable = targetTable;
-    }
-
-    public String getWhere() {
-        return where;
-    }
-
-    public void setWhere(String where) {
-        this.where = where;
     }
 
     public long getAuditId() {
@@ -99,11 +60,11 @@ public class AuditTrail {
         this.auditTime = auditTime;
     }
 
-    public List<String> getAuditKeys() {
-        return auditKeys;
+    public T getEntity() {
+        return entity;
     }
 
-    public void setAuditKeys(List<String> auditKeys) {
-        this.auditKeys = auditKeys;
+    public void setEntity(T entity) {
+        this.entity = entity;
     }
 }

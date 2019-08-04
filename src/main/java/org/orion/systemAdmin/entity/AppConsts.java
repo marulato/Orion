@@ -21,4 +21,15 @@ public class AppConsts {
     public static final String YES     = "Y";
     public static final String NO      = "N";
 
+    public static final String RESPONSE_SUCCESS = "200";
+    public static final String RESPONSE_ERROR   = "500";
+
+    public static final String VALIDATION_ERROR     = "350";
+    public static final String VALIDATION_PASSED    = "300";
+
+    public static final String ACTION_ADD    = "Add";
+    public static final String ACTION_MODIFY = "Modify";
+
+    public static final String DEFAULT_TRIGGER_GROUP    = "OrionTriggerGroup";
+    public static final String DEFAULT_TRIGGER_NAME    = "OrionTrigger";
 }

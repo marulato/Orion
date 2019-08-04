@@ -38,8 +38,8 @@
     <div class="page-title">
 
       <div class="title-env">
-        <h1 class="title">参数配置</h1>
-        <p class="description">运行时服务器参数设置</p>
+        <h1 class="title">计划任务配置</h1>
+        <p class="description">计划任务与批量处理任务</p>
       </div>
 
       <div class="breadcrumb-env">
@@ -54,7 +54,7 @@
           </li>
           <li class="active">
 
-            <strong>参数配置</strong>
+            <strong>计划任务</strong>
           </li>
         </ol>
 
@@ -65,7 +65,7 @@
     <!-- Removing search and results count filter -->
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title">服务器运行参数</h3>
+        <h3 class="panel-title">计划任务与批处理</h3>
       </div>
       <div class="col-md-12" id="alertBox" style="display: none">
         <div class="alert alert-success">
@@ -82,7 +82,7 @@
           <div class="col-xs-6">
             <div class="dataTables_length">
               <label>每页显示
-                <select class="form-control input sm" style="display: inline-block" id="pageSizeDropDown" onchange="sysConfig.changePageSize()">
+                <select class="form-control input sm" style="display: inline-block" id="pageSizeDropDown" onchange=>
                   <option value="5">5</option>
                   <option value="10" selected>10</option>
                   <option value="20">20</option>
@@ -95,7 +95,7 @@
           </div>
           <div class="col-xs-6">
             <div class="dataTables_length">
-              <button type="button" class="btn btn-info btn-icon" style="float: right" onclick="sysConfig.initSearchParam()"><i class="fa-search"></i><span>&nbsp;搜索</span></button>
+              <button type="button" class="btn btn-info btn-icon" style="float: right" onclick="jobScheduel.initSearch()"><i class="fa-search"></i><span>&nbsp;搜索</span></button>
             </div>
           </div>
         </div>
@@ -103,8 +103,11 @@
           <thead>
           <tr>
             <th>名称</th>
-            <th>键</th>
-            <th>参数</th>
+            <th>注册状态</th>
+            <th>描述</th>
+            <th>执行方式</th>
+            <th>Cron</th>
+            <th>目标类</th>
             <th>操作</th>
           </tr>
           </thead>
@@ -113,8 +116,16 @@
 
           </tbody>
         </table>
-        <div class="dataTables_paginate paging_simple_numbers">
-          <div class="tcdPageCode page_1"></div>
+        <div class="row">
+          <div class="col-xs-6">
+            <button type="button" class="btn btn-secondary btn-icon" onclick="jobScheduel.initAdd()">
+              <i class="fa-plus"></i>
+              <span>创建</span>
+            </button>
+          </div>
+          <div class="dataTables_paginate paging_simple_numbers">
+            <div class="tcdPageCode page_1"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -128,135 +139,190 @@
   </div>
 </div>
 
-<!--修改弹窗-->
-<div class="modal fade" id="modifyBox">
+<!--创建任务-->
+<div class="modal fade" id="addBox">
   <div class="modal-dialog">
     <div class="modal-content">
 
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">修改参数</h4>
+        <h4 class="modal-title">创建任务</h4>
       </div>
-      <div class="modal-body">
-        <form id="modifyForm" method="post">
+      <form id="addForm" method="post">
+        <div class="modal-body">
+
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
 
-              <div class="form-group" id="err_001">
-                <label for="field-1" class="control-label">描述</label>
+              <div class="form-group">
+                <label for="field-1" class="control-label">任务名</label>
 
-                <input type="text" class="form-control" id="descInput" name="description">
+                <input type="text" class="form-control" id="field-1" placeholder="Job Name" name="jobName">
               </div>
 
             </div>
 
+            <div class="col-md-6">
+
+              <div class="form-group">
+                <label for="field-2" class="control-label">任务组</label>
+
+                <input type="text" class="form-control" id="field-2" placeholder="Job Group" name="jobGroup">
+              </div>
+
+            </div>
           </div>
 
           <div class="row">
             <div class="col-md-12">
 
               <div class="form-group">
-                <label for="field-3" class="control-label">键</label>
+                <label for="field-3" class="control-label">目标类全限定名</label>
 
-                <input type="text"  readonly="readonly" class="form-control" id="keyInput" name="configKey">
+                <input type="text" class="form-control" id="field-3" placeholder="Class" name="className">
               </div>
 
             </div>
           </div>
 
           <div class="row">
-            <div class="col-md-6">
+            <div class="form-group">
+              <div class="col-sm-10">
+                <span>自动托管</span>
+                <p>
+                  <label class="cbr-inline" style="color: #323232">
+                    <input type="radio" name="automatic" class="cbr" value="Y" checked onclick="jobScheduel.showCronInput()">
+                    自动执行
+                  </label>
+                  <label class="cbr-inline" style="color: #323232">
+                    <input type="radio" name="automatic" class="cbr" value="N" onclick="jobScheduel.hideCronInput()">
+                    手动执行
+                  </label>
+                </p>
+              </div>
+            </div>
+          </div>
 
-              <div class="form-group" id="err_002">
-                <label for="field-4" class="control-label">值</label>
+          <div class="row" id="cronDiv">
+            <div class="col-md-12">
 
-                <input type="text" class="form-control" id="valueInput" name="configValue">
+              <div class="form-group">
+                <label for="field-3" class="control-label">CRON表达式</label>
+
+                <input type="text" class="form-control" id="field-3" placeholder="Cron Expression" name="cron">
               </div>
 
             </div>
-
           </div>
-        </form>
 
-      </div>
+          <div class="row">
+            <div class="form-group">
+              <div class="col-sm-10">
+                <span>完成后注册</span>
+                <p>
+                  <label class="cbr-inline" style="color: #323232">
+                    <input type="radio" name="register" class="cbr" value="Y" checked>
+                    是
+                  </label>
+                  <label class="cbr-inline" style="color: #323232">
+                    <input type="radio" name="register" value="N" class="cbr">
+                    否
+                  </label>
+                </p>
+              </div>
+            </div>
+          </div>
 
+          <div class="row">
+            <div class="col-md-12">
+
+              <div class="form-group no-margin">
+                <label for="field-7" class="control-label">描述</label>
+
+                <textarea class="form-control autogrow" id="field-7" placeholder="Write something about yourself" name="description"></textarea>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </form>
       <div class="modal-footer">
-        <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
-        <button type="button" id="saveModifyBtn" class="btn btn-info" onclick="sysConfig.doModify()">
-          <i class="fa-save"></i>
-          <span>保存</span>
-        </button>
+        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-info">创建</button>
       </div>
     </div>
   </div>
 </div>
 
 
-<!--搜索弹窗-->
+
+<!--搜索-->
 <div class="modal fade" id="searchBox">
   <div class="modal-dialog">
     <div class="modal-content">
 
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">搜索</h4>
+        <h4 class="modal-title">搜索任务</h4>
       </div>
-
-      <div class="modal-body">
-        <form method="post" id="searchForm">
-          <div class="row">
-            <div class="col-md-12">
-
-              <div class="form-group">
-                <label for="field-1" class="control-label">描述</label>
-
-                <input type="text" class="form-control" name="description" id="condesc">
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="row">
-            <div class="col-md-12">
-
-              <div class="form-group">
-                <label for="field-3" class="control-label">键</label>
-
-                <input type="text" class="form-control" name="configKey" id="conkey">
-              </div>
-
-            </div>
-          </div>
+      <form id="searchForm" method="post">
+        <div class="modal-body">
 
           <div class="row">
             <div class="col-md-6">
 
               <div class="form-group">
-                <label for="field-4" class="control-label">值</label>
+                <label for="field-1" class="control-label">任务名</label>
 
-                <input type="text" class="form-control" name="configValue" id="convalue">
+                <input type="text" class="form-control" id="field-1" placeholder="Job Name" name="jobName">
               </div>
 
             </div>
 
+            <div class="col-md-6">
+
+              <div class="form-group">
+                <label for="field-2" class="control-label">任务组</label>
+
+                <input type="text" class="form-control" id="field-2" placeholder="Job Group" name="jobGroup">
+              </div>
+
+            </div>
           </div>
-        </form>
 
+          <div class="row">
+            <div class="col-md-12">
 
-      </div>
+              <div class="form-group">
+                <label for="field-3" class="control-label">目标类全限定名</label>
 
+                <input type="text" class="form-control" id="field-3" placeholder="Class" name="className">
+              </div>
+
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+
+              <div class="form-group no-margin">
+                <label for="field-7" class="control-label">描述</label>
+
+                <textarea class="form-control autogrow" id="field-7" placeholder="Write something about yourself" name="description"></textarea>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </form>
       <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-white" onclick="sysConfig.resetSearch()">重置</button>
-        <button type="button" class="btn btn-info" onclick="sysConfig.doSearchParam()">搜索</button>
+        <button type="button" class="btn btn-info">搜索</button>
       </div>
     </div>
   </div>
 </div>
-
-
-
 
 
 
@@ -284,10 +350,10 @@
 <!-- JavaScripts initializations and stuff -->
 <script th:src="@{/assets/js/xenon-custom.js}"></script>
 
-<script th:src="@{/orion/jquery-block.js}"></script>
 <script th:src="@{/orion/common.js}"></script>
-<script th:src="@{/orion/systemadmin/systemConfig.js}"></script>
+<script th:src="@{/orion/jquery-block.js}"></script>
 <script th:src="@{/orion/jquery.page.js}"></script>
+<script th:src="@{/orion/systemadmin/batchjobConfig.js}"></script>
 
 </body>
 </html>

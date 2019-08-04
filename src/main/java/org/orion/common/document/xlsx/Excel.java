@@ -79,7 +79,7 @@ public class Excel {
      * @return the content of the cell as a string
      */
     public String getValue(int rn, int cn) {
-        return PoiUtil.readCell(rowMap.get(rn).getCell(cn));
+        return PoiUtil.readCell(rowMap.get(rn) == null ? null : rowMap.get(rn).getCell(cn));
     }
 
     /**
@@ -91,7 +91,7 @@ public class Excel {
         String cord = PoiUtil.getNumericCoordinate(coordinate);
         if (!StringUtil.isEmpty(cord)) {
             String[] matrix = cord.split(",");
-            setValue(Integer.valueOf(matrix[1]) - 1, Integer.valueOf(matrix[0]) - 1, value);
+            setValue(Integer.parseInt(matrix[1]) - 1, Integer.parseInt(matrix[0]) - 1, value);
         }
     }
 

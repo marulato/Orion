@@ -1,5 +1,6 @@
 package org.orion.common.dao.crud;
 
+import org.orion.common.audit.AuditTrail;
 import org.orion.common.basic.BaseEntity;
 import org.orion.common.dao.DatabaseSchemaDao;
 import org.orion.common.miscutil.StringUtil;
@@ -36,5 +37,11 @@ public class CrudManager {
             return databaseSchemaDao.countAll(table);
         }
         return -1;
+    }
+
+    public void createAudit(AuditTrail auditTrail) {
+        if (auditTrail != null && auditTrail.getEntity() != null) {
+            databaseSchemaDao.createAudit(auditTrail);
+        }
     }
 }

@@ -8,12 +8,45 @@
         SELECT * FROM SYS_CONFIG
     </select>
 
-    <select id="query" resultType="org.orion.systemAdmin.entity.SystemConfig">
-        SELECT * FROM SYS_CONFIG WHERE CONFIG_KEY = #{key}
+    <select id="searchWithParams" parameterType="org.orion.common.basic.SearchParam" resultType="org.orion.systemAdmin.entity.SystemConfig">
+        SELECT * FROM SYS_CONFIG
+        <where>
+            <if test="sp.object.configKey != null and sp.object.configKey != ''">
+            <bind name="configkey" value="'%'+sp.object.configKey+'%'"></bind>
+                AND CONFIG_KEY LIKE #{configkey}
+            </if>
+            <if test="sp.object.configValue != null and sp.object.configValue !=''">
+            <bind name="configvalue" value="'%' + sp.object.configValue + '%'"/>
+                AND CONFIG_VALUE LIKE #{configvalue}
+            </if>
+            <if test="sp.object.description != null and sp.object.description != ''">
+            <bind name="desc" value="'%' + sp.object.description + '%'"/>
+                AND DESCRIPTION LIKE #{desc}
+            </if>
+        </where>
+        ORDER BY CONFIG_KEY ASC LIMIT #{sp.start}, #{sp.pageSize}
     </select>
 
-    <select id="getCounts" resultType="int">
-        SELECT COUNT(*) FROM SYS_CONFIG;
+    <select id="getCountsWithParams" parameterType="org.orion.common.basic.SearchParam" resultType="int">
+        SELECT COUNT(*) FROM SYS_CONFIG
+        <where>
+            <if test="sp.object.configKey != null and sp.object.configKey != ''">
+                <bind name="configkey" value="'%'+sp.object.configKey+'%'"></bind>
+                AND CONFIG_KEY LIKE #{configkey}
+            </if>
+            <if test="sp.object.configValue != null and sp.object.configValue !=''">
+                <bind name="configvalue" value="'%' + sp.object.configValue + '%'"/>
+                AND CONFIG_VALUE LIKE #{configvalue}
+            </if>
+            <if test="sp.object.description != null and sp.object.description != ''">
+                <bind name="desc" value="'%' + sp.object.description + '%'"/>
+                AND DESCRIPTION LIKE #{desc}
+            </if>
+        </where>
+    </select>
+
+    <select id="query" resultType="org.orion.systemAdmin.entity.SystemConfig">
+        SELECT * FROM SYS_CONFIG WHERE CONFIG_KEY = #{key}
     </select>
 
     <update id="update" parameterType="org.orion.systemAdmin.entity.SystemConfig">

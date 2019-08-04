@@ -1,34 +1,34 @@
 package org.orion.common.scheduel;
 
 import org.orion.common.basic.BaseEntity;
+import org.orion.common.dao.annotation.SearchColumn;
 
 public class BatchJobEntity extends BaseEntity {
 
-    private String jobId;
-    private String name;
+    @SearchColumn
+    private String jobName;
+    @SearchColumn
     private String description;
+    @SearchColumn
     private String className;
     private String isQuartz;
+    private String cron;
     private String isRegistered;
 
+    public static final String TABLE_NAME   = "BATCH_JOB_SCHEDUEL";
+    public static final String AUDIT_TABLE   = "BATCH_JOB_SCHEDUEL_HX";
+    public static final String COL_JOB_NAME = "JOB_NAME";
+
     public BatchJobEntity() {
-        super("BATCH_JOB_SCHEDUEL", "BATCH_JOB_SCHEDUEL_HX");
+        super(TABLE_NAME, AUDIT_TABLE);
     }
 
-    public String getJobId() {
-        return jobId;
+    public String getJobName() {
+        return jobName;
     }
 
-    public void setJobId(String jobId) {
-        this.jobId = jobId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
     }
 
     public String getDescription() {
@@ -61,5 +61,13 @@ public class BatchJobEntity extends BaseEntity {
 
     public void setIsRegistered(String isRegistered) {
         this.isRegistered = isRegistered;
+    }
+
+    public String getCron() {
+        return cron;
+    }
+
+    public void setCron(String cron) {
+        this.cron = cron;
     }
 }

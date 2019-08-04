@@ -71,6 +71,10 @@
         <appender-ref ref="MY_INFO_FILE" />
     </root>
 
+    <root level="error">
+        <appender-ref ref="SYSTEM_FILE"/>
+    </root>
+
     <logger name="my_info" additivity="true">
         <appender-ref ref="MY_INFO_FILE"/>
     </logger>

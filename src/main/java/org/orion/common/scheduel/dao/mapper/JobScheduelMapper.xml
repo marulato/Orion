@@ -2,14 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="org.orion.common.scheduel.dao.JobScheduelDao">
-    <select id="queryAllQuartzJobs" parameterType="int" resultType="org.orion.common.scheduel.ScheduelEntity">
-        SELECT * FROM QRTZ_JOB_DETAILS LIMIT #{page}, #{pageSize}
-    </select>
-
-    <insert id="createBatchJob" parameterType="org.orion.common.scheduel.BatchJobEntity">
-        INSERT INTO BATCH_JOB_SCHEDUEL VALUES (#{name}, #{description}, #{className}, #{isQuartz}, #{isRegistered},
-                                              #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy})
-    </insert>
 
     <select id="queryBatchJob" parameterType="string" resultType="org.orion.common.scheduel.BatchJobEntity">
         SELECT * FROM BATCH_JOB_SCHEDUEL WHERE NAME = #{name}
@@ -17,5 +9,9 @@
 
     <select id="queryAllBatchJobs" resultType="org.orion.common.scheduel.BatchJobEntity">
         SELECT * FROM BATCH_JOB_SCHEDUEL
+    </select>
+
+    <select id="queryBatchJobByTrigger" parameterType="org.orion.common.scheduel.JobScheduel" resultType="org.orion.common.scheduel.BatchJobEntity">
+        SELECT * FROM BATCH_JOB_SCHEDUEL WHERE CRON = #{cron} AND CLASS_NAME = #{className}
     </select>
 </mapper>

@@ -205,4 +205,8 @@ public final class StringUtil {
         }
         return null;
     }
+
+    public static String addSingleQuo(String src) {
+        return "'" + src + "'";
+    }
 }

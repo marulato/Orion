@@ -1,7 +1,6 @@
 package org.orion.common.basic;
 
 import org.orion.common.miscutil.DateUtil;
-import org.orion.common.scheduel.RegisterManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +36,7 @@ public abstract class BaseBatchJob {
     }
 
     protected boolean beforeExecute() {
-        return RegisterManager.isRegistered(batchjobId);
+        return true;
     }
 
     protected void afterExecute() {

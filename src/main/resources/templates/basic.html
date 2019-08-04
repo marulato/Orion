@@ -169,14 +169,14 @@
               <span class="title">参数配置</span>
             </a>
           </li>
-          <li>
-            <a href="dashboard-2.html">
+          <li id="batchjob_li">
+            <a th:href="@{/web/System/JobScheduel}">
               <span class="title">计划任务</span>
             </a>
           </li>
           <li>
             <a href="dashboard-3.html">
-              <span class="title">Dashboard 3</span>
+              <span class="title">权限管理</span>
             </a>
           </li>
           <li>
@@ -980,9 +980,9 @@
 
     <li class="dropdown user-profile">
       <a href="#" data-toggle="dropdown">
-        <img src="assets/images/user-4.png" alt="user-image" class="img-circle img-inline userpic-32" width="28" />
+        <img th:src="@{/assets/images/user-4.png}" alt="user-image" class="img-circle img-inline userpic-32" width="28" />
         <span>
-								Arlind Nushi
+								QA-DEV
 								<i class="fa-angle-down"></i>
 							</span>
       </a>

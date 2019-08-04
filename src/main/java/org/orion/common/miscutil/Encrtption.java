@@ -2,6 +2,7 @@ package org.orion.common.miscutil;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.orion.common.validation.Token;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.crypto.Cipher;
@@ -128,6 +129,20 @@ public class Encrtption {
                 return new String(decrypted, StandardCharsets.UTF_8);
         }
         return null;
+    }
+
+    public static String generateToken() {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] key = new byte[20];
+        secureRandom.nextBytes(key);
+        return new String(Base64.encodeBase64(key), StandardCharsets.UTF_8);
+    }
+
+    public static boolean validateToken(String token) {
+        if (Token.getToken().equals(token)) {
+            return DateUtil.isBetween(DateUtil.now(), Token.getGenerateDate(), Token.getInvalidDate());
+        }
+        return false;
     }
 
 }

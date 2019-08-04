@@ -1,6 +1,7 @@
 package org.orion.common.dao;
 
 import org.apache.ibatis.annotations.*;
+import org.orion.common.audit.AuditTrail;
 import org.orion.common.basic.BaseEntity;
 
 import java.util.List;
@@ -28,4 +29,7 @@ public interface DatabaseSchemaDao {
 
     @SelectProvider(type = SQLManager.class, method = "getCount")
     public int countAll(String table);
+
+    @InsertProvider(type = SQLManager.class, method = "createAudit")
+    public void createAudit(AuditTrail auditTrail);
 }

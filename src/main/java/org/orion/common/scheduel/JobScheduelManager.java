@@ -2,11 +2,12 @@ package org.orion.common.scheduel;
 
 import org.orion.common.basic.AppContext;
 import org.orion.common.basic.BaseBatchJob;
-import org.orion.common.mastercode.ErrorCode;
+import org.orion.common.basic.SearchParam;
+import org.orion.common.dao.crud.CrudManager;
 import org.orion.common.miscutil.DateUtil;
 import org.orion.common.miscutil.StringUtil;
-import org.orion.common.miscutil.Validation;
 import org.orion.common.scheduel.dao.JobScheduelDao;
+import org.orion.systemAdmin.entity.AppConsts;
 import org.quartz.*;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.triggers.CronTriggerImpl;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,80 +30,34 @@ public class JobScheduelManager {
     private Scheduler scheduler;
     @Resource
     private JobScheduelDao jobScheduelDao;
+    @Resource
+    private CrudManager crudManager;
     private final Logger logger = LoggerFactory.getLogger(JobScheduelManager.class);
     private Map<String, BatchJobEntity> jobMap;
 
- /*   public JobScheduelManager() {
-        init();
-    }*/
-
-    private void init() {
-        jobMap = new HashMap<>();
-        List<BatchJobEntity> batchJobList = this.getAllBatchJobs();
-        if (batchJobList != null && !batchJobList.isEmpty()) {
-            batchJobList.forEach((job) -> {
-                jobMap.put(job.getName(), job);
-            });
-        }
-        logger.info("BatchJob cache created. " + jobMap.size() + " records cached");
-    }
-
-    private void updateCache(String jobName, BatchJobEntity batchJob) {
-        if (!StringUtil.isEmpty(jobName)) {
-            if (jobMap.containsKey(jobName)) {
-                if (batchJob == null)
-                    jobMap.remove(jobName);
-                else if(jobName.equals(batchJob.getName())) {
-                    jobMap.put(jobName, batchJob);
-                }
-            } else {
-                if (batchJob != null && jobName.equals(batchJob.getName())) {
-                    jobMap.put(jobName, batchJob);
-                }
-            }
-        }
-    }
-
-    public BatchJobEntity getBatchJob(String jobName) {
-        if (!StringUtil.isEmpty(jobName)) {
-            if (jobMap.containsKey(jobName)) {
-                return jobMap.get(jobName);
-            }
-            else {
-                BatchJobEntity batchJob = getBatchJobByName(jobName);
-                if (batchJob != null) {
-                    updateCache(jobName, batchJob);
-                    logger.info("BatchJob cache updated for enquiry: " + jobName);
-                    return batchJob;
-                }
-            }
-        }
-        return null;
-    }
-
-    private void registerJob(Class<? extends QuartzJobBean> batchJobClass, String cron, String jobId, String groupId,
-                          String triggerId, String triggerGroup, String jobDesc, String triggerDesc) {
-        if (batchJobClass == null || StringUtil.isEmpty(cron) || StringUtil.isEmpty(jobId) || StringUtil.isEmpty(groupId)) {
+    private void registerJob(Class<? extends QuartzJobBean> batchJobClass, String cron, String jobName, String jobGroup,
+                          String triggerName, String triggerGroup, String jobDesc, String triggerDesc) {
+        if (batchJobClass == null || StringUtil.isEmpty(cron) || StringUtil.isEmpty(jobName) || StringUtil.isEmpty(jobGroup)) {
             logger.warn("");
             return;
         }
-        if (StringUtil.isEmpty(triggerId))
-            triggerId = jobId;
+        if (StringUtil.isEmpty(triggerName))
+            triggerName = jobName;
         if (StringUtil.isEmpty(triggerGroup))
-            triggerGroup = groupId;
+            triggerGroup = jobGroup;
         try {
             CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cron);
-            TriggerKey triggerKey = TriggerKey.triggerKey(triggerId, triggerGroup);
+            TriggerKey triggerKey = TriggerKey.triggerKey(triggerName, triggerGroup);
             CronTrigger triggerOld = null;
             triggerOld = (CronTrigger) scheduler.getTrigger(triggerKey);
             if (triggerOld != null) {
                 logger.warn("Batch Job already EXSITS");
                 return;
             } else {
-                JobDetail jobDetail = JobBuilder.newJob(batchJobClass).withIdentity(jobId, groupId).build();
+                JobDetail jobDetail = JobBuilder.newJob(batchJobClass).withIdentity(jobName, jobGroup).build();
                 JobDetailImpl finalJob = (JobDetailImpl) jobDetail;
                 finalJob.setDescription(jobDesc);
-                CronTrigger trigger = TriggerBuilder.newTrigger().forJob(jobDetail).withIdentity(triggerId, triggerGroup).
+                CronTrigger trigger = TriggerBuilder.newTrigger().forJob(jobDetail).withIdentity(triggerName, triggerGroup).
                         withSchedule(cronScheduleBuilder).build();
                 CronTriggerImpl finalTrigger = (CronTriggerImpl) trigger;
                 finalTrigger.setMisfireInstruction(CronTriggerImpl.MISFIRE_INSTRUCTION_DO_NOTHING);
@@ -115,40 +70,48 @@ public class JobScheduelManager {
         }
     }
 
-    public BatchJobEntity getOrionBatchJob(JobScheduel jobScheduel, boolean isQuartz, boolean isRegistered) {
+    public BatchJobEntity initOrionBatchJob(JobScheduel jobScheduel) {
         if (jobScheduel != null) {
             BatchJobEntity batchJobEntity = new BatchJobEntity();
-            batchJobEntity.setName(jobScheduel.getName());
-            batchJobEntity.setClassName(jobScheduel.getJobClass().getName());
+            batchJobEntity.setJobName(jobScheduel.getJobName());
+            batchJobEntity.setClassName(jobScheduel.getClassName());
             batchJobEntity.setDescription(jobScheduel.getJobDesc());
-            batchJobEntity.setIsQuartz(isQuartz ? "Y" : "N");
-            batchJobEntity.setIsRegistered(isRegistered ? "Y" : "N");
+            batchJobEntity.setIsQuartz(jobScheduel.getAutomatic());
+            batchJobEntity.setIsRegistered(jobScheduel.getRegister());
             return batchJobEntity;
         }
         return null;
     }
 
     private void registerAutoJob(JobScheduel jobScheduel) {
-        registerJob(jobScheduel.getJobClass(), jobScheduel.getCron(), jobScheduel.getJobId(), jobScheduel.getGroupId(),
-                jobScheduel.getTriggerId(), jobScheduel.getTriggerGroup(), jobScheduel.getJobDesc(), jobScheduel.getTriggerDesc());
+        if (!StringUtil.isEmpty(jobScheduel.getTriggerGroup())) {
+            jobScheduel.setTriggerGroup(AppConsts.DEFAULT_TRIGGER_GROUP);
+        }
+        if (!StringUtil.isEmpty(jobScheduel.getTriggerName())) {
+            jobScheduel.setTriggerName(AppConsts.DEFAULT_TRIGGER_NAME + "_" + jobScheduel.getJobName());
+        }
+        if (!StringUtil.isEmpty(jobScheduel.getTriggerDesc())) {
+            jobScheduel.setTriggerDesc("Orion Default Trigger");
+        }
+        registerJob(jobScheduel.getJobClass(), jobScheduel.getCron(), jobScheduel.getJobName(), jobScheduel.getJobGroup(),
+                jobScheduel.getTriggerName(), jobScheduel.getTriggerGroup(), jobScheduel.getJobDesc(), jobScheduel.getTriggerDesc());
     }
 
     @Transactional
-    public void registerAutomaticJob(JobScheduel jobScheduel, AppContext appContext, boolean needRegistion) {
+    public void registerQuartzJob(JobScheduel jobScheduel, AppContext appContext) {
         if (jobScheduel != null && appContext != null) {
-            long start = System.currentTimeMillis();
             registerAutoJob(jobScheduel);
-            BatchJobEntity batchJobEntity = getOrionBatchJob(jobScheduel, true, needRegistion);
+            BatchJobEntity batchJobEntity = initOrionBatchJob(jobScheduel);
             batchJobEntity.setAudit(appContext.getUser().getLoginId(), DateUtil.now());
-            List<ErrorCode> errorCodes = createBatchJob(batchJobEntity);
-            long end = System.currentTimeMillis();
+            batchJobEntity.setCron(jobScheduel.getCron());
+            createBatchJob(batchJobEntity);
         }
     }
 
     @Transactional
     public void registerManualJob(JobScheduel jobScheduel, AppContext appContext) {
         if (jobScheduel != null && appContext != null) {
-            BatchJobEntity batchJobEntity = getOrionBatchJob(jobScheduel, false, true);
+            BatchJobEntity batchJobEntity = initOrionBatchJob(jobScheduel);
             batchJobEntity.setAudit(appContext.getUser().getLoginId(), DateUtil.now());
             createBatchJob(batchJobEntity);
         }
@@ -162,58 +125,28 @@ public class JobScheduelManager {
         }
     }
 
-    public void deleteJob(String triggerName, String triggerGroup, String jobId, String groupId) {
-        try {
-            if (StringUtil.isEmpty(triggerGroup) || StringUtil.isEmpty(triggerName)) {
-                deleteJob(jobId, groupId);
-            } else if (!StringUtil.isEmpty(jobId) && !StringUtil.isEmpty(groupId)) {
-                TriggerKey triggerKey = TriggerKey.triggerKey(triggerName, triggerGroup);
-                scheduler.pauseTrigger(triggerKey);
-                scheduler.unscheduleJob(triggerKey);
-                JobKey jobKey = JobKey.jobKey(jobId, groupId);
-                scheduler.deleteJob(jobKey);
-            } else {
-                logger.warn("Job Identity is empty, deletion abort");
-            }
-        } catch (Exception e) {
-            logger.error("", e);
-        }
-    }
-
-    public void deleteJob(String jobId, String groupId) {
-        if (StringUtil.isEmpty(jobId) || StringUtil.isEmpty(groupId)) {
+    public void deleteQuartzJob(JobScheduel jobScheduel) {
+        if (jobScheduel == null) {
             logger.warn("");
             return;
         }
         try {
-            TriggerKey triggerKey = TriggerKey.triggerKey(jobId, groupId);
+            TriggerKey triggerKey = TriggerKey.triggerKey(jobScheduel.getTriggerName(), jobScheduel.getTriggerGroup());
             scheduler.pauseTrigger(triggerKey);
             scheduler.unscheduleJob(triggerKey);
-            JobKey jobKey = JobKey.jobKey(jobId, groupId);
+            JobKey jobKey = JobKey.jobKey(jobScheduel.getJobName(), jobScheduel.getJobGroup());
             scheduler.deleteJob(jobKey);
         } catch (Exception e) {
             logger.error("", e);
         }
     }
 
-    public void modifyJob(String jobId, String groupId, String cron) {
-        try {
-            TriggerKey oldTriggerKey = TriggerKey.triggerKey(jobId, groupId);
-            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cron);
-            CronTrigger cronTrigger = TriggerBuilder.newTrigger()
-                    .withIdentity(oldTriggerKey).withSchedule(scheduleBuilder).build();
-            scheduler.rescheduleJob(oldTriggerKey, cronTrigger);
-        } catch (Exception e) {
-            logger.error("", e);
-        }
-    }
-
-    public void modifyJob(JobScheduel jobScheduel) {
+    public void modifyQuartzJob(JobScheduel jobScheduel) {
         if (jobScheduel != null) {
             try {
-                TriggerKey oldTriggerKey = TriggerKey.triggerKey(jobScheduel.getJobId(), jobScheduel.getGroupId());
+                TriggerKey oldTriggerKey = TriggerKey.triggerKey(jobScheduel.getJobName(), jobScheduel.getJobGroup());
                 if (oldTriggerKey == null) {
-                    oldTriggerKey = TriggerKey.triggerKey(jobScheduel.getTriggerId(), jobScheduel.getTriggerGroup());
+                    oldTriggerKey = TriggerKey.triggerKey(jobScheduel.getTriggerName(), jobScheduel.getTriggerGroup());
                 }
                 CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(jobScheduel.getCron());
                 CronTrigger cronTrigger = TriggerBuilder.newTrigger()
@@ -226,18 +159,18 @@ public class JobScheduelManager {
         }
     }
 
-    public void pauseJob(String jobId, String groupId) {
+    public void pauseJob(String jobName, String groupId) {
         try {
-            JobKey jobKey = JobKey.jobKey(jobId, groupId);
+            JobKey jobKey = JobKey.jobKey(jobName, groupId);
             scheduler.pauseJob(jobKey);
         } catch (Exception e) {
             logger.error("", e);
         }
     }
 
-    public void resumeJob(String jobId, String groupId) {
+    public void resumeJob(String jobName, String groupId) {
         try {
-            JobKey jobKey = JobKey.jobKey(jobId, groupId);
+            JobKey jobKey = JobKey.jobKey(jobName, groupId);
             scheduler.resumeJob(jobKey);
         } catch (Exception e) {
             logger.error("", e);
@@ -255,7 +188,7 @@ public class JobScheduelManager {
 
     public boolean isRegistered(String jobName) {
         if (!StringUtil.isEmpty(jobName)) {
-            BatchJobEntity batchJobEntity = getBatchJob(jobName);
+            BatchJobEntity batchJobEntity = getBatchJobByName(jobName);
             if (batchJobEntity != null) {
                 return batchJobEntity.getIsRegistered().equals("Y");
             }
@@ -263,10 +196,10 @@ public class JobScheduelManager {
         return false;
     }
 
-    public void executeJob(String jobId, boolean checkRegistion) {
-        if (!StringUtil.isEmpty(jobId)) {
+    public void executeJob(String jobName, boolean checkRegistion) {
+        if (!StringUtil.isEmpty(jobName)) {
             try {
-                BatchJobEntity batchJob = getBatchJob(jobId);
+                BatchJobEntity batchJob = getBatchJobByName(jobName);
                 if (batchJob != null) {
                     Class jobClass = Class.forName(batchJob.getClassName());
                     Object instance = jobClass.getConstructor().newInstance();
@@ -278,7 +211,7 @@ public class JobScheduelManager {
                     } else if(instance instanceof QuartzJobBean) {
                         Method method = jobClass.getDeclaredMethod("executeInternal");
                         method.setAccessible(true);
-                        method.invoke(instance, null);
+                        method.invoke(instance);
                     }
                 }
             } catch (Exception e) {
@@ -287,16 +220,10 @@ public class JobScheduelManager {
         }
     }
 
-    public List<ErrorCode> createBatchJob(BatchJobEntity batchJob) {
-        List<ErrorCode> errorCodes = null;
+    public void createBatchJob(BatchJobEntity batchJob) {
         if (batchJob != null) {
-            errorCodes = Validation.doValidate(batchJob);
-            if (errorCodes == null || errorCodes.isEmpty()) {
-                jobScheduelDao.createBatchJob(batchJob);
-                updateCache(batchJob.getName(), batchJob);
+            crudManager.create(batchJob);
             }
-        }
-        return errorCodes;
     }
 
     public BatchJobEntity getBatchJobByName(String jobName) {
@@ -309,7 +236,41 @@ public class JobScheduelManager {
         return jobScheduelDao.queryAllBatchJobs();
     }
 
-    public List<ScheduelEntity> searchJobScheduels(int page, int pageSize) {
-        return jobScheduelDao.queryAllQuartzJobs(page, pageSize);
+    public void updateMaunalJob(BatchJobEntity batchJobEntity) {
+        if (batchJobEntity != null) {
+            crudManager.update(batchJobEntity);
+        }
+    }
+
+    public List<BatchJobEntity> search(SearchParam<BatchJobEntity> searchParam) {
+        if (searchParam != null && searchParam.getObject() != null) {
+            return jobScheduelDao.search(searchParam);
+        }
+        return new ArrayList<>();
+    }
+
+    public int getTotalPages(SearchParam<BatchJobEntity> searchParam) {
+        if (searchParam != null && searchParam.getObject() != null) {
+            return jobScheduelDao.getCountsBySearchParam(searchParam);
+        }
+        return -1;
+    }
+
+    public BatchJobEntity getBatchJobByTrigger(JobScheduel jobScheduel) {
+        if (jobScheduel != null) {
+            return jobScheduelDao.queryBatchJobByTrigger(jobScheduel);
+        }
+        return null;
+    }
+
+    private BatchJobEntity getBatchJobFromJobScheduel(JobScheduel jobScheduel) {
+        BatchJobEntity batchJobEntity = null;
+        if (jobScheduel != null) {
+            batchJobEntity.setJobName(jobScheduel.getJobName());
+            batchJobEntity.setClassName(jobScheduel.getJobClass().getName());
+            batchJobEntity.setDescription(jobScheduel.getJobDesc());
+            batchJobEntity.setCron(jobScheduel.getCron());
+        }
+        return batchJobEntity;
     }
 }
