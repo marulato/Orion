@@ -1,8 +1,11 @@
-package org.orion.common.validation;
+package org.orion.common.miscutil;
 
-import org.orion.common.miscutil.StringUtil;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public abstract class ValidationUtil {
+public class ValidationUtil {
+    
+    private ValidationUtil(){}
 
     public static final String LOGIN_ID         = "\\w{5,20}";
     public static final String PWD_UP_ALPHA     = ".*[A-Z]+.*";
@@ -13,7 +16,7 @@ public abstract class ValidationUtil {
 
     public static boolean validateIDFormate(String id) {
         if (!StringUtil.isEmpty(id) && id.length() >= 5 && id.length() <= 20) {
-            return id.matches(LOGIN_ID);
+            return matches(LOGIN_ID, id);
         }
         return false;
     }
@@ -33,10 +36,28 @@ public abstract class ValidationUtil {
         return validate >= 2;
     }
 
-    public boolean isValidEmail(String email) {
+    public static boolean isValidEmail(String email) {
         if (!StringUtil.isEmpty(email)) {
             return email.matches(EMAIL);
         }
         return false;
+    }
+
+    public static boolean matches(String regex, String src) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(src);
+        return matcher.matches();
+    }
+
+    public static boolean lookingAt(String regex, String src) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(src);
+        return matcher.lookingAt();
+    }
+
+    public static boolean find(String regex, String src) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(src);
+        return matcher.find();
     }
 }

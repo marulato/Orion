@@ -7,6 +7,6 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 public class AccountExpiryBatchJob extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-
+        System.out.println("TEST");
     }
 }

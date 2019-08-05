@@ -1,10 +1,15 @@
-package org.orion.common.miscutil;
+package org.orion.common.validation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.orion.common.mastercode.ErrorCode;
 import org.orion.common.message.DataManager;
-import org.orion.common.validation.ValidateWithMethod;
+import org.orion.common.miscutil.ReflectionUtil;
+import org.orion.common.miscutil.StringUtil;
+import org.orion.common.miscutil.ValidationUtil;
+import org.orion.common.validation.annotation.Length;
+import org.orion.common.validation.annotation.Regex;
+import org.orion.common.validation.annotation.ValidateWithMethod;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -109,9 +114,77 @@ public class Validation {
         return errorCodeList;
     }
 
+    private static List<String> validateLength(Object target) {
+        List<Field> fields = ReflectionUtil.getAnnotationFields(target, Length.class);
+        List<String> errors = new ArrayList<>();
+        for(Field field : fields) {
+            Length anno = field.getAnnotation(Length.class);
+            int min = anno.min();
+            int max = anno.max();
+            if (min > max) {
+                int temp = min;
+                min = max;
+                max = temp;
+            }
+            try {
+                String value = ReflectionUtil.getString(target, field);
+                if (min > 0 && max >= min) {
+                    if (StringUtil.isEmpty(value) || value.length() < min || value.length() > max) {
+                        errors.add(anno.errorCode());
+                    }
+                } else if (min == max && min == 0) {
+                    if (!StringUtil.isEmpty(value)) {
+                        errors.add(anno.errorCode());
+                    }
+                } else if (min ==0 && max > min) {
+                    if (value.length() > max) {
+                        errors.add(anno.errorCode());
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("An Exception Occured During Validation", e);
+            }
+        }
+        return errors;
+    }
+
+    private static List<String> validateRegex(Object target) {
+        List<Field> fields = ReflectionUtil.getAnnotationFields(target, Regex.class);
+        List<String> errors = new ArrayList<>();
+        for(Field field : fields) {
+            Regex anno = field.getAnnotation(Regex.class);
+            try {
+                String value = ReflectionUtil.getString(target, field);
+                String pattern = anno.pattern();
+                String regex = anno.regex();
+                if ("matches".equalsIgnoreCase(pattern)) {
+                    if (!ValidationUtil.matches(regex, value)) {
+                        errors.add(anno.errorCode());
+                    }
+                } else if("lookingAt".equalsIgnoreCase(pattern)) {
+                    if (!ValidationUtil.lookingAt(regex, value)) {
+                        errors.add(anno.errorCode());
+                    }
+                } else if("find".equalsIgnoreCase(pattern)) {
+                    if (!ValidationUtil.find(regex, value)) {
+                        errors.add(anno.errorCode());
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("An Exception Occured During Validation", e);
+            }
+        }
+        return errors;
+    }
+
+
     public static List<ErrorCode> doValidate(Object target) {
         List<String> errorCodeList = validateWithCode(target);
+        List<String> stringErrors = validateLength(target);
+        List<String> regexErrors = validateRegex(target);
         List<ErrorCode> errorCodes = new ArrayList<>();
+        errorCodeList.addAll(stringErrors);
+        errorCodeList.addAll(regexErrors);
         if (errorCodeList != null && !errorCodeList.isEmpty()) {
             for (String code : errorCodeList) {
                 errorCodes.add(DataManager.getErrorCode(code));

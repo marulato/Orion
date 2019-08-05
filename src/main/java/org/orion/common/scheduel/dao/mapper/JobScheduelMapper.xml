@@ -4,7 +4,7 @@
 <mapper namespace="org.orion.common.scheduel.dao.JobScheduelDao">
 
     <select id="queryBatchJob" parameterType="string" resultType="org.orion.common.scheduel.BatchJobEntity">
-        SELECT * FROM BATCH_JOB_SCHEDUEL WHERE NAME = #{name}
+        SELECT * FROM BATCH_JOB_SCHEDUEL WHERE JOB_NAME = #{jobName}
     </select>
 
     <select id="queryAllBatchJobs" resultType="org.orion.common.scheduel.BatchJobEntity">

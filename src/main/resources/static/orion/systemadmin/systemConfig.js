@@ -19,6 +19,9 @@ sysConfig.search = function (page) {
             var result = data.result;
             if (data.responseCode == "200") {
                 var tableValue = "";
+                if (result.length == 0) {
+                    tableValue = "<tr><td colspan='4' style='text-align: center'>没有数据</td></tr>";
+                }
                 $(".odd").remove();
                 $(".even").remove();
                 $.each(result, function (index, obj) {
@@ -27,16 +30,16 @@ sysConfig.search = function (page) {
                         tableValue += "<td>"+obj.description+"</td>";
                         tableValue += "<td>"+obj.configKey+"</td>";
                         tableValue += "<td>"+obj.configValue+"</td>";
-                        tableValue += "<td><a href=\"javascript:void(0);\" class=\"btn btn-info btn-sm btn-icon icon-left\" onclick=\"sysConfig.initModify('"+obj.configKey+"')\">修改</a>"
-                        tableValue += "<a href='javascript:void(0);' class='btn btn-danger btn-sm btn-icon icon-left'>删除</a></td>"
+                        tableValue += "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"sysConfig.initModify('"+obj.configKey+"')\"><i class=\"fa-pencil\"></i>修改</button>"
+                        tableValue += "<button type=\"button\" class=\"btn btn-danger\">删除</button></td>"
                         tableValue += "</tr>"
                     } else {
                         tableValue += "<tr class='even'>"
                         tableValue += "<td>"+obj.description+"</td>";
                         tableValue += "<td>"+obj.configKey+"</td>";
                         tableValue += "<td>"+obj.configValue+"</td>";
-                        tableValue += "<td><a href=\"javascript:void(0);\" class=\"btn btn-info btn-sm btn-icon icon-left\" onclick=\"sysConfig.initModify('"+obj.configKey+"')\">修改</a>"
-                        tableValue += "<a href='javascript:void(0);' class='btn btn-danger btn-sm btn-icon icon-left'>删除</a></td>"
+                        tableValue += "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"sysConfig.initModify('"+obj.configKey+"')\"><i class=\"fa-pencil\"></i>修改</button>"
+                        tableValue += "<button type=\"button\" class=\"btn btn-danger\">删除</button></td>"
                         tableValue += "</tr>";
                     }
                 });

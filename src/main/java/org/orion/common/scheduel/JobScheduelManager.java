@@ -83,14 +83,14 @@ public class JobScheduelManager {
         return null;
     }
 
-    private void registerAutoJob(JobScheduel jobScheduel) {
-        if (!StringUtil.isEmpty(jobScheduel.getTriggerGroup())) {
+    private void registerAutoJob(JobScheduel jobScheduel) throws Exception {
+        if (StringUtil.isEmpty(jobScheduel.getTriggerGroup())) {
             jobScheduel.setTriggerGroup(AppConsts.DEFAULT_TRIGGER_GROUP);
         }
-        if (!StringUtil.isEmpty(jobScheduel.getTriggerName())) {
+        if (StringUtil.isEmpty(jobScheduel.getTriggerName())) {
             jobScheduel.setTriggerName(AppConsts.DEFAULT_TRIGGER_NAME + "_" + jobScheduel.getJobName());
         }
-        if (!StringUtil.isEmpty(jobScheduel.getTriggerDesc())) {
+        if (StringUtil.isEmpty(jobScheduel.getTriggerDesc())) {
             jobScheduel.setTriggerDesc("Orion Default Trigger");
         }
         registerJob(jobScheduel.getJobClass(), jobScheduel.getCron(), jobScheduel.getJobName(), jobScheduel.getJobGroup(),
@@ -98,7 +98,7 @@ public class JobScheduelManager {
     }
 
     @Transactional
-    public void registerQuartzJob(JobScheduel jobScheduel, AppContext appContext) {
+    public void registerQuartzJob(JobScheduel jobScheduel, AppContext appContext) throws Exception {
         if (jobScheduel != null && appContext != null) {
             registerAutoJob(jobScheduel);
             BatchJobEntity batchJobEntity = initOrionBatchJob(jobScheduel);
@@ -223,7 +223,7 @@ public class JobScheduelManager {
     public void createBatchJob(BatchJobEntity batchJob) {
         if (batchJob != null) {
             crudManager.create(batchJob);
-            }
+        }
     }
 
     public BatchJobEntity getBatchJobByName(String jobName) {
@@ -263,7 +263,7 @@ public class JobScheduelManager {
         return null;
     }
 
-    private BatchJobEntity getBatchJobFromJobScheduel(JobScheduel jobScheduel) {
+    private BatchJobEntity getBatchJobFromJobScheduel(JobScheduel jobScheduel) throws Exception {
         BatchJobEntity batchJobEntity = null;
         if (jobScheduel != null) {
             batchJobEntity.setJobName(jobScheduel.getJobName());

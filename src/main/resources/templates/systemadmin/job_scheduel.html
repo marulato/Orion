@@ -21,7 +21,7 @@
   <link rel="stylesheet" th:href="@{/orion/jquery.page.css}">
 
 
-  <script th:src="@{/assets/js/jquery-1.11.1.min.js}"></script>
+<!--  <script th:src="@{/assets/js/jquery-1.11.1.min.js}"></script>-->
 
 
 </head>
@@ -99,7 +99,7 @@
             </div>
           </div>
         </div>
-        <table class="table table-bordered table-striped" id="sysconfigTable">
+        <table class="table table-bordered table-striped" id="jobTable">
           <thead>
           <tr>
             <th>名称</th>
@@ -112,7 +112,7 @@
           </tr>
           </thead>
 
-          <tbody class="middle-align" id="sysConfigbody">
+          <tbody class="middle-align" id="jobBody">
 
           </tbody>
         </table>
@@ -154,7 +154,7 @@
           <div class="row">
             <div class="col-md-6">
 
-              <div class="form-group">
+              <div class="form-group" id="err_003">
                 <label for="field-1" class="control-label">任务名</label>
 
                 <input type="text" class="form-control" id="field-1" placeholder="Job Name" name="jobName">
@@ -164,7 +164,7 @@
 
             <div class="col-md-6">
 
-              <div class="form-group">
+              <div class="form-group" id="err_004">
                 <label for="field-2" class="control-label">任务组</label>
 
                 <input type="text" class="form-control" id="field-2" placeholder="Job Group" name="jobGroup">
@@ -176,7 +176,7 @@
           <div class="row">
             <div class="col-md-12">
 
-              <div class="form-group">
+              <div class="form-group" id="err_006-err_008">
                 <label for="field-3" class="control-label">目标类全限定名</label>
 
                 <input type="text" class="form-control" id="field-3" placeholder="Class" name="className">
@@ -206,7 +206,7 @@
           <div class="row" id="cronDiv">
             <div class="col-md-12">
 
-              <div class="form-group">
+              <div class="form-group" id="err_007-err_008">
                 <label for="field-3" class="control-label">CRON表达式</label>
 
                 <input type="text" class="form-control" id="field-3" placeholder="Cron Expression" name="cron">
@@ -249,7 +249,7 @@
       </form>
       <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-info">创建</button>
+        <button type="button" class="btn btn-info" onclick="jobScheduel.doAdd()">创建</button>
       </div>
     </div>
   </div>
@@ -275,7 +275,7 @@
               <div class="form-group">
                 <label for="field-1" class="control-label">任务名</label>
 
-                <input type="text" class="form-control" id="field-1" placeholder="Job Name" name="jobName">
+                <input type="text" class="form-control" id="jobNameInput" placeholder="Job Name" name="jobName">
               </div>
 
             </div>
@@ -285,7 +285,7 @@
               <div class="form-group">
                 <label for="field-2" class="control-label">任务组</label>
 
-                <input type="text" class="form-control" id="field-2" placeholder="Job Group" name="jobGroup">
+                <input type="text" class="form-control" id="jobGroupInput" placeholder="Job Group" name="jobGroup">
               </div>
 
             </div>
@@ -297,7 +297,7 @@
               <div class="form-group">
                 <label for="field-3" class="control-label">目标类全限定名</label>
 
-                <input type="text" class="form-control" id="field-3" placeholder="Class" name="className">
+                <input type="text" class="form-control" id="classNameInput" placeholder="Class" name="className">
               </div>
 
             </div>
@@ -308,7 +308,7 @@
               <div class="form-group no-margin">
                 <label for="field-7" class="control-label">描述</label>
 
-                <textarea class="form-control autogrow" id="field-7" placeholder="Write something about yourself" name="description"></textarea>
+                <textarea class="form-control autogrow" id="descInput" placeholder="Write something about yourself" name="description"></textarea>
               </div>
 
             </div>

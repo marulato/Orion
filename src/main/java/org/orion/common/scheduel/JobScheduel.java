@@ -1,7 +1,8 @@
 package org.orion.common.scheduel;
 
 import org.orion.common.basic.BaseBatchJob;
-import org.orion.common.validation.ValidateWithMethod;
+import org.orion.common.miscutil.StringUtil;
+import org.orion.common.validation.annotation.ValidateWithMethod;
 import org.orion.systemAdmin.entity.AppConsts;
 import org.quartz.CronExpression;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -9,23 +10,31 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 public class JobScheduel {
 
     private Class<?> jobClass;
+    @ValidateWithMethod(methodName = {"validateJobName"}, errorCode = {"002"})
     private String jobName;
     private String jobGroup;
     private String jobDesc;
     private String triggerName;
     private String triggerGroup;
     private String triggerDesc;
-    @ValidateWithMethod(methodName = {"validateCron"}, errorCode = {"100"})
+    @ValidateWithMethod(methodName = {"validateCron"}, errorCode = {"007"})
     private String cron;
 
     //additional fields
     private String automatic;
     private String register;
-    @ValidateWithMethod(methodName = {"validateClass"}, errorCode = {""})
+    @ValidateWithMethod(methodName = {"validateClass"}, errorCode = {"006"})
     private String className;
 
+    private boolean validateJobName(String jobName) {
+        return !StringUtil.isEmpty(jobName) && jobName.length() <= 32;
+    }
+
     private boolean validateCron(String cron) {
-        return CronExpression.isValidExpression(cron);
+        if (AppConsts.YES.equals(automatic)) {
+            return CronExpression.isValidExpression(cron);
+        }
+        return true;
     }
 
     private boolean validateClass(String className)  {

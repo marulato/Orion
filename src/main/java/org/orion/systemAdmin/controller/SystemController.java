@@ -7,7 +7,7 @@ import org.orion.common.basic.SearchResult;
 import org.orion.common.dao.crud.CrudManager;
 import org.orion.common.mastercode.ErrorCode;
 import org.orion.common.miscutil.Encrtption;
-import org.orion.common.miscutil.Validation;
+import org.orion.common.validation.Validation;
 import org.orion.systemAdmin.entity.AppConsts;
 import org.orion.systemAdmin.entity.SystemConfig;
 import org.orion.systemAdmin.service.SysConfigService;

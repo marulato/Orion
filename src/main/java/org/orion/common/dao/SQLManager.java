@@ -224,6 +224,7 @@ import java.util.Map;
 
     public String createSearch(SearchParam searchParam) throws Exception {
         if (searchParam != null) {
+            int noneValueColumn = 0;
             StringBuilder search = new StringBuilder();
             List<Field> searchFields = ReflectionUtil.getAnnotationFields(searchParam.getObject(), SearchColumn.class);
             search.append("SELECT * FROM ").append(searchParam.getTable());
@@ -231,6 +232,10 @@ import java.util.Map;
                 search.append(" WHERE ");
                 for (Field field : searchFields) {
                     String fieldName = field.getName();
+                    if (StringUtil.isEmpty(ReflectionUtil.getString(searchParam.getObject(), field))) {
+                        noneValueColumn ++;
+                        continue;
+                    }
                     String columnName = StringUtil.convertToTableColumn(fieldName);
                     SearchColumn annotation = field.getAnnotation(SearchColumn.class);
                     search.append(columnName).append(" ").append(annotation.pattern().toUpperCase());
@@ -238,7 +243,12 @@ import java.util.Map;
                     search.append(StringUtil.addSingleQuo(annotation.suffix())).append(")");
                     search.append(" AND ");
                 }
-                search.delete(search.lastIndexOf("AND"), search.length());
+                if (search.lastIndexOf("AND") > -1) {
+                    search.delete(search.lastIndexOf("AND"), search.length());
+                }
+            }
+            if (noneValueColumn == searchFields.size()) {
+                search.delete(search.lastIndexOf("WHERE"), search.length());
             }
             if (searchParam.getOrder() != null) {
                 search.append(searchParam.getOrder().orderBy());

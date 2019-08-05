@@ -1,7 +1,7 @@
 package org.orion.systemAdmin.entity;
 
 import org.orion.common.miscutil.StringUtil;
-import org.orion.common.validation.ValidateWithMethod;
+import org.orion.common.validation.annotation.ValidateWithMethod;
 
 import java.util.Objects;
 

@@ -65,13 +65,23 @@ common.validate = function (form, url) {
 }
 
 common.showErrorMsg = function (result) {
+    common.dismissErrorMsg();
     var errors = result.errors;
     $.each(errors, function (idx, err) {
         var errMsg ="*" + err.errorDesc;
-        var id = "#err_" + err.errorCode;
-        $(id).removeClass("form-group");
-        $(id).addClass("form-group has-error");
-        $(id).after("<span id='err_span_" + idx + "' style='color: #cc3f44'>"+errMsg+"</span>");
+        $("div[id^='err_']").each(function (index, div) {
+            var idStr = $(div).attr("id");
+            var id = "#" + idStr;
+            if (idStr.indexOf(err.errorCode) != -1) {
+                if ($(id).hasClass("form-group")) {
+                    $(id).removeClass("form-group");
+                }
+                if (!$(id).hasClass("form-group has-error")) {
+                    $(id).addClass("form-group has-error");
+                }
+                $(id).after("<span id='err_span_" + idx + "' style='color: #cc3f44'>"+errMsg+"</span>");
+            }
+        });
     });
 }
 

@@ -1,4 +1,4 @@
-package org.orion.common.validation;
+package org.orion.common.validation.annotation;
 
 import java.lang.annotation.*;
 

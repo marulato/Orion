@@ -1,17 +1,16 @@
 package org.orion.systemAdmin.entity;
 
 import org.orion.common.dao.annotation.SearchColumn;
-import org.orion.common.miscutil.StringUtil;
-import org.orion.common.validation.ValidateWithMethod;
+import org.orion.common.validation.annotation.Length;
 
 public class SystemConfig {
 
     @SearchColumn
     private String configKey;
-    @ValidateWithMethod(methodName = {"validateValue"}, errorCode = {"002"})
+    @Length(min = 1, max = 64, errorCode = "002")
     @SearchColumn
     private String configValue;
-    @ValidateWithMethod(methodName = {"validateDesc"}, errorCode = {"001"})
+    @Length(min = 1, max = 256, errorCode = "001")
     @SearchColumn
     private String description;
 
@@ -20,14 +19,6 @@ public class SystemConfig {
     public static final String COL_CONFIG_KEY   = "CONFIG_KEY";
     public static final String COL_CONFIG_VALUE = "CONFIG_VALUE";
     public static final String COL_DESC         = "DESCRIPTION";
-
-    private boolean validateValue(String value) {
-        return !StringUtil.isEmpty(value) && value.length() <= 64;
-    }
-
-    private boolean validateDesc(String desc) {
-        return !StringUtil.isEmpty(desc) && desc.length() <= 256;
-    }
 
     public String getConfigKey() {
         return configKey;

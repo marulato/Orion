@@ -7,10 +7,10 @@ import org.orion.common.basic.SearchResult;
 import org.orion.common.mastercode.ErrorCode;
 import org.orion.common.message.DataManager;
 import org.orion.common.miscutil.Encrtption;
-import org.orion.common.miscutil.Validation;
 import org.orion.common.scheduel.BatchJobEntity;
 import org.orion.common.scheduel.JobScheduel;
 import org.orion.common.scheduel.JobScheduelManager;
+import org.orion.common.validation.Validation;
 import org.orion.systemAdmin.entity.AppConsts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +40,11 @@ public class JobScheduelController {
         BatchJobEntity batchJobEntity = jobScheduelManager.getBatchJobByName(jobScheduel.getJobName());
         if (AppConsts.ACTION_ADD.equals(action)) {
             if (batchJobEntity != null) {
-                errors.add(DataManager.getErrorCode(""));
+                errors.add(DataManager.getErrorCode("005"));
             } else {
                 BatchJobEntity jobWithSameTrigger = jobScheduelManager.getBatchJobByTrigger(jobScheduel);
                 if (jobWithSameTrigger != null) {
-                    errors.add(DataManager.getErrorCode(""));
+                    errors.add(DataManager.getErrorCode("008"));
                 }
             }
         } else if(AppConsts.ACTION_MODIFY.equals(action)) {
@@ -70,7 +70,7 @@ public class JobScheduelController {
         searchParam.orderByAsc(BatchJobEntity.COL_JOB_NAME);
         try {
             List<BatchJobEntity> batchJobEntityList = jobScheduelManager.search(searchParam);
-            SearchResult searchResult1 = SearchResult.success(batchJobEntityList, jobScheduelManager.getTotalPages(searchParam));
+            searchResult = SearchResult.success(batchJobEntityList, jobScheduelManager.getTotalPages(searchParam));
         } catch (Exception e) {
             searchResult = SearchResult.error();
             logger.error("", e);
@@ -78,6 +78,7 @@ public class JobScheduelController {
         return searchResult;
     }
 
+    @RequestMapping("/web/System/JobScheduel/create")
     @ResponseBody
     public Response createNewJob(JobScheduel jobScheduel, String token, HttpServletRequest request) {
         Response response = new Response();
@@ -93,7 +94,9 @@ public class JobScheduelController {
             } else {
                 jobScheduelManager.registerManualJob(jobScheduel, appContext);
             }
+            response.setCode(AppConsts.RESPONSE_SUCCESS);
         } catch (Exception e) {
+            response.setCode(AppConsts.RESPONSE_ERROR);
             logger.error("", e);
         }
         return response;

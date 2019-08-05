@@ -4,7 +4,7 @@ import org.orion.common.basic.AppContext;
 import org.orion.common.miscutil.DateUtil;
 import org.orion.common.miscutil.Encrtption;
 import org.orion.common.miscutil.HttpUtil;
-import org.orion.common.validation.ValidationUtil;
+import org.orion.common.miscutil.ValidationUtil;
 import org.orion.systemAdmin.entity.AppConsts;
 import org.orion.systemAdmin.entity.User;
 import org.orion.systemAdmin.service.AuthorizeActionService;
