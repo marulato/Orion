@@ -44,4 +44,10 @@ public class CrudManager {
             databaseSchemaDao.createAudit(auditTrail);
         }
     }
+
+    public void delete(BaseEntity baseEntity) {
+        if (baseEntity != null) {
+            databaseSchemaDao.delete(baseEntity);
+        }
+    }
 }

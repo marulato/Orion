@@ -125,20 +125,28 @@ public class JobScheduelManager {
         }
     }
 
-    public void deleteQuartzJob(JobScheduel jobScheduel) {
+    @Transactional
+    public void deleteQuartzJob(JobScheduel jobScheduel) throws Exception {
         if (jobScheduel == null) {
             logger.warn("");
             return;
         }
-        try {
-            TriggerKey triggerKey = TriggerKey.triggerKey(jobScheduel.getTriggerName(), jobScheduel.getTriggerGroup());
-            scheduler.pauseTrigger(triggerKey);
-            scheduler.unscheduleJob(triggerKey);
-            JobKey jobKey = JobKey.jobKey(jobScheduel.getJobName(), jobScheduel.getJobGroup());
-            scheduler.deleteJob(jobKey);
-        } catch (Exception e) {
-            logger.error("", e);
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobScheduel.getTriggerName(), jobScheduel.getTriggerGroup());
+        scheduler.pauseTrigger(triggerKey);
+        scheduler.unscheduleJob(triggerKey);
+        JobKey jobKey = JobKey.jobKey(jobScheduel.getJobName(), jobScheduel.getJobGroup());
+        scheduler.deleteJob(jobKey);
+        BatchJobEntity batchJobEntity = getBatchJobFromJobScheduel(jobScheduel);
+        crudManager.delete(batchJobEntity);
+    }
+
+    public void deleteManualJob(JobScheduel jobScheduel) throws Exception {
+        if (jobScheduel == null) {
+            logger.warn("");
+            return;
         }
+        BatchJobEntity batchJobEntity = getBatchJobFromJobScheduel(jobScheduel);
+        crudManager.delete(batchJobEntity);
     }
 
     public void modifyQuartzJob(JobScheduel jobScheduel) {

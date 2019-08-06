@@ -1,11 +1,13 @@
 package org.orion.common.scheduel;
 
 import org.orion.common.basic.BaseEntity;
+import org.orion.common.dao.annotation.Id;
 import org.orion.common.dao.annotation.SearchColumn;
 
 public class BatchJobEntity extends BaseEntity {
 
     @SearchColumn
+    @Id
     private String jobName;
     @SearchColumn
     private String description;

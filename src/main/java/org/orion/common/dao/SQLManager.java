@@ -239,7 +239,8 @@ import java.util.Map;
                     String columnName = StringUtil.convertToTableColumn(fieldName);
                     SearchColumn annotation = field.getAnnotation(SearchColumn.class);
                     search.append(columnName).append(" ").append(annotation.pattern().toUpperCase());
-                    search.append(" CONCAT(").append(StringUtil.addSingleQuo(annotation.prefix())).append(", #{").append("object." + fieldName).append("}, ");
+                    search.append(" CONCAT(").append(StringUtil.addSingleQuo(annotation.prefix())).append(", #{").
+                            append("object." + fieldName).append("}, ");
                     search.append(StringUtil.addSingleQuo(annotation.suffix())).append(")");
                     search.append(" AND ");
                 }
