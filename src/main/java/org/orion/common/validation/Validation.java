@@ -137,7 +137,7 @@ public class Validation {
                         errors.add(anno.errorCode());
                     }
                 } else if (min ==0 && max > min) {
-                    if (value.length() > max) {
+                    if (value != null && value.length() > max) {
                         errors.add(anno.errorCode());
                     }
                 }

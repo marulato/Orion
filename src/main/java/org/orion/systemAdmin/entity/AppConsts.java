@@ -3,6 +3,7 @@ package org.orion.systemAdmin.entity;
 public class AppConsts {
 
     public static final String SALT_KEY         = "OrionWebPassword";
+    public static final String REQUEST_KEY      = "OrionWebRequests";
 
     public static final String CODE_TYPE_ACCT   = "ACT";
     public static final String ACCT_ACTIVE      = "A";
@@ -21,6 +22,7 @@ public class AppConsts {
     public static final String YES     = "Y";
     public static final String NO      = "N";
 
+    public static final String INVALID_REQUEST  = "000";
     public static final String RESPONSE_SUCCESS = "200";
     public static final String RESPONSE_ERROR   = "500";
 

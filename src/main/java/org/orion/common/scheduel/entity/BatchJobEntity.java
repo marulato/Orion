@@ -1,4 +1,4 @@
-package org.orion.common.scheduel;
+package org.orion.common.scheduel.entity;
 
 import org.orion.common.basic.BaseEntity;
 import org.orion.common.dao.annotation.Id;
@@ -9,6 +9,8 @@ public class BatchJobEntity extends BaseEntity {
     @SearchColumn
     @Id
     private String jobName;
+    @SearchColumn
+    private String jobGroup;
     @SearchColumn
     private String description;
     @SearchColumn
@@ -31,6 +33,14 @@ public class BatchJobEntity extends BaseEntity {
 
     public void setJobName(String jobName) {
         this.jobName = jobName;
+    }
+
+    public String getJobGroup() {
+        return jobGroup;
+    }
+
+    public void setJobGroup(String jobGroup) {
+        this.jobGroup = jobGroup;
     }
 
     public String getDescription() {

@@ -7,6 +7,10 @@ common.loading = function (message) {
     });
 }
 
+common.toErrorPage = function() {
+    location.href = "/orion/web/error";
+}
+
 common.loadingFinished = function () {
     $.unblockUI();
 }

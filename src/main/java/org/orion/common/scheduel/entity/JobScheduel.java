@@ -1,18 +1,23 @@
-package org.orion.common.scheduel;
+package org.orion.common.scheduel.entity;
 
 import org.orion.common.basic.BaseBatchJob;
-import org.orion.common.miscutil.StringUtil;
+import org.orion.common.miscutil.DateUtil;
+import org.orion.common.validation.annotation.Length;
 import org.orion.common.validation.annotation.ValidateWithMethod;
 import org.orion.systemAdmin.entity.AppConsts;
 import org.quartz.CronExpression;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import java.util.Date;
+
 public class JobScheduel {
 
     private Class<?> jobClass;
-    @ValidateWithMethod(methodName = {"validateJobName"}, errorCode = {"002"})
+    @Length(min = 1, max = 32, errorCode = "003")
     private String jobName;
+    @Length(min = 1, max = 32, errorCode = "004")
     private String jobGroup;
+    @Length(min = 0, max = 256, errorCode = "001")
     private String jobDesc;
     private String triggerName;
     private String triggerGroup;
@@ -25,10 +30,8 @@ public class JobScheduel {
     private String register;
     @ValidateWithMethod(methodName = {"validateClass"}, errorCode = {"006"})
     private String className;
-
-    private boolean validateJobName(String jobName) {
-        return !StringUtil.isEmpty(jobName) && jobName.length() <= 32;
-    }
+    private BatchJobFiredHistory firedHistory;
+    private String lastFireDate;
 
     private boolean validateCron(String cron) {
         if (AppConsts.YES.equals(automatic)) {
@@ -55,6 +58,25 @@ public class JobScheduel {
             jobClass = Class.forName(className);
         }
         return jobClass;
+    }
+
+    public BatchJobFiredHistory getFiredHistory() {
+        return firedHistory;
+    }
+
+    public void setFiredHistory(BatchJobFiredHistory firedHistory) {
+        this.firedHistory = firedHistory;
+        if (firedHistory != null) {
+            lastFireDate = DateUtil.getStandardDate(new Date(firedHistory.getFireTime()));
+        }
+    }
+
+    public String getLastFireDate() {
+        return lastFireDate;
+    }
+
+    public void setLastFireDate(String lastFireDate) {
+        this.lastFireDate = lastFireDate;
     }
 
     public void setJobClass(Class<?> jobClass) {
@@ -140,4 +162,5 @@ public class JobScheduel {
     public void setClassName(String className) {
         this.className = className;
     }
+
 }

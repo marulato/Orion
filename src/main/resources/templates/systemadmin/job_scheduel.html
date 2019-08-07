@@ -325,6 +325,113 @@
 </div>
 
 
+<!--显示详情-->
+<div class="modal fade" id="displayBox">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">详细信息</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-md-6">
+
+            <div class="form-group">
+              <label class="control-label">任务名:&nbsp;</label>
+
+              <span id="nameSpan">TestJob</span>
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+
+            <div class="form-group">
+              <label class="control-label">任务组:&nbsp;</label>
+
+              <span id="groupSpan">Job Group</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+
+            <div class="form-group">
+              <label for="field-3" class="control-label">目标类全限定名:&nbsp;</label>
+
+              <span id="classSpan">org.orion</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group">
+            <div class="col-sm-10">
+              <span>自动托管</span>
+              <p>
+                <label class="cbr-inline" style="color: #323232">
+                  <input type="radio" id="auto1" class="cbr" value="Y">
+                  自动执行
+                </label>
+                <label class="cbr-inline" style="color: #323232">
+                  <input type="radio" id="auto2" class="cbr" value="N">
+                  手动执行
+                </label>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" id="cronDiv">
+          <div class="col-md-12">
+
+            <div class="form-group">
+              <label class="control-label">CRON表达式:&nbsp;</label>
+
+              <span id="cronSpan">* * * * * ?</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+
+            <div class="form-group">
+              <label class="control-label">上次执行时间:&nbsp;</label>
+
+              <span id="fireSpan">2019-01-01</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+
+            <div class="form-group no-margin">
+              <label class="control-label">描述</label>
+
+              <textarea class="form-control autogrow" id="descArea"></textarea>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 <!-- Imported styles on this page -->
@@ -349,7 +456,7 @@
 
 <!-- JavaScripts initializations and stuff -->
 <script th:src="@{/assets/js/xenon-custom.js}"></script>
-
+<script th:src="@{/js/aes.min.js}"></script>
 <script th:src="@{/orion/common.js}"></script>
 <script th:src="@{/orion/jquery-block.js}"></script>
 <script th:src="@{/orion/jquery.page.js}"></script>

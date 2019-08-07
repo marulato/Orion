@@ -292,15 +292,17 @@ import java.util.Map;
                 for(String dataType : dataTypes) {
                     if ("varchar".equalsIgnoreCase(dataType) || "char".equalsIgnoreCase(dataType) || "text".equalsIgnoreCase(dataType)) {
                         fieldTypes.add("String");
-                    } else if("double".equalsIgnoreCase(dataType)) {
+                    } else if ("double".equalsIgnoreCase(dataType)) {
                         fieldTypes.add("double");
-                    } else if("int".equalsIgnoreCase(dataType)) {
+                    } else if ("int".equalsIgnoreCase(dataType)) {
                         fieldTypes.add("int");
-                    } else if("bigint".equalsIgnoreCase(dataType)) {
+                    } else if ("bigint".equalsIgnoreCase(dataType)) {
                         fieldTypes.add("long");
-                    } else if("smallint".equalsIgnoreCase(dataType)) {
+                    } else if ("long".equalsIgnoreCase(dataType)) {
+                        fieldTypes.add("long");
+                    } else if ("smallint".equalsIgnoreCase(dataType)) {
                         fieldTypes.add("int");
-                    } else if("date".equalsIgnoreCase(dataType) || "datetime".equalsIgnoreCase(dataType)) {
+                    } else if ("date".equalsIgnoreCase(dataType) || "datetime".equalsIgnoreCase(dataType)) {
                         fieldTypes.add("Date");
                     } else if (dataType.contains("blob")) {
                         fieldTypes.add("byte[]");

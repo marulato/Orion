@@ -35,17 +35,21 @@ jobScheduel.search = function (page) {
             common.loadingFinished();
             var result = data.result;
             if (data.responseCode == "200") {
+                $(".odd").remove();
+                $(".even").remove();
                 var tableValue = "";
                 if (result.length == 0) {
                     tableValue = "<tr><td colspan='7' style='text-align: center'>没有数据</td></tr>";
                 }
-                $(".odd").remove();
-                $(".even").remove();
                 $.each(result, function (index, obj) {
                     var status = null;
                     var method = null;
-                    var desc = null;
-                    var cron = null;
+                    var desc = obj.description;
+                    var cron = obj.cron;
+                    var jobGroup = obj.jobGroup;
+                    var key = CryptoJS.enc.Utf8.parse("OrionWebRequests");
+                    var param = CryptoJS.AES.encrypt(obj.jobName + "," + jobGroup, key, {mode:CryptoJS.mode.ECB,padding: CryptoJS.pad.Pkcs7}).toString();
+                    param = encodeURIComponent(encodeURIComponent(param));
                     if (obj.isRegistered == "Y") {
                         status = "已注册";
                     }  else {
@@ -70,7 +74,7 @@ jobScheduel.search = function (page) {
                         tableValue += "<td>"+ method +"</td>";
                         tableValue += "<td>"+ cron +"</td>";
                         tableValue += "<td>"+ obj.className +"</td>";
-                        tableValue += "<td> <button type=\"button\" class=\"btn btn-info\"><i class=\"fa fa-credit-card\">&nbsp;查看</i></button>";
+                        tableValue += "<td> <button type=\"button\" class=\"btn btn-info\"><i class=\"fa fa-credit-card\" onclick=\"jobScheduel.doDisplay('"+param+"')\">&nbsp;查看</i></button>";
                         tableValue += "<button type=\"button\" class=\"btn btn-secondary\"><i class=\"fa fa-pencil\">&nbsp;修改</i></button>";
                         tableValue += "<button type=\"button\" class=\"btn btn-primary\"><i class=\"fa fa-rocket\">&nbsp;运行</i></button>";
                         tableValue += "<button type=\"button\" class=\"btn btn-danger\"><i class=\"fa fa-trash\" onclick=\"\">&nbsp;删除</i></button></td>";
@@ -78,11 +82,11 @@ jobScheduel.search = function (page) {
                         tableValue += "<tr class='even'>";
                         tableValue += "<td>"+ obj.jobName +"</td>";
                         tableValue += "<td>"+ status +"</td>";
-                        tableValue += "<td>"+ obj.description +"</td>";
+                        tableValue += "<td>"+ desc +"</td>";
                         tableValue += "<td>"+ method +"</td>";
-                        tableValue += "<td>"+ obj.cron +"</td>";
+                        tableValue += "<td>"+ cron +"</td>";
                         tableValue += "<td>"+ obj.className +"</td>";info
-                        tableValue += "<td> <button type=\"button\" class=\"btn btn-info\"><i class=\"fa fa-credit-card\">&nbsp;查看</i></button>";
+                        tableValue += "<td> <button type=\"button\" class=\"btn btn-info\"><i class=\"fa fa-credit-card\" onclick=\"jobScheduel.doDisplay('"+param+"')\">&nbsp;查看</i></button>";
                         tableValue += "<button type=\"button\" class=\"btn btn-secondary\"><i class=\"fa fa-pencil\">&nbsp;修改</i></button>";
                         tableValue += "<button type=\"button\" class=\"btn btn-primary\"><i class=\"fa fa-rocket\">&nbsp;运行</i></button>";
                         tableValue += "<button type=\"button\" class=\"btn btn-danger\"><i class=\"fa fa-trash\">&nbsp;删除</i></button></td>";
@@ -108,7 +112,7 @@ jobScheduel.search = function (page) {
 
 jobScheduel.doAdd = function () {
     var content = $("#addForm").serialize();
-    var result = common.validate(content, "/orion/web/System/JobScheduel/validate");
+    var result = common.validate(content + "&action=" + "Add", "/orion/web/System/JobScheduel/validate");
     if (result.code == "300") {
         $("#addBox").modal("hide");
         common.loading("正在处理您的请求，请稍后...");
@@ -124,13 +128,47 @@ jobScheduel.doAdd = function () {
                     $("#alertBox").css("display", "block");
                     jobScheduel.search(1);
                 } else {
-                    location.href = "/orion/web/error";
+                    common.toErrorPage();
                 }
             }
         });
     } else {
         common.showErrorMsg(result);
     }
+}
+
+jobScheduel.doDisplay = function(param) {
+    $("#auto1").attr("checked", false);
+    $("#auto2").attr("checked", false);
+    common.loading("正在处理您的请求，请稍后...");
+    $.ajax({
+        url:"/orion/web/System/JobScheduel/display/" + param,
+        type:"get",
+        dataType:"json",
+        success:function (data) {
+            common.loadingFinished();
+            if (data.code == "200") {
+                var obj = data.object;
+                $("#nameSpan").html(obj.jobName);
+                $("#groupSpan").html(obj.jobGroup);
+                $("#fireSpan").html(obj.lastFireDate);
+                $("#classSpan").html(obj.className);
+                $("#descArea").val(obj.description);
+                if (obj.automatic == "Y") {
+                    $("#auto1").attr("checked", "checked");
+                } else {
+                    $("#auto2").attr("checked", "checked");
+                }
+                $("#displayBox").modal("show", {backdrop: 'static'});
+            } else {
+                common.toErrorPage();
+            }
+        },
+        error:function (data) {
+            common.loadingFinished();
+            console.log(data);
+        }
+    });
 }
 
 jobScheduel.doDelete = function () {

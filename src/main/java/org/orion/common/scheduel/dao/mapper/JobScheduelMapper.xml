@@ -3,15 +3,19 @@
 
 <mapper namespace="org.orion.common.scheduel.dao.JobScheduelDao">
 
-    <select id="queryBatchJob" parameterType="string" resultType="org.orion.common.scheduel.BatchJobEntity">
-        SELECT * FROM BATCH_JOB_SCHEDUEL WHERE JOB_NAME = #{jobName}
+    <select id="queryBatchJob" parameterType="string" resultType="org.orion.common.scheduel.entity.BatchJobEntity">
+        SELECT * FROM BATCH_JOB_SCHEDUEL WHERE JOB_NAME = #{jobName} AND JOB_GROUP = #{jobGroup}
     </select>
 
-    <select id="queryAllBatchJobs" resultType="org.orion.common.scheduel.BatchJobEntity">
+    <select id="queryAllBatchJobs" resultType="org.orion.common.scheduel.entity.BatchJobEntity">
         SELECT * FROM BATCH_JOB_SCHEDUEL
     </select>
 
-    <select id="queryBatchJobByTrigger" parameterType="org.orion.common.scheduel.JobScheduel" resultType="org.orion.common.scheduel.BatchJobEntity">
+    <select id="queryBatchJobByTrigger" parameterType="org.orion.common.scheduel.entity.JobScheduel" resultType="org.orion.common.scheduel.entity.BatchJobEntity">
         SELECT * FROM BATCH_JOB_SCHEDUEL WHERE CRON = #{cron} AND CLASS_NAME = #{className}
+    </select>
+
+    <select id="getJobFireHistory" parameterType="org.orion.common.scheduel.entity.BatchJobEntity" resultType="org.orion.common.scheduel.entity.BatchJobFiredHistory">
+        SELECT * FROM BATCH_JOB_FIRED_HISTORY WHERE JOB_NAME = #{jobName} AND JOB_GROUP = #{jobGroup} ORDER BY FIRE_TIME DESC
     </select>
 </mapper>

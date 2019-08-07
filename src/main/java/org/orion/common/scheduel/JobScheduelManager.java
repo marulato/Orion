@@ -7,6 +7,9 @@ import org.orion.common.dao.crud.CrudManager;
 import org.orion.common.miscutil.DateUtil;
 import org.orion.common.miscutil.StringUtil;
 import org.orion.common.scheduel.dao.JobScheduelDao;
+import org.orion.common.scheduel.entity.BatchJobEntity;
+import org.orion.common.scheduel.entity.BatchJobFiredHistory;
+import org.orion.common.scheduel.entity.JobScheduel;
 import org.orion.systemAdmin.entity.AppConsts;
 import org.quartz.*;
 import org.quartz.impl.JobDetailImpl;
@@ -74,11 +77,27 @@ public class JobScheduelManager {
         if (jobScheduel != null) {
             BatchJobEntity batchJobEntity = new BatchJobEntity();
             batchJobEntity.setJobName(jobScheduel.getJobName());
+            batchJobEntity.setJobGroup(jobScheduel.getJobGroup());
             batchJobEntity.setClassName(jobScheduel.getClassName());
             batchJobEntity.setDescription(jobScheduel.getJobDesc());
             batchJobEntity.setIsQuartz(jobScheduel.getAutomatic());
             batchJobEntity.setIsRegistered(jobScheduel.getRegister());
             return batchJobEntity;
+        }
+        return null;
+    }
+
+    public JobScheduel getJobScheduelFromBatchJob(BatchJobEntity jobEntity) {
+        if (jobEntity != null) {
+            JobScheduel jobScheduel = new JobScheduel();
+            jobScheduel.setJobName(jobEntity.getJobName());
+            jobScheduel.setJobGroup(jobEntity.getJobGroup());
+            jobScheduel.setJobDesc(jobEntity.getDescription());
+            jobScheduel.setClassName(jobEntity.getClassName());
+            jobScheduel.setCron(jobEntity.getCron());
+            jobScheduel.setAutomatic(jobEntity.getIsQuartz());
+            jobScheduel.setRegister(jobEntity.getIsRegistered());
+            return jobScheduel;
         }
         return null;
     }
@@ -136,7 +155,7 @@ public class JobScheduelManager {
         scheduler.unscheduleJob(triggerKey);
         JobKey jobKey = JobKey.jobKey(jobScheduel.getJobName(), jobScheduel.getJobGroup());
         scheduler.deleteJob(jobKey);
-        BatchJobEntity batchJobEntity = getBatchJobFromJobScheduel(jobScheduel);
+        BatchJobEntity batchJobEntity = initOrionBatchJob(jobScheduel);
         crudManager.delete(batchJobEntity);
     }
 
@@ -145,7 +164,7 @@ public class JobScheduelManager {
             logger.warn("");
             return;
         }
-        BatchJobEntity batchJobEntity = getBatchJobFromJobScheduel(jobScheduel);
+        BatchJobEntity batchJobEntity = initOrionBatchJob(jobScheduel);
         crudManager.delete(batchJobEntity);
     }
 
@@ -194,9 +213,9 @@ public class JobScheduelManager {
         return false;
     }
 
-    public boolean isRegistered(String jobName) {
+    public boolean isRegistered(String jobName, String jobGroup) {
         if (!StringUtil.isEmpty(jobName)) {
-            BatchJobEntity batchJobEntity = getBatchJobByName(jobName);
+            BatchJobEntity batchJobEntity = getBatchJobByNameAndGroup(jobName, jobGroup);
             if (batchJobEntity != null) {
                 return batchJobEntity.getIsRegistered().equals("Y");
             }
@@ -204,10 +223,10 @@ public class JobScheduelManager {
         return false;
     }
 
-    public void executeJob(String jobName, boolean checkRegistion) {
-        if (!StringUtil.isEmpty(jobName)) {
+    public void executeJob(JobScheduel jobScheduel, boolean checkRegistion) {
+        if (jobScheduel != null) {
             try {
-                BatchJobEntity batchJob = getBatchJobByName(jobName);
+                BatchJobEntity batchJob = getBatchJobByNameAndGroup(jobScheduel.getJobName(), jobScheduel.getJobGroup());
                 if (batchJob != null) {
                     Class jobClass = Class.forName(batchJob.getClassName());
                     Object instance = jobClass.getConstructor().newInstance();
@@ -234,9 +253,9 @@ public class JobScheduelManager {
         }
     }
 
-    public BatchJobEntity getBatchJobByName(String jobName) {
-        if (!StringUtil.isEmpty(jobName))
-            return jobScheduelDao.queryBatchJob(jobName);
+    public BatchJobEntity getBatchJobByNameAndGroup(String jobName, String jobGroup) {
+        if (!StringUtil.isEmpty(jobName) && !StringUtil.isEmpty(jobGroup))
+            return jobScheduelDao.queryBatchJob(jobName, jobGroup);
         return null;
     }
 
@@ -271,14 +290,14 @@ public class JobScheduelManager {
         return null;
     }
 
-    private BatchJobEntity getBatchJobFromJobScheduel(JobScheduel jobScheduel) throws Exception {
-        BatchJobEntity batchJobEntity = null;
-        if (jobScheduel != null) {
-            batchJobEntity.setJobName(jobScheduel.getJobName());
-            batchJobEntity.setClassName(jobScheduel.getJobClass().getName());
-            batchJobEntity.setDescription(jobScheduel.getJobDesc());
-            batchJobEntity.setCron(jobScheduel.getCron());
+    public BatchJobFiredHistory getLatestFired(BatchJobEntity jobEntity) {
+        if (jobEntity != null) {
+            List<BatchJobFiredHistory> jobFiredHistories = jobScheduelDao.getJobFireHistory(jobEntity);
+            if (!jobFiredHistories.isEmpty()) {
+                return jobFiredHistories.get(0);
+            }
         }
-        return batchJobEntity;
+        return null;
     }
+
 }
