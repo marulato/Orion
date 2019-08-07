@@ -193,13 +193,9 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/*.yml</include>
-                    <include>**/*.html</include>
-                    <include>**/*.js</include>
-                    <include>**/*.css</include>
-                    <include>**/*.properties</include>
+                    <include>**/*</include>
                 </includes>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
             </resource>
         </resources>
     </build>
