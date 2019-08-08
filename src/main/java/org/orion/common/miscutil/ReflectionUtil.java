@@ -2,6 +2,7 @@ package org.orion.common.miscutil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,13 @@ public class ReflectionUtil {
         return null;
     }
 
+    public static String getSetter(Field field) {
+        if (field != null) {
+            return "set" + StringUtil.toUpperCaseByIndex(field.getName(), 0);
+        }
+        return null;
+    }
+
     public static Object invokeGetter(Object target, Field field) throws Exception {
         Class targetClass = target.getClass();
         Method getter = targetClass.getDeclaredMethod(getGetter(field));
@@ -69,5 +77,23 @@ public class ReflectionUtil {
             }
         }
         return null;
+    }
+
+    public static List<Field> getNonstaticField(Object target, Class<?> type) {
+        List<Field> specifiedField = new ArrayList<>();
+        if (target != null && type != null) {
+            Class targetClass = target.getClass();
+            Field[] allFields = targetClass.getDeclaredFields();
+            for (Field field : allFields) {
+                if (field.getType() == type) {
+                    if (Modifier.isStatic(field.getModifiers())) {
+                        continue;
+                    }
+                    field.setAccessible(true);
+                    specifiedField.add(field);
+                }
+            }
+        }
+        return specifiedField;
     }
 }

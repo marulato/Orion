@@ -22,7 +22,7 @@ public class Validation {
     private static Field[] fields;
     private static Object target;
     private static boolean hasAnnotation;
-    private static final Logger logger = LogManager.getLogger(Validation.class);
+    private static final Logger logger = LogManager.getLogger("Orion Validation Log");
     private static void initClass(Object object) {
         if (object != null) {
             target = object;

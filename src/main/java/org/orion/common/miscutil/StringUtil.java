@@ -1,7 +1,11 @@
 package org.orion.common.miscutil;
 
 
+import org.apache.commons.lang.StringEscapeUtils;
+
+import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.List;
 
 public final class StringUtil {
 
@@ -208,5 +212,14 @@ public final class StringUtil {
 
     public static String addSingleQuo(String src) {
         return "'" + src + "'";
+    }
+
+    public static void escapeInjection(Object object) throws Exception {
+        List<Field> stringFields = ReflectionUtil.getNonstaticField(object, String.class);
+        for (Field field : stringFields) {
+            String escapedValue = StringEscapeUtils.escapeHtml(
+                    StringEscapeUtils.escapeJavaScript((String) field.get(object)));
+            field.set(object, escapedValue);
+        }
     }
 }

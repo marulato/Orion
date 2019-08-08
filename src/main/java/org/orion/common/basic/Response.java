@@ -1,5 +1,7 @@
 package org.orion.common.basic;
 
+import org.orion.common.miscutil.StringUtil;
+
 public class Response {
 
     private String code;
@@ -7,6 +9,13 @@ public class Response {
     private String msg;
     private long timeCost;
     private Object errors;
+
+    public void setObject(Object object, boolean escape) throws Exception {
+        if (escape) {
+            StringUtil.escapeInjection(object);
+        }
+        this.object = object;
+    }
 
     public String getCode() {
         return code;
@@ -20,8 +29,8 @@ public class Response {
         return object;
     }
 
-    public void setObject(Object object) {
-        this.object = object;
+    public void setObject(Object object) throws Exception {
+        setObject(object, true);
     }
 
     public String getMsg() {
