@@ -1,6 +1,9 @@
 package org.orion.common.miscutil;
 
+import org.orion.systemAdmin.entity.AppConsts;
+
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 
 public class HttpUtil {
 
@@ -36,6 +39,14 @@ public class HttpUtil {
                 request.getSession().removeAttribute(name);
             }
         }
+    }
+
+    public static String[] decryptParams(String encryptedParams) throws Exception {
+        if (!StringUtil.isEmpty(encryptedParams)) {
+            return Encrtption.decryptAES(URLDecoder.decode(encryptedParams),
+                    AppConsts.REQUEST_KEY, true).split(",");
+        }
+        return new String[0];
     }
 
 }

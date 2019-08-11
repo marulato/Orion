@@ -68,15 +68,16 @@ common.validate = function (form, url) {
     return response;
 }
 
-common.showErrorMsg = function (result) {
+common.showErrorMsg = function (result, suffix) {
     common.dismissErrorMsg();
     var errors = result.errors;
     $.each(errors, function (idx, err) {
         var errMsg ="*" + err.errorDesc;
         $("div[id^='err_']").each(function (index, div) {
             var idStr = $(div).attr("id");
+            console.log(idStr);
             var id = "#" + idStr;
-            if (idStr.indexOf(err.errorCode) != -1) {
+            if (idStr.indexOf(err.errorCode) != -1 && idStr.indexOf(suffix) != -1) {
                 if ($(id).hasClass("form-group")) {
                     $(id).removeClass("form-group");
                 }
@@ -93,4 +94,12 @@ common.dismissErrorMsg = function () {
     $("div[id^='err_']").removeClass("form-group has-error");
     $("div[id^='err_']").addClass("form-group");
     $("span[id^='err_span_']").remove();
+}
+
+common.requestKey = function () {
+    return "OrionWebRequests";
+}
+
+common.unescape = function (str) {
+    return eval("'" + str + "'");
 }

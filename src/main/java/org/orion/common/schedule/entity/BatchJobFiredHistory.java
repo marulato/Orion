@@ -1,9 +1,14 @@
-package org.orion.common.scheduel.entity;
+package org.orion.common.schedule.entity;
 
-public class BatchJobFiredHistory {
+import org.orion.common.basic.BaseEntity;
+import org.orion.common.dao.annotation.Id;
 
+public class BatchJobFiredHistory extends BaseEntity {
+
+    @Id
     private long fireId;
     private String jobName;
+    private String jobGroup;
     private String fireMethod;
     private String status;
     private long fireTime;
@@ -11,6 +16,10 @@ public class BatchJobFiredHistory {
     private long timeCost;
 
     public static final String TABLE_NAME   = "BATCH_JOB_FIRED_HISTORY";
+
+    public BatchJobFiredHistory() {
+        super(TABLE_NAME, null);
+    }
 
     public void setFireId(long fireId) {
         this.fireId = fireId;
@@ -42,6 +51,14 @@ public class BatchJobFiredHistory {
 
     public String getJobName() {
         return this.jobName;
+    }
+
+    public String getJobGroup() {
+        return jobGroup;
+    }
+
+    public void setJobGroup(String jobGroup) {
+        this.jobGroup = jobGroup;
     }
 
     public void setStatus(String status) {

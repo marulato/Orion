@@ -70,11 +70,19 @@
       <div class="col-md-12" id="alertBox" style="display: none">
         <div class="alert alert-success">
           <button type="button" class="close" data-dismiss="alert">
-            <span aria-hidden="true">&times;</span>
             <span class="sr-only">Close</span>
           </button>
 
-          <strong>操作成功!&nbsp;</strong> 页面已更新.
+          <strong>操作成功！&nbsp;&nbsp;</strong> 页面已更新.
+        </div>
+      </div>
+      <div class="col-md-12" id="jobAlert" style="display: none">
+        <div class="alert alert-warning">
+          <button type="button" class="close" data-dismiss="alert">
+            <span class="sr-only">Close</span>
+          </button>
+
+          <strong>执行成功！&nbsp;&nbsp;</strong> 计划任务已成功通过手动执行.
         </div>
       </div>
       <div class="panel-body">
@@ -95,7 +103,7 @@
           </div>
           <div class="col-xs-6">
             <div class="dataTables_length">
-              <button type="button" class="btn btn-info btn-icon" style="float: right" onclick="jobScheduel.initSearch()"><i class="fa-search"></i><span>&nbsp;搜索</span></button>
+              <button type="button" class="btn btn-info btn-icon" style="float: right" onclick="jobSchedule.initSearch()"><i class="fa-search"></i><span>&nbsp;搜索</span></button>
             </div>
           </div>
         </div>
@@ -118,7 +126,7 @@
         </table>
         <div class="row">
           <div class="col-xs-6">
-            <button type="button" class="btn btn-secondary btn-icon" onclick="jobScheduel.initAdd()">
+            <button type="button" class="btn btn-secondary btn-icon" onclick="jobSchedule.initAdd()">
               <i class="fa-plus"></i>
               <span>创建</span>
             </button>
@@ -154,7 +162,7 @@
           <div class="row">
             <div class="col-md-6">
 
-              <div class="form-group" id="err_003">
+              <div class="form-group" id="err_003_a">
                 <label for="field-1" class="control-label">任务名</label>
 
                 <input type="text" class="form-control" id="field-1" placeholder="Job Name" name="jobName">
@@ -164,7 +172,7 @@
 
             <div class="col-md-6">
 
-              <div class="form-group" id="err_004">
+              <div class="form-group" id="err_004_a">
                 <label for="field-2" class="control-label">任务组</label>
 
                 <input type="text" class="form-control" id="field-2" placeholder="Job Group" name="jobGroup">
@@ -176,7 +184,7 @@
           <div class="row">
             <div class="col-md-12">
 
-              <div class="form-group" id="err_006-err_008">
+              <div class="form-group" id="err_006_a">
                 <label for="field-3" class="control-label">目标类全限定名</label>
 
                 <input type="text" class="form-control" id="field-3" placeholder="Class" name="className">
@@ -188,14 +196,14 @@
           <div class="row">
             <div class="form-group">
               <div class="col-sm-10">
-                <span>自动托管</span>
+                <span>托管方式</span>
                 <p>
                   <label class="cbr-inline" style="color: #323232">
-                    <input type="radio" name="automatic" class="cbr" value="Y" checked onclick="jobScheduel.showCronInput()">
+                    <input type="radio" name="automatic" class="cbr" value="Y" checked="checked" onclick="jobSchedule.showCronInput()">
                     自动执行
                   </label>
                   <label class="cbr-inline" style="color: #323232">
-                    <input type="radio" name="automatic" class="cbr" value="N" onclick="jobScheduel.hideCronInput()">
+                    <input type="radio" name="automatic" class="cbr" value="N" onclick="jobSchedule.hideCronInput()">
                     手动执行
                   </label>
                 </p>
@@ -206,7 +214,7 @@
           <div class="row" id="cronDiv">
             <div class="col-md-12">
 
-              <div class="form-group" id="err_007-err_008">
+              <div class="form-group" id="err_007_a">
                 <label for="field-3" class="control-label">CRON表达式</label>
 
                 <input type="text" class="form-control" id="field-3" placeholder="Cron Expression" name="cron">
@@ -221,7 +229,7 @@
                 <span>完成后注册</span>
                 <p>
                   <label class="cbr-inline" style="color: #323232">
-                    <input type="radio" name="register" class="cbr" value="Y" checked>
+                    <input type="radio" name="register" class="cbr" value="Y" checked="checked">
                     是
                   </label>
                   <label class="cbr-inline" style="color: #323232">
@@ -233,13 +241,13 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row" id="err_005_a">
             <div class="col-md-12">
 
               <div class="form-group no-margin">
                 <label for="field-7" class="control-label">描述</label>
 
-                <textarea class="form-control autogrow" id="field-7" placeholder="Write something about yourself" name="description"></textarea>
+                <textarea class="form-control autogrow" id="field-7" placeholder="Write something about yourself" name="jobDesc"></textarea>
               </div>
 
             </div>
@@ -249,7 +257,7 @@
       </form>
       <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-info" onclick="jobScheduel.doAdd()">创建</button>
+        <button type="button" class="btn btn-info" onclick="jobSchedule.doAdd()">创建</button>
       </div>
     </div>
   </div>
@@ -332,7 +340,7 @@
 
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">详细信息</h4>
+        <h4 class="modal-title" id="displayTitle">详细信息</h4>
       </div>
       <div class="modal-body">
 
@@ -371,20 +379,26 @@
         </div>
 
         <div class="row">
-          <div class="form-group">
-            <div class="col-sm-10">
-              <span>自动托管</span>
-              <p>
-                <label class="cbr-inline" style="color: #323232">
-                  <input type="radio" id="auto1" class="cbr" value="Y">
-                  自动执行
-                </label>
-                <label class="cbr-inline" style="color: #323232">
-                  <input type="radio" id="auto2" class="cbr" value="N">
-                  手动执行
-                </label>
-              </p>
+          <div class="col-md-12">
+
+            <div class="form-group">
+              <label class="control-label">托管方式:&nbsp;</label>
+
+              <span id="autoSpan">-</span>
             </div>
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+
+            <div class="form-group">
+              <label class="control-label">注册状态:&nbsp;</label>
+
+              <span id="regSpan">-</span>
+            </div>
+
           </div>
         </div>
 
@@ -413,6 +427,48 @@
         </div>
 
         <div class="row">
+        <div class="col-md-6">
+
+          <div class="form-group">
+            <label class="control-label">创建:&nbsp;</label>
+
+            <span id="createdBySpan">createdBy</span>
+          </div>
+
+        </div>
+        <div class="col-md-6">
+
+          <div class="form-group">
+            <label class="control-label">创建时间:&nbsp;</label>
+
+            <span id="createdAtSpan">createdAt</span>
+          </div>
+
+        </div>
+      </div>
+
+        <div class="row">
+          <div class="col-md-6">
+
+            <div class="form-group">
+              <label class="control-label">修改:&nbsp;</label>
+
+              <span id="updatedBySpan">updatedBy</span>
+            </div>
+
+          </div>
+          <div class="col-md-6">
+
+            <div class="form-group">
+              <label class="control-label">修改时间:&nbsp;</label>
+
+              <span id="updatedAtSpan">updatedAt</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row">
           <div class="col-md-12">
 
             <div class="form-group no-margin">
@@ -427,12 +483,153 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn" style="display: none" data-dismiss="modal" onclick="jobSchedule.doDelete()"><i class="fa fa-trash"></i>&nbsp;删除</button>
       </div>
     </div>
   </div>
 </div>
 
 
+<!--修改-->
+<div class="modal fade" id="modifyBox">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">修改任务</h4>
+      </div>
+      <form id="modifyForm" method="post">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+
+              <div class="form-group" id="err_003_m">
+                <label class="control-label">任务名</label>
+
+                <input type="text" class="form-control" id="modifyName" readonly="readonly" placeholder="Job Name" name="jobName">
+              </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+              <div class="form-group" id="err_004_m">
+                <label class="control-label">任务组</label>
+
+                <input type="text" class="form-control" id="modifyGroup" readonly="readonly" placeholder="Job Group" name="jobGroup">
+              </div>
+
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+
+              <div class="form-group" id="err_006_m">
+                <label for="" class="control-label">目标类全限定名</label>
+
+                <input type="text" class="form-control" id="modifyClass" placeholder="Class" name="className">
+              </div>
+
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <div class="col-sm-10">
+                <span>托管方式</span>
+                <p>
+                  <label class="cbr-inline" style="color: #323232">
+                    <input type="radio" name="automatic" id="modifyAuto1" class="cbr" value="Y" checked="checked" onclick="jobSchedule.showModifyCronInput()">
+                    自动执行
+                  </label>
+                  <label class="cbr-inline" style="color: #323232">
+                    <input type="radio" name="automatic" id="modifyAuto2" class="cbr" value="N" onclick="jobSchedule.hideModifyCronInput()">
+                    手动执行
+                  </label>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" id="cronDiv">
+            <div class="col-md-12">
+
+              <div class="form-group" id="err_007_m">
+                <label class="control-label">CRON表达式</label>
+
+                <input type="text" class="form-control" id="modifyCron" placeholder="Cron Expression" name="cron">
+              </div>
+
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <div class="col-sm-10">
+                <span>注册/取消注册</span>
+                <p>
+                  <label class="cbr-inline" style="color: #323232">
+                    <input type="radio" name="register" class="cbr" value="Y" checked="checked">
+                    注册
+                  </label>
+                  <label class="cbr-inline" style="color: #323232">
+                    <input type="radio" name="register" value="N" class="cbr">
+                    取消注册
+                  </label>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" id="err_005_m">
+            <div class="col-md-12">
+
+              <div class="form-group no-margin">
+                <label class="control-label">描述</label>
+
+                <textarea class="form-control autogrow" id="modifyDesc" placeholder="Write something about yourself" name="jobDesc"></textarea>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-info" onclick="jobSchedule.doModify()"><i class="fa-save"></i>&nbsp;保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!--配置参数-->
+<div class="modal fade" id="paramBox">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">参数配置</h4>
+      </div>
+      <form id="paramForm" method="post">
+        <div class="modal-body" id="paramBody">
+
+        </div>
+      </form>
+      <button type="button" class="btn btn-primary" onclick="jobSchedule.addParamRow()"><i class="fa fa-plus"></i>&nbsp;增加</button>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-info" onclick=""><i class="fa fa-save"></i>&nbsp;保存</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Imported styles on this page -->
 <link rel="stylesheet" th:href="@{/assets/js/datatables/dataTables.bootstrap.css}">
@@ -460,7 +657,7 @@
 <script th:src="@{/orion/common.js}"></script>
 <script th:src="@{/orion/jquery-block.js}"></script>
 <script th:src="@{/orion/jquery.page.js}"></script>
-<script th:src="@{/orion/systemadmin/batchjobConfig.js}"></script>
+<script th:src="@{/orion/systemadmin/batchjobConfig.js}" charset="UTF-8"></script>
 
 </body>
 </html>

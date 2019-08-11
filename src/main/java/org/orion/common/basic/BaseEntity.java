@@ -1,5 +1,7 @@
 package org.orion.common.basic;
 
+import org.orion.common.miscutil.DateUtil;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,9 +23,9 @@ public abstract class BaseEntity implements Serializable, Cloneable {
     }
 
     public void setAudit(String createdBy, Date createdAt, String updatedBy, Date updatedAt) {
-        this.createdAt = createdAt;
+        setCreatedAt(createdAt);
         this.createdBy = createdBy;
-        this.updatedAt = updatedAt;
+        setUpdatedAt(updatedAt);
         this.updatedBy = updatedBy;
     }
 
@@ -33,7 +35,7 @@ public abstract class BaseEntity implements Serializable, Cloneable {
 
     public void setUpdateAudit(String  updatedBy, Date updatedAt) {
         this.updatedBy = updatedBy;
-        this.updatedAt = updatedAt;
+        setUpdatedAt(updatedAt);
     }
 
     public void setCreateAudit(String  createdBy, Date createdAt) {
@@ -47,6 +49,7 @@ public abstract class BaseEntity implements Serializable, Cloneable {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+        createdAtStr = DateUtil.getStandardDate(createdAt);
     }
 
     public String getCreatedBy() {
@@ -63,6 +66,7 @@ public abstract class BaseEntity implements Serializable, Cloneable {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+        updatedAtStr = DateUtil.getStandardDate(updatedAt);
     }
 
     public String getUpdatedBy() {

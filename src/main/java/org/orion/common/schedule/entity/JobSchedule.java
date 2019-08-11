@@ -1,6 +1,7 @@
-package org.orion.common.scheduel.entity;
+package org.orion.common.schedule.entity;
 
 import org.orion.common.basic.BaseBatchJob;
+import org.orion.common.basic.BaseEntity;
 import org.orion.common.miscutil.DateUtil;
 import org.orion.common.validation.annotation.Length;
 import org.orion.common.validation.annotation.ValidateWithMethod;
@@ -10,7 +11,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.util.Date;
 
-public class JobScheduel {
+public class JobSchedule extends BaseEntity {
 
     private Class<?> jobClass;
     @Length(min = 1, max = 32, errorCode = "003")
@@ -33,6 +34,10 @@ public class JobScheduel {
     private BatchJobFiredHistory firedHistory;
     private String lastFireDate;
 
+    public JobSchedule() {
+        super(null, null);
+    }
+
     private boolean validateCron(String cron) {
         if (AppConsts.YES.equals(automatic)) {
             return CronExpression.isValidExpression(cron);
@@ -43,11 +48,10 @@ public class JobScheduel {
     private boolean validateClass(String className)  {
         try {
             Class cls = Class.forName(className);
-            Object instance = cls.getConstructor().newInstance();
             if (AppConsts.YES.equals(automatic))
-                return instance instanceof QuartzJobBean;
+                return cls.getSuperclass() == QuartzJobBean.class;
             else
-                return instance instanceof BaseBatchJob;
+                return cls.getSuperclass() == BaseBatchJob.class;
         } catch (Exception e) {
             return false;
         }

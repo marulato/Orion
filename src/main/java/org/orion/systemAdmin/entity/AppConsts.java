@@ -31,7 +31,15 @@ public class AppConsts {
 
     public static final String ACTION_ADD    = "Add";
     public static final String ACTION_MODIFY = "Modify";
+    public static final String ACTION_DELETE = "Delete";
 
     public static final String DEFAULT_TRIGGER_GROUP    = "OrionTriggerGroup";
     public static final String DEFAULT_TRIGGER_NAME    = "OrionTrigger";
+
+    public static final String BATCHJOB_STATUS_RUNNING     = "Running";
+    public static final String BATCHJOB_STATUS_COMPLETED   = "Completed";
+    public static final String BATCHJOB_STATUS_EXCEPTION   = "Exception";
+    public static final String BATCHJOB_STATUS_CANCELED    = "Canceled";
+    public static final String BATCHJOB_FIRE_TYPE_AUTO     = "A";
+    public static final String BATCHJOB_FIRE_TYPE_MANUAL   = "M";
 }

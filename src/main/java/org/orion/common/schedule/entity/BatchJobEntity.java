@@ -1,4 +1,4 @@
-package org.orion.common.scheduel.entity;
+package org.orion.common.schedule.entity;
 
 import org.orion.common.basic.BaseEntity;
 import org.orion.common.dao.annotation.Id;
@@ -7,9 +7,10 @@ import org.orion.common.dao.annotation.SearchColumn;
 public class BatchJobEntity extends BaseEntity {
 
     @SearchColumn
-    @Id
+    @Id(autoIncrement = false)
     private String jobName;
     @SearchColumn
+    @Id(autoIncrement = false)
     private String jobGroup;
     @SearchColumn
     private String description;
@@ -19,8 +20,8 @@ public class BatchJobEntity extends BaseEntity {
     private String cron;
     private String isRegistered;
 
-    public static final String TABLE_NAME   = "BATCH_JOB_SCHEDUEL";
-    public static final String AUDIT_TABLE   = "BATCH_JOB_SCHEDUEL_HX";
+    public static final String TABLE_NAME   = "BATCH_JOB_SCHEDULE";
+    public static final String AUDIT_TABLE   = "BATCH_JOB_SCHEDULE_HX";
     public static final String COL_JOB_NAME = "JOB_NAME";
 
     public BatchJobEntity() {

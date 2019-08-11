@@ -9,6 +9,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
@@ -139,6 +140,9 @@ public class Encrtption {
     }
 
     public static boolean validateToken(String token) {
+        if (!StringUtil.isEmpty(token) && token.contains("%")) {
+            token = URLDecoder.decode(token, StandardCharsets.UTF_8);
+        }
         if (Token.getToken().equals(token)) {
             return DateUtil.isBetween(DateUtil.now(), Token.getGenerateDate(), Token.getInvalidDate());
         }

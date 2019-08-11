@@ -2,7 +2,6 @@ package org.orion.common.cache;
 
 import org.orion.common.mastercode.ErrorCode;
 import org.orion.common.miscutil.SpringUtil;
-import org.orion.common.scheduel.JobScheduelManager;
 import org.orion.systemAdmin.entity.MasterCode;
 import org.orion.systemAdmin.service.MasterCodeService;
 import org.slf4j.Logger;
@@ -14,7 +13,6 @@ import java.util.Map;
 
 public class CachePool {
 
-    private static JobScheduelManager jobScheduelManager = SpringUtil.getBean(JobScheduelManager.class);
     private static MasterCodeService masterCodeService = SpringUtil.getBean(MasterCodeService.class);
 
     private static Map<Object, ErrorCode> errorCodeCache;

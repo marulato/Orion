@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.orion.common.schedule.dao.JobScheduleDao">
+
+    <select id="queryBatchJobByNameAndGroup" parameterType="string" resultType="org.orion.common.schedule.entity.BatchJobEntity">
+        SELECT * FROM BATCH_JOB_SCHEDULE WHERE JOB_NAME = #{jobName} AND JOB_GROUP = #{jobGroup}
+    </select>
+
+    <select id="queryAllBatchJobs" resultType="org.orion.common.schedule.entity.BatchJobEntity">
+        SELECT * FROM BATCH_JOB_SCHEDULE
+    </select>
+
+    <select id="queryBatchJobByTrigger" parameterType="org.orion.common.schedule.entity.JobSchedule" resultType="org.orion.common.schedule.entity.BatchJobEntity">
+        SELECT * FROM BATCH_JOB_SCHEDULE WHERE CRON = #{cron} AND CLASS_NAME = #{className}
+    </select>
+
+    <select id="queryBatchJobBySchedule" parameterType="org.orion.common.schedule.entity.JobSchedule" resultType="org.orion.common.schedule.entity.BatchJobEntity">
+        SELECT * FROM BATCH_JOB_SCHEDULE WHERE JOB_NAME = #{jobName} AND JOB_GROUP = #{jobGroup}
+    </select>
+
+    <select id="getJobFireHistory" parameterType="org.orion.common.schedule.entity.BatchJobEntity" resultType="org.orion.common.schedule.entity.BatchJobFiredHistory">
+        SELECT * FROM BATCH_JOB_FIRED_HISTORY WHERE JOB_NAME = #{jobName} AND JOB_GROUP = #{jobGroup} ORDER BY FIRE_TIME DESC
+    </select>
+
+    <select id="queryQrtzJobDetailsNameAndGroup" parameterType="string" resultType="org.orion.common.schedule.entity.QrtzJobDetails">
+        SELECT * FROM QRTZ_JOB_DETAILS WHERE JOB_NAME = #{jobName} AND JOB_GROUP = #{jobGroup}
+    </select>
+
+    <select id="queryCronTrigger" parameterType="string" resultType="org.orion.common.schedule.entity.QrtzCronTriggers">
+        SELECT * FROM QRTZ_CRON_TRIGGERS WHERE TRIGGER_NAME = #{triggerName} AND TRIGGER_GROUP = #{triggerGroup}
+    </select>
+
+    <select id="queryTrigger" parameterType="string" resultType="org.orion.common.schedule.entity.QrtzTriggers">
+        SELECT * FROM QRTZ_TRIGGERS WHERE JOB_NAME = #{jobName} AND JOB_GROUP = #{jobGroup}
+    </select>
+
+    <select id="queryQrtzJobByClass" parameterType="string" resultType="org.orion.common.schedule.entity.BatchJobEntity">
+        SELECT * FROM BATCH_JOB_SCHEDULE WHERE CLASS_NAME = #{className} AND IS_QUARTZ = 'Y'
+    </select>
+
+    <insert id="insertJobHistory" parameterType="org.orion.common.schedule.entity.BatchJobFiredHistory" useGeneratedKeys="true" keyColumn="FIRE_ID" keyProperty="fireId">
+        INSERT INTO BATCH_JOB_FIRED_HISTORY (FIRE_ID, JOB_NAME, JOB_GROUP, FIRE_TIME, STOP_TIME, TIME_COST, FIRE_METHOD, STATUS, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY ) VALUES (NULL, #{jobName}, #{jobGroup}, #{fireTime}, #{stopTime}, #{timeCost}, #{fireMethod}, #{status}, #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy} )
+    </insert>
+
+    <select id="queryRunningJobHistory" parameterType="string" resultType="org.orion.common.schedule.entity.BatchJobFiredHistory">
+        SELECT * FROM BATCH_JOB_FIRED_HISTORY WHERE JOB_NAME = #{jobName} AND JOB_GROUP = #{jobGroup} AND STATUS = 'Running' ORDER BY FIRE_TIME DESC
+    </select>
+
+    <select id="queryJobParam" parameterType="string" resultType="org.orion.common.schedule.entity.BatchJobParam">
+        SELECT * FROM BATCH_JOB_PARAM WHERE
+    </select>
+</mapper>

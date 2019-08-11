@@ -26,7 +26,7 @@ VALUES ('000', '非法请求，页面可能过期，或请求方式不被接受'
        ('002', '值不能为空且长度不得超过64个字符', 'I', '系统配置提交，验证失败', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP'),
        ('003', '任务名称不能为空且长度不得超过32个字符', 'I', '计划任务提交，验证失败', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP'),
        ('004', '任务组不能为空且长度不得超过32个字符', 'I', '计划任务提交，验证失败', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP'),
-       ('005', '任务名已存在', 'I', '计划任务提交，验证失败', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP'),
+       ('005', '数据库中已存在相同计划的任务', 'I', '计划任务提交，验证失败', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP'),
        ('006', '目标类不存在或不是有效的计划任务类型', 'I', '计划任务提交，验证失败', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP'),
        ('007', '输入的Cron不是合法的Cron表达式', 'I', '计划任务提交，验证失败', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP'),
        ('008', 'Cron和目标类不能同时与现有任务重复', 'I', '计划任务提交，验证失败', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP', STR_TO_DATE('2019-01-01','%Y-%m-%d'), 'SYSTEM_SETUP');

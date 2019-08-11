@@ -1,6 +1,7 @@
 package org.orion.systemAdmin.controller;
 
 import org.orion.common.audit.AuditTrail;
+import org.orion.common.basic.AppContext;
 import org.orion.common.basic.Response;
 import org.orion.common.basic.SearchParam;
 import org.orion.common.basic.SearchResult;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -74,18 +76,19 @@ public class SystemController {
     @RequestMapping("/web/System/Configuration/doModify")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
-    public Response doModifySystemConfig(SystemConfig systemConfig, String token) {
+    public Response doModifySystemConfig(SystemConfig systemConfig, String token, HttpServletRequest request) {
         Response response = new Response();
         if (!Encrtption.validateToken(token)) {
             response.setCode("000");
             return response;
         }
         try {
+            AppContext context = AppContext.getAppContext(request);
             SystemConfig Sysconfigbefore = sysConfigService.getSystemConfig(systemConfig.getConfigKey());
-            AuditTrail<SystemConfig> before = new AuditTrail<>(Sysconfigbefore, AppConsts.AUDIT_BEFOR_MODIFY);
+            AuditTrail<SystemConfig> before = new AuditTrail<>(Sysconfigbefore, AppConsts.AUDIT_BEFOR_MODIFY, context);
             crudManager.createAudit(before);
             sysConfigService.updateSystemConfig(systemConfig);
-            AuditTrail<SystemConfig> after = new AuditTrail<>(systemConfig, AppConsts.AUDIT_AFTER_MODIFY);
+            AuditTrail<SystemConfig> after = new AuditTrail<>(systemConfig, AppConsts.AUDIT_AFTER_MODIFY, context);
             crudManager.createAudit(after);
             response.setCode(AppConsts.RESPONSE_SUCCESS);
         } catch (Exception e) {

@@ -152,7 +152,23 @@ import java.util.Map;
 
     public String createInsert(BaseEntity entity) {
         if (entity != null) {
-            return createInsertSql(entity.getTableName(), null);
+            List<Field> ids = ReflectionUtil.getAnnotationFields(entity, Id.class);
+            List<String> idColumns = new ArrayList<>();
+            for (Field id : ids) {
+                Id anno = id.getAnnotation(Id.class);
+                if (anno.autoIncrement()) {
+                    idColumns.add(id.getName());
+                }
+            }
+            String fullInsert = createInsertSql(entity.getTableName(), null);
+            for (String idName : idColumns) {
+                StringBuilder param = new StringBuilder();
+                param.append("#{").append(StringUtil.convertColumnName(idName)).append("}");
+                if (fullInsert.contains(param.toString())) {
+                    fullInsert = fullInsert.replace(param.toString(), "NULL");
+                }
+            }
+            return fullInsert.toString();
         }
         return null;
     }
@@ -172,6 +188,7 @@ import java.util.Map;
             StringBuilder delete = new StringBuilder();
             delete.append("DELETE FROM ").append(entity.getTableName()).append(" WHERE ");
             delete.append(appendWhere(entity));
+            return delete.toString();
         }
         return null;
     }
@@ -185,8 +202,8 @@ import java.util.Map;
                 if (field.isAnnotationPresent(Id.class)) {
                     where.append(StringUtil.convertToTableColumn(field.getName()));
                     where.append(" = ").append("#{").append(field.getName()).append("}");
+                    where.append(" AND ");
                 }
-                where.append(" AND ");
             }
             where.delete(where.lastIndexOf("AND"), where.length());
             return where.toString();
@@ -206,15 +223,16 @@ import java.util.Map;
         }
         audit.deleteCharAt(audit.lastIndexOf(","));
         audit.append(") ");
-        audit.append("VALUES (NULL, ");
+        audit.append("VALUES (");
         for (String column : columns) {
             if ("auditId".equals(StringUtil.convertColumnName(column))) {
-                continue;
-            }
-            if (StringUtil.convertColumnName(column).contains("audit")) {
-                audit.append("#{").append(StringUtil.convertColumnName(column)).append("}, ");
+                audit.append("NULL, ");
             } else {
-                audit.append("#{entity.").append(StringUtil.convertColumnName(column)).append("}, ");
+                if (StringUtil.convertColumnName(column).contains("audit")) {
+                    audit.append("#{").append(StringUtil.convertColumnName(column)).append("}, ");
+                } else {
+                    audit.append("#{entity.").append(StringUtil.convertColumnName(column)).append("}, ");
+                }
             }
         }
         audit.deleteCharAt(audit.lastIndexOf(","));

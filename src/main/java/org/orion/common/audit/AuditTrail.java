@@ -1,5 +1,6 @@
 package org.orion.common.audit;
 
+import org.orion.common.basic.AppContext;
 import org.orion.common.miscutil.DateUtil;
 import org.orion.common.miscutil.ReflectionUtil;
 
@@ -11,9 +12,10 @@ public class AuditTrail <T> {
     private long auditId;
     private String auditType;
     private Date auditTime;
+    private String auditActionBy;
     private T entity;
 
-    public AuditTrail (T entity, String auditType) {
+    public AuditTrail (T entity, String auditType, AppContext context) {
         try {
             auditTable = ReflectionUtil.getString(entity, "AUDIT_TABLE");
         } catch (Exception e) {
@@ -22,6 +24,9 @@ public class AuditTrail <T> {
             } catch (Exception e1) {
                 auditTable = null;
             }
+        }
+        if (context != null) {
+            auditActionBy = context.getUser().getLoginId();
         }
         this.entity = entity;
         this.auditType = auditType;
@@ -58,6 +63,14 @@ public class AuditTrail <T> {
 
     public void setAuditTime(Date auditTime) {
         this.auditTime = auditTime;
+    }
+
+    public String getAuditActionBy() {
+        return auditActionBy;
+    }
+
+    public void setAuditActionBy(String auditActionBy) {
+        this.auditActionBy = auditActionBy;
     }
 
     public T getEntity() {

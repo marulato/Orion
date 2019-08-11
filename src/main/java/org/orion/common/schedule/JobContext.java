@@ -1,4 +1,4 @@
-package org.orion.common.scheduel;
+package org.orion.common.schedule;
 
 import java.util.Date;
 

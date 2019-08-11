@@ -100,7 +100,9 @@ public final class StringUtil {
     public static String convertColumnName(String value) {
         if (isEmpty(value)) {
             return null;
-        } else if (!value.contains("_")) {
+        } else if (!value.contains("_") && hasLowerCase(value)) {
+            return value;
+        } else if (!value.contains("_") && hasUpperCase(value) && !hasLowerCase(value)) {
             return value.toLowerCase();
         }
         String[] headNSuf = value.split("_");
