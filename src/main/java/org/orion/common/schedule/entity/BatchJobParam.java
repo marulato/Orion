@@ -5,7 +5,7 @@ public class BatchJobParam {
     private String jobName;
     private String jobGroup;
     private String paramName;
-    private String paramGroup;
+    private String paramValue;
 
     public static final String TABLE_NAME   = "BATCH_JOB_PARAM";
 
@@ -33,11 +33,11 @@ public class BatchJobParam {
         this.paramName = paramName;
     }
 
-    public String getParamGroup() {
-        return paramGroup;
+    public String getParamValue() {
+        return paramValue;
     }
 
-    public void setParamGroup(String paramGroup) {
-        this.paramGroup = paramGroup;
+    public void setParamValue(String paramValue) {
+        this.paramValue = paramValue;
     }
 }

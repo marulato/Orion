@@ -6,11 +6,15 @@ import org.orion.common.miscutil.SpringUtil;
 import org.orion.common.schedule.JobScheduleManager;
 import org.orion.common.schedule.entity.BatchJobEntity;
 import org.orion.common.schedule.entity.BatchJobFiredHistory;
+import org.orion.common.schedule.entity.BatchJobParam;
 import org.orion.systemAdmin.entity.AppConsts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class BaseBatchJob {
 
@@ -19,18 +23,23 @@ public abstract class BaseBatchJob {
     private AppContext context;
     private Exception exception;
     private BatchJobFiredHistory firedHistory;
+    private Map<String, String> jobParamMap;
     private final Logger logger = LoggerFactory.getLogger(BaseBatchJob.class);
+
     public BaseBatchJob(String jobName, String jobGroup, AppContext context) {
         this.jobName = jobName;
         this.jobGroup = jobGroup;
         this.context = context;
+        this.jobParamMap = new HashMap<>();
     }
+
     public abstract void execute();
 
     protected void start() {
         long startTime = System.currentTimeMillis();
         logger.info(jobName + " Started at " + DateUtil.getStandardDate(DateUtil.getDate(startTime)));
         try {
+            initJobParams();
             prepareBatchJobHistory();
             if (beforeExecute()) {
                 execute();
@@ -65,6 +74,18 @@ public abstract class BaseBatchJob {
     protected void afterExecute() {
         if (exception != null) {
             logger.error("BatchJob [" + jobName + "] terminated because of an exception", exception);
+        }
+    }
+
+    protected String getParameter(String name) {
+        return jobParamMap.get(name);
+    }
+
+    private void initJobParams() {
+        JobScheduleManager jobScheduleManager = SpringUtil.getBean(JobScheduleManager.class);
+        List<BatchJobParam> jobParamList = jobScheduleManager.getJobParams(jobName, jobGroup);
+        for (BatchJobParam param : jobParamList) {
+            jobParamMap.put(param.getParamName(), param.getParamValue());
         }
     }
 

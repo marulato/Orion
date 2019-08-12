@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class SystemController {
@@ -97,6 +100,21 @@ public class SystemController {
             throw e;
         }
 
+        return response;
+    }
+
+    public Response prepareSystemInfo(HttpServletRequest request) {
+        Response response = new Response();
+        Map<String, String> info = new HashMap<>();
+        try {
+            ServletContext servletContext = request.getServletContext();
+            String serverInfo = servletContext.getServerInfo();
+            String osInfo = System.getProperty("os.name");
+            info.put("server_info", serverInfo);
+            response.setObject(info);
+        } catch (Exception e) {
+
+        }
         return response;
     }
 }

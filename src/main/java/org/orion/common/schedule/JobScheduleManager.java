@@ -436,4 +436,18 @@ public class JobScheduleManager {
         return jobScheduleDao.queryRunningJobHistory(jobName, jobGroup);
     }
 
+    public List<BatchJobParam> getJobParams(String jobName, String jobGroup) {
+        return jobScheduleDao.queryJobParam(jobName, jobGroup);
+    }
+
+    public void deleteJobParams(String jobName, String jobGroup) {
+        jobScheduleDao.deleteAllJobParams(jobName, jobGroup);
+    }
+
+    public void addJobParams(List<BatchJobParam> jobParams) {
+        if (jobParams != null && !jobParams.isEmpty()) {
+            jobScheduleDao.insertJobParams(jobParams);
+        }
+    }
+
 }

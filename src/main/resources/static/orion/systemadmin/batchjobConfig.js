@@ -85,7 +85,7 @@ jobSchedule.search = function (page) {
                         tableValue += "<td> <button type=\"button\" title=\"查看\" class=\"btn btn-info\" onclick=\"jobSchedule.doDisplay('"+ param +"', false)\"><i class=\"fa fa-credit-card\"></i></button>";
                         tableValue += "<button type=\"button\" title=\"修改\" class=\"btn btn-secondary\" onclick=\"jobSchedule.initModify('"+ param +"')\"><i class=\"fa fa-pencil\"></i></button>";
                         tableValue += "<button type=\"button\" title=\"执行\" class=\"btn btn-orange\" onclick=\"jobSchedule.launch('"+ param +"')\"><i class=\"fa fa-rocket\"></i></button>";
-                        tableValue += "<button type=\"button\" title=\"配置参数\" class=\"btn btn-blue\" onclick=\"jobSchedule.initAddParam()\"><i class=\"fa fa-gear\"></i></button>"
+                        tableValue += "<button type=\"button\" title=\"配置参数\" class=\"btn btn-blue\" onclick=\"jobSchedule.initAddParam('"+ param +"')\"><i class=\"fa fa-gear\"></i></button>"
                         tableValue += "<button type=\"button\" title=\"删除\" class=\"btn btn-danger\" onclick=\"jobSchedule.initDelete('"+ param +"', true)\"><i class=\"fa fa-trash\"></i></button></td>";
                     } else {
                         tableValue += "<tr class='even'>";
@@ -98,7 +98,7 @@ jobSchedule.search = function (page) {
                         tableValue += "<td> <button type=\"button\" title=\"查看\" class=\"btn btn-info\" onclick=\"jobSchedule.doDisplay('"+ param +"', false)\"><i class=\"fa fa-credit-card\"></i></button>";
                         tableValue += "<button type=\"button\" title=\"修改\" title=\"查看\" class=\"btn btn-secondary\" onclick=\"jobSchedule.initModify('"+ param +"')\"><i class=\"fa fa-pencil\"></i></button>";
                         tableValue += "<button type=\"button\" title=\"执行\" class=\"btn btn-orange\" onclick=\"jobSchedule.launch('"+ param +"')\"><i class=\"fa fa-rocket\"></i></button>";
-                        tableValue += "<button type=\"button\" title=\"配置参数\" class=\"btn btn-blue\" onclick=\"jobSchedule.initAddParam()\"><i class=\"fa fa-gear\"></i></button>"
+                        tableValue += "<button type=\"button\" title=\"配置参数\" class=\"btn btn-blue\" onclick=\"jobSchedule.initAddParam('"+ param +"')\"><i class=\"fa fa-gear\"></i></button>"
                         tableValue += "<button type=\"button\" title=\"删除\" class=\"btn btn-danger\" onclick=\"jobSchedule.initDelete('"+ param +"', true)\"><i class=\"fa fa-trash\"></i></button></td>";
                     }
                 });
@@ -336,17 +336,64 @@ jobSchedule.doSearchParam = function () {
     jobSchedule.search(1);
 }
 
-jobSchedule.initAddParam = function () {
-    $("#paramBox").modal('show', {backdrop: 'static'});
+jobSchedule.initAddParam = function (param) {
+    $.ajax({
+        url:"/orion/web/System/JobSchedule/job-param/" + param,
+        type:"get",
+        dataType:"json",
+        success:function (data) {
+            if (data.code == "200") {
+                $("#paramBody").empty();
+                var list = data.object;
+                $("#no_param_span").remove();
+                if (list.length == 0) {
+                    $("#paramBody").append("<span id='no_param_span'>没有参数</span>");
+                } else {
+                    $("#no_param_span").remove();
+                    $.each(list, function (index, obj) {
+                        jobSchedule.addParamRow();
+                        var nameInputId = "paramNameInput" + index;
+                        var valueInputId = "paramValueInput" + index;
+                        $("#" + nameInputId).val(obj.paramName);
+                        $("#" + valueInputId).val(obj.paramValue);
+                    });
+                }
+                $("#paramBox").modal('show', {backdrop: 'static'});
+            } else {
+                common.toErrorPage();
+            }
+        }
+    });
+}
+
+jobSchedule.doAddParam = function () {
+    var token = common.getToken();
+    var content = $("#paramForm").serialize();
+    $.ajax({
+        url:"/orion/web/System/JobSchedule/add-job-param",
+        type:"post",
+        data:content + "&token=" + token,
+        dataType:"json",
+        success:function (data) {
+            if (data.code == "200") {
+                $("#paramBox").modal("hide");
+                $("#alertBox").css("display", "block");
+                window.setTimeout(jobSchedule.hideSuccessAlert, 2500);
+            }
+        }
+    });
 }
 
 jobSchedule.addParamRow = function () {
+    $("#no_param_span").remove();
     var rowNum = $("div[id^='paramRow']").length;
     var sequence = rowNum + 1;
     var rowId= "paramRow" + sequence;
     var paramName = "params[" + rowNum + "]." + "paramName" ;
     var paramValue = "params[" + rowNum + "]." + "paramValue" ;
-    var str = "<div class=\"row\" id=\""+rowId+"\"> <div class=\"col-md-6\"><div class=\"form-group\"><label class=\"control-label\">参数名</label><input type=\"text\" class=\"form-control\" name=\""+paramName+"\"></div></div><div class=\"col-md-6\"><div class=\"form-group\"><label class=\"control-label\">值</label><span style='float: right'><a href='javascript:void(0);' onclick=\"jobSchedule.removeParamRow('"+rowId+"')\">x</a></span><input type=\"text\" class=\"form-control\" name=\""+paramValue+"\"></div></div></div>"
+    var nameInputId = "paramNameInput" + rowNum;
+    var valueInputId = "paramValueInput" + rowNum;
+    var str = "<div class=\"row\" id=\""+rowId+"\"> <div class=\"col-md-6\"><div class=\"form-group\"><label class=\"control-label\">参数名</label><input type=\"text\" id=\""+nameInputId+"\" class=\"form-control\" name=\""+paramName+"\"></div></div><div class=\"col-md-6\"><div class=\"form-group\"><label class=\"control-label\">值</label><span style='float: right'><a href='javascript:void(0);' onclick=\"jobSchedule.removeParamRow('"+rowId+"')\">x</a></span><input type=\"text\" id=\""+valueInputId+"\" class=\"form-control\" name=\""+paramValue+"\"></div></div></div>"
     if (rowNum <= 0) {
         $("#paramBody").append(str);
     } else {

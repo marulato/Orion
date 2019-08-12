@@ -20,7 +20,7 @@
     </select>
 
     <select id="getJobFireHistory" parameterType="org.orion.common.schedule.entity.BatchJobEntity" resultType="org.orion.common.schedule.entity.BatchJobFiredHistory">
-        SELECT * FROM BATCH_JOB_FIRED_HISTORY WHERE JOB_NAME = #{jobName} AND JOB_GROUP = #{jobGroup} ORDER BY FIRE_TIME DESC
+        SELECT * FROM BATCH_JOB_FIRED_HISTORY WHERE JOB_NAME = #{jobName} AND JOB_GROUP = #{jobGroup} AND STATUS = 'Completed' ORDER BY FIRE_TIME DESC
     </select>
 
     <select id="queryQrtzJobDetailsNameAndGroup" parameterType="string" resultType="org.orion.common.schedule.entity.QrtzJobDetails">
@@ -48,6 +48,17 @@
     </select>
 
     <select id="queryJobParam" parameterType="string" resultType="org.orion.common.schedule.entity.BatchJobParam">
-        SELECT * FROM BATCH_JOB_PARAM WHERE
+        SELECT * FROM BATCH_JOB_PARAM WHERE JOB_NAME = #{jobName} AND JOB_GROUP = #{jobGroup}
     </select>
+
+    <select id="deleteAllJobParams" parameterType="string">
+        DELETE FROM BATCH_JOB_PARAM WHERE JOB_NAME = #{jobName} AND JOB_GROUP = #{jobGroup}
+    </select>
+
+    <insert id="insertJobParams" parameterType="list">
+        INSERT INTO BATCH_JOB_PARAM (JOB_NAME, JOB_GROUP, PARAM_NAME, PARAM_VALUE) VALUES
+        <foreach collection="params" item="param" separator=",">
+            (#{param.jobName}, #{param.jobGroup}, #{param.paramName}, #{param.paramValue})
+        </foreach>
+    </insert>
 </mapper>

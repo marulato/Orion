@@ -9,11 +9,9 @@ import org.orion.common.mastercode.ErrorCode;
 import org.orion.common.message.DataManager;
 import org.orion.common.miscutil.Encrtption;
 import org.orion.common.miscutil.HttpUtil;
+import org.orion.common.miscutil.StringUtil;
 import org.orion.common.schedule.JobScheduleManager;
-import org.orion.common.schedule.entity.BatchJobEntity;
-import org.orion.common.schedule.entity.BatchJobFiredHistory;
-import org.orion.common.schedule.entity.JobSchedule;
-import org.orion.common.schedule.entity.QrtzJobDetails;
+import org.orion.common.schedule.entity.*;
 import org.orion.common.validation.Validation;
 import org.orion.systemAdmin.entity.AppConsts;
 import org.slf4j.Logger;
@@ -26,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -262,6 +261,64 @@ public class JobScheduleController {
             response.setCode(AppConsts.RESPONSE_ERROR);
             logger.error("", e);
         }
+        return response;
+    }
+
+    @RequestMapping("/web/System/JobSchedule/job-param/{param}")
+    @ResponseBody
+    public Response initAddParam(@PathVariable("param") String param, HttpServletRequest request) {
+        HttpUtil.setSessionAttr(request, "add_param", param);
+        Response response = new Response();
+        try {
+            String[] requestParam = HttpUtil.decryptParams(param);
+            String jobName = requestParam[0];
+            String jobGroup = requestParam[1];
+            List<BatchJobParam> jobParamList = jobScheduleManager.getJobParams(jobName, jobGroup);
+            response.setObject(jobParamList);
+            response.setCode(AppConsts.RESPONSE_SUCCESS);
+        } catch (Exception e) {
+            response.setCode(AppConsts.RESPONSE_ERROR);
+            logger.error("", e);
+        }
+        return response;
+    }
+
+    @RequestMapping("/web/System/JobSchedule/add-job-param")
+    @ResponseBody
+    public Response addJobParam(JobParamModel jobParamModel, String token, HttpServletRequest request) throws Exception {
+        Response response = new Response();
+        if (!Encrtption.validateToken(token)) {
+            response.setCode(AppConsts.INVALID_REQUEST);
+            return response;
+        }
+        try {
+            String param = (String) HttpUtil.getSessionAttr(request, "add_param");
+            String[] requestParam = HttpUtil.decryptParams(param);
+            String jobName = requestParam[0];
+            String jobGroup = requestParam[1];
+            List<BatchJobParam> jobParamList = jobParamModel.getParams();
+            jobScheduleManager.deleteJobParams(jobName, jobGroup);
+            if (jobParamList != null && !jobParamList.isEmpty()) {
+                Iterator<BatchJobParam> iterator = jobParamList.iterator();
+                while (iterator.hasNext()) {
+                    BatchJobParam jobParam = iterator.next();
+                    if (jobParam == null || StringUtil.isEmpty(jobParam.getParamName()) ||
+                            StringUtil.isEmpty(jobParam.getParamValue())) {
+                        iterator.remove();
+                    } else {
+                        jobParam.setJobName(jobName);
+                        jobParam.setJobGroup(jobGroup);
+                    }
+                }
+                jobScheduleManager.addJobParams(jobParamList);
+            }
+            response.setCode(AppConsts.RESPONSE_SUCCESS);
+        } catch (Exception e) {
+            logger.error("", e);
+            response.setCode(AppConsts.RESPONSE_ERROR);
+            throw e;
+        }
+
         return response;
     }
 

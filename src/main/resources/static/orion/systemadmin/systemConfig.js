@@ -30,16 +30,14 @@ sysConfig.search = function (page) {
                         tableValue += "<td>"+obj.description+"</td>";
                         tableValue += "<td>"+obj.configKey+"</td>";
                         tableValue += "<td>"+obj.configValue+"</td>";
-                        tableValue += "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"sysConfig.initModify('"+obj.configKey+"')\"><i class=\"fa-pencil\"></i>修改</button>"
-                        tableValue += "<button type=\"button\" class=\"btn btn-danger\">删除</button></td>"
+                        tableValue += "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"sysConfig.initModify('"+obj.configKey+"')\"><i class=\"fa-pencil\"></i></button></td>"
                         tableValue += "</tr>"
                     } else {
                         tableValue += "<tr class='even'>"
                         tableValue += "<td>"+obj.description+"</td>";
                         tableValue += "<td>"+obj.configKey+"</td>";
                         tableValue += "<td>"+obj.configValue+"</td>";
-                        tableValue += "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"sysConfig.initModify('"+obj.configKey+"')\"><i class=\"fa-pencil\"></i>修改</button>"
-                        tableValue += "<button type=\"button\" class=\"btn btn-danger\">删除</button></td>"
+                        tableValue += "<td><button type=\"button\" class=\"btn btn-secondary\" onclick=\"sysConfig.initModify('"+obj.configKey+"')\"><i class=\"fa-pencil\"></i></button></td>"
                         tableValue += "</tr>";
                     }
                 });

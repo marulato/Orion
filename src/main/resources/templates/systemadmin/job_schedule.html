@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -73,7 +73,7 @@
             <span class="sr-only">Close</span>
           </button>
 
-          <strong>操作成功！&nbsp;&nbsp;</strong> 页面已更新.
+          <strong><i class="fa fa-check"></i>&nbsp;操作成功！&nbsp;&nbsp;</strong> 页面已更新.
         </div>
       </div>
       <div class="col-md-12" id="jobAlert" style="display: none">
@@ -326,7 +326,7 @@
       </form>
       <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-info">搜索</button>
+        <button type="button" class="btn btn-info" onclick="jobSchedule.doSearchParam(1)">搜索</button>
       </div>
     </div>
   </div>
@@ -527,7 +527,7 @@
             <div class="col-md-12">
 
               <div class="form-group" id="err_006_m">
-                <label for="" class="control-label">目标类全限定名</label>
+                <label class="control-label">目标类全限定名</label>
 
                 <input type="text" class="form-control" id="modifyClass" placeholder="Class" name="className">
               </div>
@@ -625,7 +625,7 @@
       <button type="button" class="btn btn-primary" onclick="jobSchedule.addParamRow()"><i class="fa fa-plus"></i>&nbsp;增加</button>
       <div class="modal-footer">
         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-info" onclick=""><i class="fa fa-save"></i>&nbsp;保存</button>
+        <button type="button" class="btn btn-info" onclick="jobSchedule.doAddParam()"><i class="fa fa-save"></i>&nbsp;保存</button>
       </div>
     </div>
   </div>
