@@ -26,10 +26,11 @@ public class CrudManager {
         }
     }
 
-    public void execute(String sql) {
+    public String execute(String sql) {
         if (!StringUtil.isEmpty(sql)) {
-            databaseSchemaDao.execute(sql);
+           return databaseSchemaDao.execute(sql);
         }
+        return null;
     }
 
     public int countAll(String table) {

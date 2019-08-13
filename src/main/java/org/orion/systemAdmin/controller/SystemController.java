@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,8 +115,39 @@ public class SystemController {
             String osInfo = System.getProperty("os.name");
             info.put("server_info", serverInfo);
             response.setObject(info);
-        } catch (Exception e) {
+            Runtime runtime = Runtime.getRuntime();
+            if (osInfo.contains("Windows")) {
+                Process process = runtime.exec("systeminfo");
+                InputStreamReader reader = new InputStreamReader(process.getInputStream(), "GBK");
+                LineNumberReader input = new LineNumberReader(reader);
+                String line = "";
+                while ((line = input.readLine()) != null) {
+                    if (line.contains("OS 名称")) {
+                        String[] details = line.split(":");
+                        info.put("os_info", details[1].trim());
+                        break;
+                    }
+                }
+            } else if (osInfo.contains("Linux")) {
+                Process process = runtime.exec("cat/etc/issue");
+                InputStreamReader reader = new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8);
+                LineNumberReader input = new LineNumberReader(reader);
+                String line = "";
+                while ((line = input.readLine()) != null) {
+                    info.put("os_info", line);
+                    break;
+                }
+            }
+            String mysqlVer = crudManager.execute("SELECT VERSION();");
+            info.put("mysql_ver", mysqlVer);
+            info.put("jvm_vendor", System.getProperty("java.vm.vendor"));
+            info.put("jvm_name", System.getProperty("java.vm.name "));
+            info.put("jvm_version", System.getProperty("java.vm.version"));
+            info.put("jre_vendor", System.getProperty("java.vendor"));
+            info.put("jre_version", System.getProperty("java.version"));
 
+        } catch (Exception e) {
+            info.clear();
         }
         return response;
     }
