@@ -40,7 +40,7 @@ public class AuthLoginController {
 
     @RequestMapping("/web/Home")
     public String initHomePage() {
-        return "systemadmin/dashboard";
+        return "systemadmin/system_info";
     }
 
     @RequestMapping("/web/AuthLogin/signin")

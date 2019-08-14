@@ -103,7 +103,7 @@ sysConfig.doModify = function () {
 
         });
     } else {
-        common.showErrorMsg(result);
+        common.showErrorMsg(result, "m");
     }
 }
 

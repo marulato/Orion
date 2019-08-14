@@ -8,6 +8,7 @@ import org.orion.common.basic.SearchResult;
 import org.orion.common.dao.crud.CrudManager;
 import org.orion.common.mastercode.ErrorCode;
 import org.orion.common.miscutil.Encrtption;
+import org.orion.common.miscutil.HttpUtil;
 import org.orion.common.validation.Validation;
 import org.orion.systemAdmin.entity.AppConsts;
 import org.orion.systemAdmin.entity.SystemConfig;
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -106,49 +107,88 @@ public class SystemController {
         return response;
     }
 
+    @RequestMapping("/web/System/Info")
+    public String initSystemInfo() {
+        return "systemadmin/system_info";
+    }
+
+    @RequestMapping("/web/System/Info/display")
+    @ResponseBody
     public Response prepareSystemInfo(HttpServletRequest request) {
         Response response = new Response();
-        Map<String, String> info = new HashMap<>();
+        Runtime runtime = Runtime.getRuntime();
+        Map<String, String> info = (Map<String, String>) HttpUtil.getSessionAttr(request, "system_info");
         try {
-            ServletContext servletContext = request.getServletContext();
-            String serverInfo = servletContext.getServerInfo();
-            String osInfo = System.getProperty("os.name");
-            info.put("server_info", serverInfo);
-            response.setObject(info);
-            Runtime runtime = Runtime.getRuntime();
-            if (osInfo.contains("Windows")) {
-                Process process = runtime.exec("systeminfo");
+            if (info != null) {
+                info.put("已分配内存", String.valueOf(runtime.totalMemory()/1024/1024) + " MB");
+                info.put("JVM总内存", String.valueOf(runtime.maxMemory()/1024/1024) + " MB");
+                info.put("可用内存", String.valueOf(runtime.freeMemory()/1024/1024) + " MB");
+                response.setObject(info);
+            } else {
+                info = new LinkedHashMap<>();
+                ServletContext servletContext = request.getServletContext();
+                String serverInfo = servletContext.getServerInfo();
+                String osInfo = System.getProperty("os.name");
+                response.setObject(info);
+                info.put("Servlet容器", serverInfo);
+                if (osInfo.contains("Windows")) {
+                    Process process = runtime.exec("systeminfo");
+                    InputStreamReader reader = new InputStreamReader(process.getInputStream(), "GBK");
+                    LineNumberReader input = new LineNumberReader(reader);
+                    String line = "";
+                    while ((line = input.readLine()) != null) {
+                        if (line.contains("OS 名称")) {
+                            String[] details = line.split(":");
+                            info.put("操作系统名称", details[1].trim());
+                        }
+                        if (line.contains("OS 版本") && !line.contains("BIOS")) {
+                            String[] details = line.split(":");
+                            info.put("操作系统版本", details[1].trim());
+                        }
+                    }
+                    reader.close();
+                    input.close();
+                } else if (osInfo.contains("Linux")) {
+                    Process process = runtime.exec("cat/etc/issue");
+                    InputStreamReader reader = new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8);
+                    LineNumberReader input = new LineNumberReader(reader);
+                    String line = "";
+                    while ((line = input.readLine()) != null) {
+                        info.put("os_info", line);
+                        break;
+                    }
+                    reader.close();
+                    input.close();
+                }
+                String mysqlVer = crudManager.execute("SELECT VERSION();");
+                Process process = runtime.exec("wmic cpu get name");
                 InputStreamReader reader = new InputStreamReader(process.getInputStream(), "GBK");
                 LineNumberReader input = new LineNumberReader(reader);
                 String line = "";
                 while ((line = input.readLine()) != null) {
-                    if (line.contains("OS 名称")) {
-                        String[] details = line.split(":");
-                        info.put("os_info", details[1].trim());
+                    if (line.contains("Intel") || line.contains("AMD")) {
+                        info.put("CPU", line);
                         break;
                     }
                 }
-            } else if (osInfo.contains("Linux")) {
-                Process process = runtime.exec("cat/etc/issue");
-                InputStreamReader reader = new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8);
-                LineNumberReader input = new LineNumberReader(reader);
-                String line = "";
-                while ((line = input.readLine()) != null) {
-                    info.put("os_info", line);
-                    break;
-                }
-            }
-            String mysqlVer = crudManager.execute("SELECT VERSION();");
-            info.put("mysql_ver", mysqlVer);
-            info.put("jvm_vendor", System.getProperty("java.vm.vendor"));
-            info.put("jvm_name", System.getProperty("java.vm.name "));
-            info.put("jvm_version", System.getProperty("java.vm.version"));
-            info.put("jre_vendor", System.getProperty("java.vendor"));
-            info.put("jre_version", System.getProperty("java.version"));
+                reader.close();
+                input.close();
+                info.put("逻辑处理器数量", String.valueOf(runtime.availableProcessors()));
+                info.put("MySQL版本", mysqlVer);
+                info.put("JVM名称", System.getProperty("java.vm.name"));
+                info.put("JVM提供商", System.getProperty("java.vm.vendor"));
+                info.put("JVM版本", System.getProperty("java.vm.version"));
+                info.put("JVM总内存", String.valueOf(runtime.maxMemory()/1024/1024) + " MB");
+                info.put("已分配内存", String.valueOf(runtime.totalMemory()/1024/1024) + " MB");
+                info.put("可用内存", String.valueOf(runtime.freeMemory()/1024/1024) + " MB");
+                HttpUtil.setSessionAttr(request, "system_info", info);
+                response.setCode(AppConsts.RESPONSE_SUCCESS);
 
+            }
         } catch (Exception e) {
-            info.clear();
+            response.setCode(AppConsts.RESPONSE_ERROR);
         }
         return response;
     }
+
 }
