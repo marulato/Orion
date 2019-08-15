@@ -4,10 +4,10 @@ import org.orion.common.basic.AppContext;
 import org.orion.common.message.DataManager;
 import org.orion.common.miscutil.DateUtil;
 import org.orion.common.miscutil.Encrtption;
-import org.orion.common.miscutil.HttpUtil;
+import org.orion.common.rbac.LoginResult;
+import org.orion.common.rbac.User;
+import org.orion.common.rbac.UserLoginHistory;
 import org.orion.systemAdmin.entity.AppConsts;
-import org.orion.systemAdmin.entity.User;
-import org.orion.systemAdmin.entity.UserLoginHistory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,14 +23,13 @@ public class AuthorizeActionService {
     @Resource
     private UserMaintenanceService userMainService;
 
-    public int login(User loginUser, HttpServletRequest request) {
+    public LoginResult login(User loginUser) {
         int loginStatus = 0;
+        LoginResult loginResult = new LoginResult();
         if (loginUser != null) {
             User user = userMainService.getUser(loginUser.getLoginId());
+            UserLoginHistory loginHistory = new UserLoginHistory(user);
             if (user != null) {
-                UserLoginHistory loginHistory = new UserLoginHistory(user);
-                loginHistory.setSessionId(request.getSession().getId());
-                loginHistory.setClient(request.getParameter("agent"));
                 Date now = DateUtil.now();
                 loginHistory.setLoginTime(now);
                 user.setLoginLastAttemptDt(now);
@@ -78,19 +77,12 @@ public class AuthorizeActionService {
                         loginStatus = -1;
                     }
                 }
-                if (loginStatus == 1) {
-                    HttpUtil.setSessionAttr(request, "login_user", user);
-                    HttpUtil.setSessionAttr(request, "login_time", now);
-                    HttpUtil.setSessionAttr(request, "is_login", true);
-                    AppContext context = AppContext.getAppContext(request);
-                    context.setUserRoles(userMainService.getUserRole(user));
-                    context.setUrlList(userMainService.getUrlForUser(user));
-                }
-                userMainService.updateUserLogin(user);
-                userMainService.createLoginAudit(loginHistory);
             }
+            loginResult.setLoginHistory(loginHistory);
+            loginResult.setUser(user);
         }
-        return loginStatus;
+        loginResult.setStatus(loginStatus);
+        return loginResult;
     }
 
     public boolean checkSessionValidity(HttpServletRequest request) {

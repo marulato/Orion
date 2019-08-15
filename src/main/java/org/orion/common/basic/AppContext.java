@@ -2,8 +2,8 @@ package org.orion.common.basic;
 
 import org.orion.common.miscutil.HttpUtil;
 import org.orion.common.miscutil.SpringUtil;
-import org.orion.systemAdmin.entity.OrionUserRole;
-import org.orion.systemAdmin.entity.User;
+import org.orion.common.rbac.OrionUserRole;
+import org.orion.common.rbac.User;
 import org.orion.systemAdmin.service.UserMaintenanceService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +34,6 @@ public class AppContext {
                 context.setUserRoles(userMainService.getUserRole(user));
                 context.setUrlList(userMainService.getUrlForUser(user));
                 context.setLoginTime((Date) HttpUtil.getSessionAttr(request, "login_time"));
-                context.setLogin((boolean) HttpUtil.getSessionAttr(request, "is_login"));
                 context.setSessionId(request.getSession().getId());
                 HttpUtil.setSessionAttr(request, "AppContext", context);
                 HttpUtil.clearSession(request, "login_time", "is_login");

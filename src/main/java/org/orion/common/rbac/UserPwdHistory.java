@@ -1,4 +1,4 @@
-package org.orion.systemAdmin.entity;
+package org.orion.common.rbac;
 
 import org.orion.common.basic.BaseEntity;
 

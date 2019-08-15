@@ -1,12 +1,17 @@
 package org.orion.systemAdmin.controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.orion.common.basic.AppContext;
 import org.orion.common.miscutil.DateUtil;
 import org.orion.common.miscutil.Encrtption;
 import org.orion.common.miscutil.HttpUtil;
 import org.orion.common.miscutil.ValidationUtil;
+import org.orion.common.rbac.User;
+import org.orion.configration.authority.ShiroRealm;
 import org.orion.systemAdmin.entity.AppConsts;
-import org.orion.systemAdmin.entity.User;
 import org.orion.systemAdmin.service.AuthorizeActionService;
 import org.orion.systemAdmin.service.UserMaintenanceService;
 import org.slf4j.Logger;
@@ -38,6 +43,7 @@ public class AuthLoginController {
         return "systemadmin/changePassword";
     }
 
+    @RequiresRoles(value = {"SYSTEMADMIN"})
     @RequestMapping("/web/Home")
     public String initHomePage() {
         return "systemadmin/system_info";
@@ -48,16 +54,28 @@ public class AuthLoginController {
     public String login(HttpServletRequest request, User loginUser) throws Exception {
         if (loginUser != null) {
             loginUser.setPwd(Encrtption.decryptAES(loginUser.getPwd(), AppConsts.SALT_KEY, true));
-            int loginResult = authorizeService.login(loginUser, request);
-            if (loginResult == 1) {
-                AppContext context = AppContext.getAppContext(request);
-                User user = context.getUser();
-                if (AppConsts.YES.equals(user.getPwdChgRequired())) {
-                    HttpUtil.setSessionAttr(request, "changePwd", AppConsts.YES);
-                    return "changePwd";
+            Subject subject = SecurityUtils.getSubject();
+            UsernamePasswordToken token = new UsernamePasswordToken();
+            token.setUsername(loginUser.getLoginId());
+            token.setPassword(loginUser.getPwd().toCharArray());
+            try {
+                subject.login(token);
+
+                int status = ShiroRealm.getLoginResult().getStatus();
+                HttpUtil.setSessionAttr(request, "login_user", ShiroRealm.getLoginResult().getUser());
+                if (status == 1) {
+                    AppContext context = AppContext.getAppContext(request);
+                    User user = context.getUser();
+                    if (AppConsts.YES.equals(user.getPwdChgRequired())) {
+                        HttpUtil.setSessionAttr(request, "changePwd", AppConsts.YES);
+                        return "changePwd";
+                    }
                 }
+                return String.valueOf(status);
+            } catch (Exception e) {
+                logger.error("", e);
             }
-            return String.valueOf(loginResult);
+
         }
         return "error";
     }

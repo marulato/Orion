@@ -1,9 +1,10 @@
-package org.orion.systemAdmin.entity;
+package org.orion.common.rbac;
 
 import java.util.Date;
 
 public class UserLoginHistory {
     private long userId;
+    private int loginStatus;
     private String loginId;
     private Date loginTime;
     private String isSuccess;
@@ -25,6 +26,14 @@ public class UserLoginHistory {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public int getLoginStatus() {
+        return loginStatus;
+    }
+
+    public void setLoginStatus(int loginStatus) {
+        this.loginStatus = loginStatus;
     }
 
     public String getLoginId() {

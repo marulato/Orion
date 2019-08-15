@@ -1,5 +1,6 @@
 package org.orion.systemAdmin.controller;
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.orion.common.basic.AppContext;
 import org.orion.common.basic.Response;
 import org.orion.common.basic.SearchParam;
@@ -10,6 +11,7 @@ import org.orion.common.message.DataManager;
 import org.orion.common.miscutil.Encrtption;
 import org.orion.common.miscutil.HttpUtil;
 import org.orion.common.miscutil.StringUtil;
+import org.orion.common.rbac.AuthorityConsts;
 import org.orion.common.schedule.JobScheduleManager;
 import org.orion.common.schedule.entity.*;
 import org.orion.common.validation.Validation;
@@ -35,11 +37,13 @@ public class JobScheduleController {
     private CrudManager crudManager;
     private final Logger logger = LoggerFactory.getLogger(JobScheduleController.class);
 
+    @RequiresRoles(value = {AuthorityConsts.ROLE_SYSTEM_ADMIN})
     @RequestMapping("/web/System/JobSchedule")
     public String initJobSchedulePage() {
         return "systemadmin/job_schedule";
     }
 
+    @RequiresRoles(value = {AuthorityConsts.ROLE_SYSTEM_ADMIN})
     @RequestMapping("/web/System/JobSchedule/validate")
     @ResponseBody
     public Response validateJobSchedule(JobSchedule jobSchedule, String action) {
@@ -81,6 +85,7 @@ public class JobScheduleController {
         return response;
     }
 
+    @RequiresRoles(value = {AuthorityConsts.ROLE_SYSTEM_ADMIN})
     @RequestMapping("/web/System/JobSchedule/search")
     @ResponseBody
     public SearchResult search(String page, String pageSize, BatchJobEntity jobEntity) {
@@ -97,6 +102,7 @@ public class JobScheduleController {
         return searchResult;
     }
 
+    @RequiresRoles(value = {AuthorityConsts.ROLE_SYSTEM_ADMIN})
     @RequestMapping("/web/System/JobSchedule/create")
     @ResponseBody
     @Transactional
@@ -123,6 +129,7 @@ public class JobScheduleController {
         return response;
     }
 
+    @RequiresRoles(value = {AuthorityConsts.ROLE_SYSTEM_ADMIN})
     @RequestMapping("/web/System/JobSchedule/display/{param}")
     @ResponseBody
     public Response displayJob(@PathVariable("param") String param) {
@@ -146,6 +153,7 @@ public class JobScheduleController {
         return response;
     }
 
+    @RequiresRoles(value = {AuthorityConsts.ROLE_SYSTEM_ADMIN})
     @RequestMapping("/web/System/JobSchedule/modify/{param}")
     @ResponseBody
     public Response initModify(@PathVariable("param") String param, HttpServletRequest request) {
@@ -153,6 +161,7 @@ public class JobScheduleController {
         return displayJob(param);
     }
 
+    @RequiresRoles(value = {AuthorityConsts.ROLE_SYSTEM_ADMIN})
     @RequestMapping("/web/System/JobSchedule/delete/{param}")
     @ResponseBody
     public Response initDelete(@PathVariable("param") String param, HttpServletRequest request) {
@@ -160,6 +169,7 @@ public class JobScheduleController {
         return displayJob(param);
     }
 
+    @RequiresRoles(value = {AuthorityConsts.ROLE_SYSTEM_ADMIN})
     @RequestMapping("/web/System/JobSchedule/doModify")
     @ResponseBody
     @Transactional
@@ -200,6 +210,7 @@ public class JobScheduleController {
         return response;
     }
 
+    @RequiresRoles(value = {AuthorityConsts.ROLE_SYSTEM_ADMIN})
     @RequestMapping("/web/System/JobSchedule/doDelete")
     @ResponseBody
     public Response deleteJob(String token, HttpServletRequest request) {
@@ -233,6 +244,7 @@ public class JobScheduleController {
         return response;
     }
 
+    @RequiresRoles(value = {AuthorityConsts.ROLE_SYSTEM_ADMIN})
     @RequestMapping("/web/System/JobSchedule/launch/{param}")
     @ResponseBody
     @Transactional
@@ -264,6 +276,7 @@ public class JobScheduleController {
         return response;
     }
 
+    @RequiresRoles(value = {AuthorityConsts.ROLE_SYSTEM_ADMIN})
     @RequestMapping("/web/System/JobSchedule/job-param/{param}")
     @ResponseBody
     public Response initAddParam(@PathVariable("param") String param, HttpServletRequest request) {
@@ -283,6 +296,7 @@ public class JobScheduleController {
         return response;
     }
 
+    @RequiresRoles(value = {AuthorityConsts.ROLE_SYSTEM_ADMIN})
     @RequestMapping("/web/System/JobSchedule/add-job-param")
     @ResponseBody
     public Response addJobParam(JobParamModel jobParamModel, String token, HttpServletRequest request) throws Exception {

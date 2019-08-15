@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="org.orion.systemAdmin.dao.UserDao">
-    <select id="query" parameterType="java.lang.String" resultType="org.orion.systemAdmin.entity.User">
+    <select id="query" parameterType="java.lang.String" resultType="org.orion.common.rbac.User">
         SELECT * FROM USER_TBL WHERE LOGIN_ID = #{loginId}
     </select>
 
-    <insert id="insert" parameterType="org.orion.systemAdmin.entity.User">
+    <insert id="insert" parameterType="org.orion.common.rbac.User">
         INSERT INTO USER_TBL (USER_ID, LOGIN_ID, USER_DOMAIN, DISPLAY_NAME, PWD, EMAIL, MOBILE_NO, ACCT_STATUS, REMARKS,
                               LOGIN_LAST_ATTEMPT_DT, LOGIN_LAST_SUCCESS_DT, LOGIN_FAIL_ATTEMPT_CNT, PWD_LAST_CHG_DT,
                               PWD_CHG_REQUIRED, ACCT_ACTIVATE_DT, ACCT_DEACTIVATE_DT, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY)
@@ -15,7 +15,7 @@
                        #{pwdChgRequired}, #{acctActivateDt}, #{acctDeactivateDt}, #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy})
     </insert>
 
-    <update id="update" parameterType="org.orion.systemAdmin.entity.User">
+    <update id="update" parameterType="org.orion.common.rbac.User">
         UPDATE USER_TBL SET USER_ID = #{userId}, LOGIN_ID = #{loginId}, USER_DOMAIN = #{userDomain}, DISPLAY_NAME = #{displayName},
                             PWD = #{pwd}, EMAIL = #{email}, MOBILE_NO = #{mobileNo}, ACCT_STATUS = #{acctStatus},
                             REMARKS = #{remarks}, LOGIN_LAST_ATTEMPT_DT = #{loginLastAttemptDt},
@@ -25,22 +25,22 @@
                             UPDATED_AT = #{updatedAt}, UPDATED_BY = #{updatedBy} WHERE USER_ID = #{userId}
     </update>
 
-    <update id="updateAfterLogin" parameterType="org.orion.systemAdmin.entity.User">
+    <update id="updateAfterLogin" parameterType="org.orion.common.rbac.User">
         UPDATE USER_TBL SET ACCT_STATUS = #{acctStatus}, LOGIN_LAST_ATTEMPT_DT = #{loginLastAttemptDt},
                             LOGIN_LAST_SUCCESS_DT = #{loginLastSuccessDt}, LOGIN_FAIL_ATTEMPT_CNT = #{loginFailAttemptCnt},
                             UPDATED_AT = #{updatedAt}, UPDATED_BY = #{updatedBy} WHERE USER_ID = #{userId}
     </update>
 
-    <insert id="createHistory" parameterType="org.orion.systemAdmin.entity.UserLoginHistory">
+    <insert id="createHistory" parameterType="org.orion.common.rbac.UserLoginHistory">
         INSERT INTO USER_LOGIN_HISTORY (USER_ID, LOGIN_ID, LOGIN_TIME, IS_SUCCESS, CLIENT, SESSION_ID, REASON )
         VALUES(#{userId}, #{loginId}, #{loginTime}, #{isSuccess}, #{client}, #{sessionId}, #{reason} )
     </insert>
 
-    <select id="queryLoginAudit" parameterType="org.orion.systemAdmin.entity.User" resultType="org.orion.systemAdmin.entity.UserLoginHistory">
+    <select id="queryLoginAudit" parameterType="org.orion.common.rbac.User" resultType="org.orion.common.rbac.UserLoginHistory">
         SELECT * FROM USER_LOGIN_HISTORY WHERE LOGIN_ID = #{loginId}
     </select>
 
-    <select id="queryLoginAuditPeriod" resultType="org.orion.systemAdmin.entity.UserLoginHistory">
+    <select id="queryLoginAuditPeriod" resultType="org.orion.common.rbac.UserLoginHistory">
         SELECT * FROM USER_LOGIN_HISTORY
         <where>
             <if test="id != null">
@@ -58,16 +58,16 @@
         </where>
     </select>
 
-    <insert id="createProfile" parameterType="org.orion.systemAdmin.entity.UserProfile">
+    <insert id="createProfile" parameterType="org.orion.common.rbac.UserProfile">
         INSERT INTO USER_PROFILE (USER_ID, LOGIN_ID, DISPLAY_NAME, FULL_NAME, ID_NO, GENDER, DOB, EMAIL, CONTACT_NO, DESCRIPTION, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY)
         VALUES(#{userId}, #{loginId}, #{displayName}, #{fullName}, #{idNo}, #{gender}, #{dob}, #{email}, #{contactNo}, #{description}, #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy})
     </insert>
 
-    <select id="queryUserProfile" parameterType="org.orion.systemAdmin.entity.User" resultType="org.orion.systemAdmin.entity.UserProfile">
+    <select id="queryUserProfile" parameterType="org.orion.common.rbac.User" resultType="org.orion.common.rbac.UserProfile">
         SELECT * FROM USER_PROFILE WHERE USER_ID = #{userId} AND LOGIN_ID = #{loginId}
     </select>
 
-    <update id="updatePassword" parameterType="org.orion.systemAdmin.entity.User">
+    <update id="updatePassword" parameterType="org.orion.common.rbac.User">
         UPDATE USER_TBL SET PWD = #{pwd}, PWD_LAST_CHG_DT = #{pwdLastChgDt}, PWD_CHG_REQUIRED = #{pwdChgRequired}, UPDATED_AT = #{updatedAt}, UPDATED_BY = #{updatedBy} WHERE USER_ID = #{userId}
     </update>
 </mapper>

@@ -2,9 +2,9 @@ package org.orion.systemAdmin.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.orion.systemAdmin.entity.User;
-import org.orion.systemAdmin.entity.UserLoginHistory;
-import org.orion.systemAdmin.entity.UserProfile;
+import org.orion.common.rbac.User;
+import org.orion.common.rbac.UserLoginHistory;
+import org.orion.common.rbac.UserProfile;
 
 import java.util.Date;
 import java.util.List;

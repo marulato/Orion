@@ -35,16 +35,93 @@
     </mapping>
 
     <mapping>
-        <ModuelId>HOME</ModuelId>
-        <ModuelName>Home Page</ModuelName>
-        <Desc>Dashboard overview</Desc>
+        <ModuelId>SYSTEM_CONFIG</ModuelId>
+        <ModuelName>System Settings</ModuelName>
+        <Desc>System Configuration Management</Desc>
         <Remarks></Remarks>
         <Function>
-            <FuncId>HOME_PAGE</FuncId>
-            <FuncName>Home Page</FuncName>
-            <URL>/web/Home</URL>
-            <Level>N</Level>
-            <IsSystem>N</IsSystem>
+            <FuncId>SYS_CONFIG_PAGE</FuncId>
+            <FuncName>System Parameters Configuration Page</FuncName>
+            <URL>/web/System/Configuration</URL>
+            <Level>A</Level>
+            <IsSystem>Y</IsSystem>
+        </Function>
+        <Function>
+            <FuncId>SYS_CONFIG_SEARCH</FuncId>
+            <FuncName>Search System configuration</FuncName>
+            <URL>/web/System/Configuration/search</URL>
+            <Level>A</Level>
+            <IsSystem>Y</IsSystem>
+        </Function>
+        <Function>
+            <FuncId>SYS_CONFIG_MODIFY</FuncId>
+            <FuncName>Modify System configuration</FuncName>
+            <URL>/web/System/Configuration/modify</URL>
+            <Level>A</Level>
+            <IsSystem>Y</IsSystem>
+        </Function>
+        <Function>
+            <FuncId>SYS_CONFIG_DO_MODIFY</FuncId>
+            <FuncName>Submit Modify System configuration</FuncName>
+            <URL>/web/System/Configuration/doModify</URL>
+            <Level>A</Level>
+            <IsSystem>Y</IsSystem>
+        </Function>
+        <Function>
+            <FuncId>SYS_CONFIG_VALIDATION</FuncId>
+            <FuncName>System Configuration Validation</FuncName>
+            <URL>/web/System/Configuration/validate</URL>
+            <Level>A</Level>
+            <IsSystem>Y</IsSystem>
+        </Function>
+    </mapping>
+
+    <mapping>
+        <ModuelId>SYSTEM_INFO</ModuelId>
+        <ModuelName>System Information</ModuelName>
+        <Desc>Display System Information</Desc>
+        <Remarks></Remarks>
+        <Function>
+            <FuncId>SYS_INFO_PAGE</FuncId>
+            <FuncName>System Information Page</FuncName>
+            <URL>/web/System/Info</URL>
+            <Level>A</Level>
+            <IsSystem>Y</IsSystem>
+        </Function>
+        <Function>
+            <FuncId>SYS_INFO_DISPLAY</FuncId>
+            <FuncName>Display System Information</FuncName>
+            <URL>/web/System/Info/display</URL>
+            <Level>A</Level>
+            <IsSystem>Y</IsSystem>
+        </Function>
+    </mapping>
+
+    <mapping>
+        <ModuelId>SCHEDULED_TASK</ModuelId>
+        <ModuelName>Scheduled Tasks and Batch Jobs Management</ModuelName>
+        <Desc>Scheduled Tasks and Batch Jobs Management</Desc>
+        <Remarks></Remarks>
+        <Function>
+            <FuncId>JOB_SCHE_PAGE</FuncId>
+            <FuncName>Job Schedule Page</FuncName>
+            <URL>/web/System/JobSchedule</URL>
+            <Level>A</Level>
+            <IsSystem>Y</IsSystem>
+        </Function>
+        <Function>
+            <FuncId>JOB_SCHE_PAGE</FuncId>
+            <FuncName>Job Schedule Page</FuncName>
+            <URL>/web/System/JobSchedule</URL>
+            <Level>A</Level>
+            <IsSystem>Y</IsSystem>
+        </Function>
+        <Function>
+            <FuncId>JOB_SCHE_PAGE</FuncId>
+            <FuncName>Job Schedule Page</FuncName>
+            <URL>/web/System/JobSchedule</URL>
+            <Level>A</Level>
+            <IsSystem>Y</IsSystem>
         </Function>
     </mapping>
 </ModuelMappings>

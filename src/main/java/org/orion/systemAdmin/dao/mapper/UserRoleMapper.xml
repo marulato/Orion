@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="org.orion.systemAdmin.dao.UserRoleDao">
-    <select id="queryRole" resultType="org.orion.systemAdmin.entity.OrionUserRole">
+    <select id="queryRole" resultType="org.orion.common.rbac.OrionUserRole">
         SELECT * FROM USER_ROLE_ASSIGN WHERE USER_ID = #{userId}
     </select>
 </mapper>
