@@ -1,6 +1,5 @@
 package org.orion.systemAdmin.service;
 
-import org.orion.common.basic.AppContext;
 import org.orion.common.message.DataManager;
 import org.orion.common.miscutil.DateUtil;
 import org.orion.common.miscutil.Encrtption;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Service
@@ -83,14 +81,5 @@ public class AuthorizeActionService {
         }
         loginResult.setStatus(loginStatus);
         return loginResult;
-    }
-
-    public boolean checkSessionValidity(HttpServletRequest request) {
-        boolean isValid =false;
-        AppContext context = AppContext.getAppContext(request);
-        if (context != null && context.isLogin()) {
-            isValid = true;
-        }
-        return isValid;
     }
 }

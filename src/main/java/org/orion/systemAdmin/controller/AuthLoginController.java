@@ -1,8 +1,10 @@
 package org.orion.systemAdmin.controller;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.shiro.subject.Subject;
 import org.orion.common.basic.AppContext;
 import org.orion.common.miscutil.DateUtil;
@@ -10,6 +12,7 @@ import org.orion.common.miscutil.Encrtption;
 import org.orion.common.miscutil.HttpUtil;
 import org.orion.common.miscutil.ValidationUtil;
 import org.orion.common.rbac.User;
+import org.orion.common.rbac.UserLoginHistory;
 import org.orion.configration.authority.ShiroRealm;
 import org.orion.systemAdmin.entity.AppConsts;
 import org.orion.systemAdmin.service.AuthorizeActionService;
@@ -38,6 +41,7 @@ public class AuthLoginController {
         return "systemadmin/login_page";
     }
 
+    @RequiresUser
     @RequestMapping("/web/AuthLogin/ChangePassword")
     public String initChangePwdPage() {
         return "systemadmin/changePassword";
@@ -45,8 +49,14 @@ public class AuthLoginController {
 
     @RequiresRoles(value = {"SYSTEMADMIN"})
     @RequestMapping("/web/Home")
-    public String initHomePage() {
+    public String initSysHomePage() {
         return "systemadmin/system_info";
+    }
+
+    @RequestMapping("/web/Index")
+    @RequiresUser
+    public String initNormalHomePage() {
+        return "systemadmin/dashboard";
     }
 
     @RequestMapping("/web/AuthLogin/signin")
@@ -60,7 +70,6 @@ public class AuthLoginController {
             token.setPassword(loginUser.getPwd().toCharArray());
             try {
                 subject.login(token);
-
                 int status = ShiroRealm.getLoginResult().getStatus();
                 HttpUtil.setSessionAttr(request, "login_user", ShiroRealm.getLoginResult().getUser());
                 if (status == 1) {
@@ -71,9 +80,19 @@ public class AuthLoginController {
                         return "changePwd";
                     }
                 }
+                if (status != 0) {
+                    User user = ShiroRealm.getLoginResult().getUser();
+                    UserLoginHistory loginHistory = ShiroRealm.getLoginResult().getLoginHistory();
+                    userMainService.updateUserLogin(user);
+                    userMainService.createLoginAudit(loginHistory);
+                }
                 return String.valueOf(status);
             } catch (Exception e) {
-                logger.error("", e);
+                if (e instanceof AuthenticationException) {
+                    logger.info("LOGIN DENIED -> " + loginUser.getLoginId());
+                } else {
+                    logger.error("用户登陆时发生异常", e);
+                }
             }
 
         }
@@ -81,6 +100,7 @@ public class AuthLoginController {
     }
 
     @RequestMapping("/web/AuthLogin/ChangePassword/confirm")
+    @RequiresUser
     @ResponseBody
     public String changePwd(HttpServletRequest request, String pwd, String npwd) throws Exception {
         String password = Encrtption.decryptAES(pwd, AppConsts.SALT_KEY, true);
@@ -95,8 +115,8 @@ public class AuthLoginController {
                 user.setPwd(Encrtption.encryptPassword(password));
                 user.setPwdChgRequired(AppConsts.NO);
                 user.setPwdLastChgDt(now);
-                userMainService.updatePwd(user);
                 user.setUpdateAudit(user.getLoginId(), now);
+                userMainService.updatePwd(user);
                 HttpUtil.clearSession(request, "changePwd");
                 HttpUtil.setSessionAttr(request, "login_user", user);
                 return "pass";
@@ -107,10 +127,12 @@ public class AuthLoginController {
         return "notsame";
     }
 
-    @RequestMapping("/web/AuthLogin/logout")
-    public void logout(HttpServletRequest request) {
-        logger.info("Logout -> Session Elapsed");
+    @RequestMapping("/web/logout")
+    public String logout(HttpServletRequest request) {
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
         request.getSession().invalidate();
+        return "systemadmin/login_page";
     }
 
 }

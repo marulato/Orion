@@ -4,7 +4,7 @@ import org.orion.common.miscutil.HttpUtil;
 import org.orion.common.miscutil.SpringUtil;
 import org.orion.common.rbac.OrionUserRole;
 import org.orion.common.rbac.User;
-import org.orion.systemAdmin.service.UserMaintenanceService;
+import org.orion.systemAdmin.service.RbacService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -13,10 +13,8 @@ import java.util.List;
 public class AppContext {
 
     private User user;
-    private List<String> urlList;
     private List<OrionUserRole> userRoles;
     private OrionUserRole currentRole;
-    private boolean isLogin;
     private Date loginTime;
     private String sessionId;
 
@@ -30,20 +28,14 @@ public class AppContext {
             if (context == null) {
                 context = new AppContext();
                 context.setUser(user);
-                UserMaintenanceService userMainService = SpringUtil.getBean(UserMaintenanceService.class);
-                context.setUserRoles(userMainService.getUserRole(user));
-                context.setUrlList(userMainService.getUrlForUser(user));
-                context.setLoginTime((Date) HttpUtil.getSessionAttr(request, "login_time"));
+                RbacService rbacService = SpringUtil.getBean(RbacService.class);
+                context.setUserRoles(rbacService.getUserRole(user));
+                context.setLoginTime(new Date());
                 context.setSessionId(request.getSession().getId());
                 HttpUtil.setSessionAttr(request, "AppContext", context);
-                HttpUtil.clearSession(request, "login_time", "is_login");
             }
         }
         return context;
-    }
-
-    public boolean isValidURL(String url) {
-        return urlList.contains(url.substring(url.lastIndexOf("/")));
     }
 
     public User getUser() {
@@ -52,14 +44,6 @@ public class AppContext {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public List<String> getUrlList() {
-        return urlList;
-    }
-
-    public void setUrlList(List<String> urlList) {
-        this.urlList = urlList;
     }
 
     public List<OrionUserRole> getUserRoles() {
@@ -76,14 +60,6 @@ public class AppContext {
 
     public void setCurrentRole(OrionUserRole currentRole) {
         this.currentRole = currentRole;
-    }
-
-    public boolean isLogin() {
-        return isLogin;
-    }
-
-    public void setLogin(boolean login) {
-        isLogin = login;
     }
 
     public Date getLoginTime() {
