@@ -82,11 +82,11 @@ jobSchedule.search = function (page) {
                         tableValue += "<td>"+ method +"</td>";
                         tableValue += "<td>"+ cron +"</td>";
                         tableValue += "<td>"+ obj.className +"</td>";
-                        tableValue += "<td> <button type=\"button\" title=\"查看\" class=\"btn btn-info\" onclick=\"jobSchedule.doDisplay('"+ param +"', false)\"><i class=\"fa fa-credit-card\"></i></button>";
-                        tableValue += "<button type=\"button\" title=\"修改\" class=\"btn btn-secondary\" onclick=\"jobSchedule.initModify('"+ param +"')\"><i class=\"fa fa-pencil\"></i></button>";
-                        tableValue += "<button type=\"button\" title=\"执行\" class=\"btn btn-orange\" onclick=\"jobSchedule.launch('"+ param +"')\"><i class=\"fa fa-rocket\"></i></button>";
-                        tableValue += "<button type=\"button\" title=\"配置参数\" class=\"btn btn-blue\" onclick=\"jobSchedule.initAddParam('"+ param +"')\"><i class=\"fa fa-gear\"></i></button>"
-                        tableValue += "<button type=\"button\" title=\"删除\" class=\"btn btn-danger\" onclick=\"jobSchedule.initDelete('"+ param +"', true)\"><i class=\"fa fa-trash\"></i></button></td>";
+                        tableValue += "<td> <button type=\"button\" title=\"查看\" class=\"btn btn-info\" style='border-radius: 5px' onclick=\"jobSchedule.doDisplay('"+ param +"', false)\"><i class=\"fa fa-credit-card\"></i></button>";
+                        tableValue += "<button type=\"button\" title=\"修改\" class=\"btn btn-secondary\" style='border-radius: 5px' onclick=\"jobSchedule.initModify('"+ param +"')\"><i class=\"fa fa-pencil\"></i></button>";
+                        tableValue += "<button type=\"button\" title=\"执行\" class=\"btn btn-orange\" style='border-radius: 5px' onclick=\"jobSchedule.launch('"+ param +"')\"><i class=\"fa fa-rocket\"></i></button>";
+                        tableValue += "<button type=\"button\" title=\"配置参数\" class=\"btn btn-blue\" style='border-radius: 5px' onclick=\"jobSchedule.initAddParam('"+ param +"')\"><i class=\"fa fa-gear\"></i></button>"
+                        tableValue += "<button type=\"button\" title=\"删除\" class=\"btn btn-danger\" style='border-radius: 5px' onclick=\"jobSchedule.initDelete('"+ param +"', true)\"><i class=\"fa fa-trash\"></i></button></td>";
                     } else {
                         tableValue += "<tr class='even'>";
                         tableValue += "<td>"+ obj.jobName +"</td>";
@@ -95,11 +95,11 @@ jobSchedule.search = function (page) {
                         tableValue += "<td>"+ method +"</td>";
                         tableValue += "<td>"+ cron +"</td>";
                         tableValue += "<td>"+ obj.className +"</td>"
-                        tableValue += "<td> <button type=\"button\" title=\"查看\" class=\"btn btn-info\" onclick=\"jobSchedule.doDisplay('"+ param +"', false)\"><i class=\"fa fa-credit-card\"></i></button>";
-                        tableValue += "<button type=\"button\" title=\"修改\" title=\"查看\" class=\"btn btn-secondary\" onclick=\"jobSchedule.initModify('"+ param +"')\"><i class=\"fa fa-pencil\"></i></button>";
-                        tableValue += "<button type=\"button\" title=\"执行\" class=\"btn btn-orange\" onclick=\"jobSchedule.launch('"+ param +"')\"><i class=\"fa fa-rocket\"></i></button>";
-                        tableValue += "<button type=\"button\" title=\"配置参数\" class=\"btn btn-blue\" onclick=\"jobSchedule.initAddParam('"+ param +"')\"><i class=\"fa fa-gear\"></i></button>"
-                        tableValue += "<button type=\"button\" title=\"删除\" class=\"btn btn-danger\" onclick=\"jobSchedule.initDelete('"+ param +"', true)\"><i class=\"fa fa-trash\"></i></button></td>";
+                        tableValue += "<td> <button type=\"button\" title=\"查看\" class=\"btn btn-info\" style='border-radius: 5px' onclick=\"jobSchedule.doDisplay('"+ param +"', false)\"><i class=\"fa fa-credit-card\"></i></button>";
+                        tableValue += "<button type=\"button\" title=\"修改\" title=\"查看\" class=\"btn btn-secondary\" style='border-radius: 5px' onclick=\"jobSchedule.initModify('"+ param +"')\"><i class=\"fa fa-pencil\"></i></button>";
+                        tableValue += "<button type=\"button\" title=\"执行\" class=\"btn btn-orange\" style='border-radius: 5px' onclick=\"jobSchedule.launch('"+ param +"')\"><i class=\"fa fa-rocket\"></i></button>";
+                        tableValue += "<button type=\"button\" title=\"配置参数\" class=\"btn btn-blue\" style='border-radius: 5px' onclick=\"jobSchedule.initAddParam('"+ param +"')\"><i class=\"fa fa-gear\"></i></button>"
+                        tableValue += "<button type=\"button\" title=\"删除\" class=\"btn btn-danger\" style='border-radius: 5px' onclick=\"jobSchedule.initDelete('"+ param +"', true)\"><i class=\"fa fa-trash\"></i></button></td>";
                     }
                 });
                 $("#jobBody").append(tableValue);
