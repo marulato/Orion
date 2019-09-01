@@ -134,7 +134,7 @@ public class Encrtption {
 
     public static String generateToken() {
         SecureRandom secureRandom = new SecureRandom();
-        byte[] key = new byte[20];
+        byte[] key = new byte[32];
         secureRandom.nextBytes(key);
         return new String(Base64.encodeBase64(key), StandardCharsets.UTF_8);
     }
