@@ -13,8 +13,7 @@ import java.util.Properties;
 
 @Intercepts(value = {@Signature(type = Executor.class, method = "query", args =
                         {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
-        @Signature(type = Executor.class, method = "update", args =
-                {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
+        @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
 public class SQLInterceptor implements Interceptor {
     private final Logger logger = LoggerFactory.getLogger("Akita SQL Executor");
     @Override
@@ -23,7 +22,7 @@ public class SQLInterceptor implements Interceptor {
         MappedStatement mappedStatement = (MappedStatement) args[0];
         Object sqlObject = args[1];
         BoundSql sql = mappedStatement.getBoundSql(sqlObject);
-        logger.info(sql.getSql());
+        logger.debug(sql.getSql());
         return invocation.proceed();
     }
 
