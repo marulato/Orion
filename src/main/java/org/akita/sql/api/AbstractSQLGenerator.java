@@ -70,7 +70,7 @@ public abstract class AbstractSQLGenerator {
         return set.toString();
     }
 
-    public String whereStatement(Object rowMapper) {
+    public String primaryKeyStatement(Object rowMapper) {
         StringBuilder where = new StringBuilder();
         String[] idProp = BeanUtils.getIdPropName(rowMapper);
         for (String id : idProp) {
@@ -86,6 +86,8 @@ public abstract class AbstractSQLGenerator {
     public abstract String insert(DefaultSchema bean);
     public abstract String batchInsert(List<DefaultSchema> beans);
     public abstract String update(DefaultSchema bean);
+    public abstract String delete(DefaultSchema bean);
     public abstract String selectAll(String table);
+    public abstract String selectByPrimaryKey(DefaultSchema bean);
 
 }
